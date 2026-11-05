@@ -5,6 +5,7 @@
  */
 module.exports = {
   Language: '语言',
+  'Evaluation platform': '评测平台',
   'Toggle sidebar': '展开或收起侧边栏',
   'Account menu for {username}': '{username} 的账户菜单',
   'Language, appearance, telemetry, and workspace demo data.': '语言、外观、遥测以及工作区演示数据。',

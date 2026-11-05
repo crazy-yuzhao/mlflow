@@ -3991,10 +3991,6 @@
     "defaultMessage": "You're viewing a shared view. Your changes won't be saved unless you override your own saved view.",
     "description": "Experiment page > shared view banner > explanation that the shared view is read-only"
   },
-  "A1ljDC": {
-    "defaultMessage": "Docs",
-    "description": "Sidebar link for docs page"
-  },
   "A23pxC": {
     "defaultMessage": "Clear baseline",
     "description": "Label for clearing the selected baseline run"
@@ -10326,6 +10322,10 @@
   "TFWXO/": {
     "defaultMessage": "Hide raw server.json",
     "description": "Toggle to hide raw server.json"
+  },
+  "TJQL/G": {
+    "defaultMessage": "Evaluation platform",
+    "description": "Accessible name for the evaluation platform logo in the sidebar"
   },
   "TKo/CQ": {
     "defaultMessage": "Metadata",

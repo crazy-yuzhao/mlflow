@@ -77,7 +77,25 @@ describe('MlflowSidebar', () => {
     expect(screen.getByRole('link', { name: '主页' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: '实验' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: '设置' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '中文' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('img', { name: 'Evaluation platform' })).toBeInTheDocument();
+    expect(screen.getByText('评测')).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /Docs|文档/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '中文' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'English' })).not.toBeInTheDocument();
+    expect(screen.queryByText('3.18.1.dev0')).not.toBeInTheDocument();
+  });
+
+  test('shows the evaluation logo and omits docs and the language toggle', () => {
+    renderSidebarAt('/experiments');
+
+    expect(screen.getByRole('img', { name: 'Evaluation platform' })).toBeInTheDocument();
+    expect(screen.getByText('Eval')).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Docs' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '中文' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'English' })).not.toBeInTheDocument();
+    expect(screen.queryByText('3.18.1.dev0')).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Settings' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
   });
 
   test('shows the top-level menu after navigating back to the experiments list', () => {

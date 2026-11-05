@@ -13,8 +13,6 @@ import {
   useDesignSystemTheme,
   SidebarCollapseIcon,
   SidebarExpandIcon,
-  InfoBookIcon,
-  NewWindowIcon,
 } from '@databricks/design-system';
 import { useQueryClient } from '@mlflow/mlflow/src/common/utils/reactQueryHooks';
 import type { Location } from '../utils/RoutingUtils';
@@ -35,14 +33,12 @@ import { SERVER_FEATURE_KEYS, useFeatureEnabled } from '../../experiment-trackin
 import { extractWorkspaceFromSearchParams, useActiveWorkspace } from '../../workspaces/utils/WorkspaceUtils';
 import { SETTINGS_RETURN_TO_PARAM, SETTINGS_SECTION_GENERAL } from '../../settings/settingsSectionConstants';
 import { getSidebarItemStyles, MlflowSidebarLink } from './MlflowSidebarLink';
-import { MlflowLogo } from './MlflowLogo';
-import { DOCS_ROOT, GenAIDocsUrl, MLDocsUrl, Version } from '../constants';
+import { EvalPlatformLogo } from './EvalPlatformLogo';
 import { WorkspaceSelector } from '../../workspaces/components/WorkspaceSelector';
 import { MlflowSidebarExperimentItems } from './MlflowSidebarExperimentItems';
 import { MlflowSidebarGatewayItems } from './MlflowSidebarGatewayItems';
 import { MlflowSidebarSettingsItems } from './MlflowSidebarSettingsItems';
 import { MlflowSidebarWorkflowSwitch } from './MlflowSidebarWorkflowSwitch';
-import { LanguageSwitcher } from './LanguageSwitcher';
 
 const isInsideExperiment = (location: Location) =>
   Boolean(matchPath('/experiments/:experimentId/*', location.pathname));
@@ -273,13 +269,6 @@ export function MlflowSidebar({
   // Only show workspace-specific menu items when: workspaces are disabled OR a workspace is selected
   const showWorkspaceMenuItems = !workspacesEnabled || effectiveWorkspace !== null;
 
-  // Select appropriate docs URL based on workflow type
-  const docsUrl = enableWorkflowBasedNavigation
-    ? workflowType === WorkflowType.GENAI
-      ? GenAIDocsUrl
-      : MLDocsUrl
-    : DOCS_ROOT;
-
   return (
     <aside
       css={{
@@ -292,22 +281,25 @@ export function MlflowSidebar({
         gap: theme.spacing.md,
       }}
     >
-      <div css={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+      <div css={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         {showSidebar && (
-          <div css={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.xs }}>
-            <Link componentId="mlflow.sidebar.logo_home_link" to={ExperimentTrackingRoutes.rootRoute}>
-              <MlflowLogo
-                css={{
-                  display: 'block',
-                  height: theme.spacing.lg,
-                  color: theme.colors.textPrimary,
-                }}
-              />
-            </Link>
-            <Typography.Text size="sm" css={{ paddingLeft: theme.spacing.sm }} color="secondary">
-              {Version}
-            </Typography.Text>
-          </div>
+          <Link
+            componentId="mlflow.sidebar.logo_home_link"
+            to={ExperimentTrackingRoutes.rootRoute}
+            css={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              minWidth: 0,
+              color: theme.colors.textPrimary,
+              textDecoration: 'none',
+              '&:hover': {
+                color: theme.colors.textPrimary,
+                textDecoration: 'none',
+              },
+            }}
+          >
+            <EvalPlatformLogo />
+          </Link>
         )}
         <Button
           componentId="mlflow_header.toggle_sidebar_button"
@@ -374,22 +366,6 @@ export function MlflowSidebar({
             ))}
         </ul>
         <div>
-          <LanguageSwitcher collapsed={!showSidebar} />
-          <MlflowSidebarLink
-            disableWorkspacePrefix
-            css={{ paddingBlock: theme.spacing.sm }}
-            to={docsUrl}
-            componentId="mlflow.sidebar.docs_link"
-            isActive={() => false}
-            icon={<InfoBookIcon />}
-            collapsed={!showSidebar}
-            openInNewTab
-          >
-            <span css={{ display: 'flex', alignItems: 'center', gap: theme.spacing.sm }}>
-              <FormattedMessage defaultMessage="Docs" description="Sidebar link for docs page" />
-              <NewWindowIcon css={{ fontSize: theme.typography.fontSizeBase }} />
-            </span>
-          </MlflowSidebarLink>
           {showWorkspaceMenuItems && !showNestedSettingsItems && (
             <MlflowSidebarLink
               css={{ paddingBlock: theme.spacing.sm }}
