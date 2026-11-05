@@ -49,10 +49,18 @@ const LazyExperimentCustomViewProvider = React.lazy(() =>
 
 const EvalRunDetailsLoadingSkeleton = () => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   return (
     <div css={{ padding: theme.spacing.lg }}>
       {[...Array(8).keys()].map((i) => (
-        <ParagraphSkeleton label="Loading..." key={i} seed={`eval-run-details-${i}`} />
+        <ParagraphSkeleton
+          label={intl.formatMessage({
+            defaultMessage: 'Loading...',
+            description: 'Accessible name for a loading placeholder',
+          })}
+          key={i}
+          seed={`eval-run-details-${i}`}
+        />
       ))}
     </div>
   );

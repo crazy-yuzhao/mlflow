@@ -8,7 +8,7 @@ import {
   DangerIcon,
   InfoTooltip,
 } from '@databricks/design-system';
-import { FormattedMessage } from '@databricks/i18n';
+import { FormattedMessage, useIntl } from '@databricks/i18n';
 import type { ModelTrace } from '../ModelTrace.types';
 import { ModelTraceExplorer } from '../ModelTraceExplorer';
 import { getTraceArtifact } from './mlflow-fetch-utils';
@@ -37,6 +37,7 @@ export const ModelTraceExplorerOSSNotebookRenderer = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
 
   useEffect(() => {
     const fetchTraceData = async () => {
@@ -129,11 +130,17 @@ export const ModelTraceExplorerOSSNotebookRenderer = () => {
           }}
         >
           <Typography.Title level={4} withoutMargins>
-            MLflow Trace UI
+            <FormattedMessage
+              defaultMessage="MLflow Trace UI"
+              description="Title of the trace viewer embedded in a notebook"
+            />
           </Typography.Title>
           <InfoTooltip
             componentId="mlflow.notebook.trace-ui-info"
-            iconTitle="More information"
+            iconTitle={intl.formatMessage({
+              defaultMessage: 'More information',
+              description: 'Accessible name for the notebook trace display help icon',
+            })}
             maxWidth={400}
             content={
               <FormattedMessage
@@ -150,7 +157,10 @@ export const ModelTraceExplorerOSSNotebookRenderer = () => {
             componentId="mlflow.notebook.trace-ui-learn-more-link"
             href={MLFLOW_DOCS_URI}
             openInNewTab
-            title="Learn More"
+            title={intl.formatMessage({
+              defaultMessage: 'Learn More',
+              description: 'Link to MLflow documentation for more information on MLflow tracing',
+            })}
           >
             <FormattedMessage
               defaultMessage="Learn More"
@@ -162,7 +172,10 @@ export const ModelTraceExplorerOSSNotebookRenderer = () => {
           componentId="mlflow.notebook.trace-ui-see-in-mlflow-link"
           href={getMlflowUILinkForTrace(traceIds[activeTraceIndex], experimentIds[activeTraceIndex])}
           openInNewTab
-          title="View in MLflow UI"
+          title={intl.formatMessage({
+            defaultMessage: 'View in MLflow UI',
+            description: 'Link to the MLflow UI for an alternate view of the current trace',
+          })}
         >
           <FormattedMessage
             defaultMessage="View in MLflow UI"

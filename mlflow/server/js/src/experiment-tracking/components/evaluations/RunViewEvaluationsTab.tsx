@@ -4,7 +4,7 @@ import { ParagraphSkeleton, Typography, Empty, Drawer, useDesignSystemTheme } fr
 import { type KeyValueEntity } from '../../../common/types';
 import { useCompareToRunUuid } from './hooks/useCompareToRunUuid';
 import Utils from '@mlflow/mlflow/src/common/utils/Utils';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { RunColorPill } from '../experiment-page/components/RunColorPill';
 import { EvaluationRunCompareSelector } from './EvaluationRunCompareSelector';
 import {
@@ -65,7 +65,6 @@ import {
 import type { UseGetRunQueryResponseExperiment } from '../run-page/hooks/useGetRunQuery';
 import type { ExperimentEntity } from '../../types';
 import { useGetDeleteTracesAction } from '../experiment-page/components/traces-v3/hooks/useGetDeleteTracesAction';
-import { useIntl } from 'react-intl';
 import { ExportTracesToDatasetModal } from '../../pages/experiment-evaluation-datasets/components/ExportTracesToDatasetModal';
 import { AssistantAwareDrawer } from '@mlflow/mlflow/src/common/components/AssistantAwareDrawer';
 import { useCountInfo } from '../experiment-page/components/traces-v3/hooks/useCountInfo';
@@ -556,10 +555,18 @@ export const RunViewEvaluationsTab = ({
 
 const LoadingSkeleton = () => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   return (
     <div css={{ display: 'block', marginTop: theme.spacing.md, height: '100%', width: '100%' }}>
       {[...Array(10).keys()].map((i) => (
-        <ParagraphSkeleton label="Loading..." key={i} seed={`s-${i}`} />
+        <ParagraphSkeleton
+          label={intl.formatMessage({
+            defaultMessage: 'Loading...',
+            description: 'Accessible name for a loading placeholder',
+          })}
+          key={i}
+          seed={`s-${i}`}
+        />
       ))}
     </div>
   );

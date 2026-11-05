@@ -17,7 +17,12 @@ export const ExperimentViewInfoPopover = ({ experiment }: { experiment: Experime
     formatTraceArchivalRetentionForDisplay(experiment.effectiveTraceArchivalRetention?.trim(), intl) || undefined;
 
   return (
-    <InfoPopover iconTitle="Info">
+    <InfoPopover
+      iconTitle={intl.formatMessage({
+        defaultMessage: 'Info',
+        description: 'Accessible name for the experiment details info icon',
+      })}
+    >
       <div
         css={{
           display: 'flex',

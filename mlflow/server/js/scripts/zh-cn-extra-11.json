@@ -1,0 +1,17 @@
+{
+  "Params": "参数",
+  "Metric type": "指标类型",
+  "Model Trace Explorer": "模型跟踪浏览器",
+  "More information": "更多信息",
+  "Add new": "新增",
+  "Frame Skeleton": "框架骨架屏",
+  "Loading trace...": "正在加载跟踪...",
+  "MLflow Trace UI": "MLflow 跟踪界面",
+  "Parallel Coordinates": "平行坐标",
+  "Expression": "表达式",
+  "Loading code snippet": "正在加载代码片段",
+  "No parameters available": "没有可用参数",
+  "Add aliases": "添加别名",
+  "Plot chart": "绘制图表",
+  "Parameter": "参数"
+}

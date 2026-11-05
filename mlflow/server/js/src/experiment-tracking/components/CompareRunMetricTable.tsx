@@ -6,6 +6,7 @@ import { Link } from '@mlflow/mlflow/src/common/utils/RoutingUtils';
 import Routes from '@mlflow/mlflow/src/experiment-tracking/routes';
 import Utils from '@mlflow/mlflow/src/common/utils/Utils';
 import { Tooltip, useDesignSystemTheme } from '@databricks/design-system';
+import { useIntl } from 'react-intl';
 
 export type CompareRunMetricTableRef = {
   setScrollLeft: (scrollLeft: number) => void;
@@ -220,6 +221,7 @@ function CompareRunMetricTableHeaderCell({
   onMouseLeave,
 }: CompareRunMetricTableHeaderCellProps) {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   return (
     <div
       key={key}
@@ -240,7 +242,10 @@ function CompareRunMetricTableHeaderCell({
       <Link
         componentId="mlflow.experiment_tracking.compare_runs.metric_chart_link"
         to={metricPageRoute}
-        title="Plot chart"
+        title={intl.formatMessage({
+          defaultMessage: 'Plot chart',
+          description: 'Tooltip for the link that plots a metric',
+        })}
       >
         {metricRowKey}
         <i className="fa fa-chart-line" css={{ paddingLeft: '6px' }} />

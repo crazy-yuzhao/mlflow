@@ -20,7 +20,8 @@ import { connect } from 'react-redux';
 import Utils from '../../common/utils/Utils';
 import { getLatestMetrics } from '../reducers/MetricReducer';
 import CompareRunUtil from './CompareRunUtil';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
+import type { ReactNode } from 'react';
 import { LazyPlot } from './LazyPlot';
 import { CompareRunPlotContainer } from './CompareRunPlotContainer';
 
@@ -32,6 +33,27 @@ type CompareRunContourProps = {
 };
 
 type CompareRunContourState = any;
+
+const CompareRunAxisGroup = ({ axis, children }: { axis: 'parameter' | 'metric'; children: ReactNode }) => {
+  const intl = useIntl();
+  return (
+    <SimpleSelectOptionGroup
+      label={
+        axis === 'parameter'
+          ? intl.formatMessage({
+              defaultMessage: 'Parameter',
+              description: 'Group label for a parameter in the compare-runs plot',
+            })
+          : intl.formatMessage({
+              defaultMessage: 'Metric',
+              description: 'Group label for a metric in the compare-runs plot',
+            })
+      }
+    >
+      {children}
+    </SimpleSelectOptionGroup>
+  );
+};
 
 export class CompareRunContour extends Component<CompareRunContourProps, CompareRunContourState> {
   // Size limits for displaying keys and values in our plot axes and tooltips
@@ -309,20 +331,20 @@ export class CompareRunContour extends Component<CompareRunContourProps, Compare
         }}
         value={(this.state[axis].isMetric ? 'metric-' : 'param-') + this.state[axis].key}
       >
-        <SimpleSelectOptionGroup label="Parameter">
+        <CompareRunAxisGroup axis="parameter">
           {this.paramKeys.map((p: any) => (
             <SimpleSelectOption key={'param-' + p} value={'param-' + p}>
               {p}
             </SimpleSelectOption>
           ))}
-        </SimpleSelectOptionGroup>
-        <SimpleSelectOptionGroup label="Metric">
+        </CompareRunAxisGroup>
+        <CompareRunAxisGroup axis="metric">
           {this.metricKeys.map((m: any) => (
             <SimpleSelectOption key={'metric-' + m} value={'metric-' + m}>
               {m}
             </SimpleSelectOption>
           ))}
-        </SimpleSelectOptionGroup>
+        </CompareRunAxisGroup>
       </SimpleSelect>
     );
   }

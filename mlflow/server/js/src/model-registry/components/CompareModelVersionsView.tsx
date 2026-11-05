@@ -557,7 +557,10 @@ export class CompareModelVersionsViewImpl extends Component<
             [runInfos[0].experimentId],
           )}
           target="_blank"
-          title="Plot chart"
+          title={this.props.intl.formatMessage({
+            defaultMessage: 'Plot chart',
+            description: 'Tooltip for the link that plots a metric',
+          })}
         >
           {key}
           {chartIcon}

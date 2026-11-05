@@ -518,7 +518,6 @@ client.models.generate_content(model="gemini-2.5-flash", contents="Hello!")`,
             code: <code>@mlflow.trace</code>,
             a: (text: string) => (
               <Typography.Link
-                title="official documentation"
                 componentId="codegen_no_dynamic_mlflow_web_js_src_experiment_tracking_components_traces_quickstart_tracetablequickstart.utils_366"
                 href="https://mlflow.org/docs/latest/genai/tracing/app-instrumentation/manual-tracing/"
                 openInNewTab

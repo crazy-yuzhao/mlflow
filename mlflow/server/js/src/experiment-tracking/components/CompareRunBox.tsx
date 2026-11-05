@@ -58,14 +58,24 @@ const Selector = ({
         onChange({ key, isParam });
       }}
     >
-      <SimpleSelectOptionGroup label="Parameters">
+      <SimpleSelectOptionGroup
+        label={intl.formatMessage({
+          defaultMessage: 'Parameters',
+          description: 'Group label for parameters in the compare-runs box plot',
+        })}
+      >
         {paramKeys.map((key) => (
           <SimpleSelectOption key={key} value={paramOptionPrefix + key}>
             {key}
           </SimpleSelectOption>
         ))}
       </SimpleSelectOptionGroup>
-      <SimpleSelectOptionGroup label="Metrics">
+      <SimpleSelectOptionGroup
+        label={intl.formatMessage({
+          defaultMessage: 'Metrics',
+          description: 'Group label for metrics in the compare-runs box plot',
+        })}
+      >
         {metricKeys.map((key) => (
           <SimpleSelectOption key={key} value={metricOptionPrefix + key}>
             {key}

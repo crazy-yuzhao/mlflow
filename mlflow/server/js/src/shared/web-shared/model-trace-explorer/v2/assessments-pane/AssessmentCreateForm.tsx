@@ -10,7 +10,7 @@ import {
   Typography,
   useDesignSystemTheme,
 } from '@databricks/design-system';
-import { FormattedMessage } from '@databricks/i18n';
+import { FormattedMessage, useIntl } from '@databricks/i18n';
 import { getUser } from '../../../global-settings/getUser';
 
 import { AssessmentCreateNameTypeahead } from './AssessmentCreateNameTypeahead';
@@ -58,6 +58,7 @@ export const AssessmentCreateForm: ForwardRefExoticComponent<
     ref,
   ) => {
     const { theme } = useDesignSystemTheme();
+    const intl = useIntl();
     const { schemas } = useAssessmentSchemas();
 
     const [name, setName] = useState('');
@@ -221,7 +222,10 @@ export const AssessmentCreateForm: ForwardRefExoticComponent<
         <SimpleSelect
           id="shared.model-trace-explorer.assessment-data-type-select"
           componentId="shared.model-trace-explorer.assessment-data-type-select"
-          label="Data Type"
+          label={intl.formatMessage({
+            defaultMessage: 'Data Type',
+            description: 'Field label for assessment data type in a creation form',
+          })}
           value={dataType}
           disabled={isLoading}
           onChange={(e) => {

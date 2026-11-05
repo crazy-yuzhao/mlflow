@@ -4,7 +4,7 @@ import { useEditAliasesModal } from '../../../common/hooks/useEditAliasesModal';
 import { AliasTag } from '../../../common/components/AliasTag';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import type { ThunkDispatch } from '../../../redux-types';
 import { setModelVersionAliasesApi } from '../../actions';
 import { mlflowAliasesLearnMoreLink } from '../../constants';
@@ -29,6 +29,7 @@ export const ModelVersionViewAliasEditor = ({
   onAliasesModified?: () => void;
 }) => {
   const dispatch = useDispatch<ThunkDispatch>();
+  const intl = useIntl();
 
   const { EditAliasesModal, showEditAliasesModal } = useEditAliasesModal({
     aliases: modelEntity?.aliases ?? [],
@@ -64,9 +65,12 @@ export const ModelVersionViewAliasEditor = ({
           size="small"
           type="link"
           onClick={onAddEdit}
-          title="Add aliases"
+          title={intl.formatMessage({
+            defaultMessage: 'Add aliases',
+            description: 'Tooltip for the button that adds model version aliases',
+          })}
         >
-          Add
+          <FormattedMessage defaultMessage="Add" description="Button that adds aliases to a model version" />
         </Button>
       ) : (
         <div css={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
@@ -78,7 +82,10 @@ export const ModelVersionViewAliasEditor = ({
             size="small"
             icon={<PencilIcon />}
             onClick={onAddEdit}
-            title="Edit aliases"
+            title={intl.formatMessage({
+              defaultMessage: 'Edit aliases',
+              description: 'Tooltip for the button that edits model version aliases',
+            })}
           />
         </div>
       )}

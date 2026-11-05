@@ -13,7 +13,7 @@ import {
   Tooltip,
   useDesignSystemTheme,
 } from '@databricks/design-system';
-import { FormattedMessage } from '@databricks/i18n';
+import { FormattedMessage, useIntl } from '@databricks/i18n';
 import { isV3ModelTraceInfo, isV4TraceId } from '../../model-trace-explorer/ModelTraceExplorer.utils';
 import { ModelTraceExplorer } from '../../model-trace-explorer/ModelTraceExplorerEntrypoint';
 import { ModelTraceExplorerDrawer } from '../../model-trace-explorer/ModelTraceExplorerDrawerEntrypoint';
@@ -78,6 +78,7 @@ export const GenAiEvaluationTracesReviewModal = React.memo(
     selectedSpanId?: string;
   }) => {
     const { theme } = useDesignSystemTheme();
+    const intl = useIntl();
     const [showAddToEvaluationDatasetModal, setShowAddToEvaluationDatasetModal] = useState(false);
 
     const handleClose = useCallback(() => {
@@ -207,7 +208,10 @@ export const GenAiEvaluationTracesReviewModal = React.memo(
           !currentTraceQueryResult.data &&
           currentTraceQueryResult.isLoading && (
             <GenericSkeleton
-              label="Loading trace..."
+              label={intl.formatMessage({
+                defaultMessage: 'Loading trace...',
+                description: 'Accessible name for a trace that is still loading',
+              })}
               style={{
                 // Size the width and height to fit the modal content area
                 width: 'calc(100% - 45px)',

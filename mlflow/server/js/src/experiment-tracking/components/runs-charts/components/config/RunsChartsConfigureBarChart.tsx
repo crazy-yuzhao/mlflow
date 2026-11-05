@@ -1,5 +1,6 @@
 import { LegacySelect } from '@databricks/design-system';
 import { useCallback, useEffect } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { isEmpty, isUndefined } from 'lodash';
 import { RunsChartsCardConfig } from '../../runs-charts.types';
 import type { RunsChartsBarCardConfig, RunsChartsMetricByDatasetEntry } from '../../runs-charts.types';
@@ -88,11 +89,14 @@ export const RunsChartsConfigureBarChart = ({
     }
   }, [state.metricKey, updateMetric, updateSelectedMetrics, metricKeyList, metricKeysByDataset]);
 
+  const intl = useIntl();
   const emptyMetricsList = metricKeyList.length === 0;
 
   return (
     <>
-      <RunsChartsConfigureField title="Metric">
+      <RunsChartsConfigureField
+        title={<FormattedMessage defaultMessage="Metric" description="Label for the metric shown on a chart axis" />}
+      >
         {!isEmpty(metricKeysByDataset) ? (
           <RunsChartsConfigureMetricWithDatasetSelect
             metricKeysByDataset={metricKeysByDataset}
@@ -105,7 +109,17 @@ export const RunsChartsConfigureBarChart = ({
           <LegacySelect
             css={styles.selectFull}
             mode="multiple"
-            placeholder={emptyMetricsList ? 'No metrics available' : 'Select metrics'}
+            placeholder={
+              emptyMetricsList
+                ? intl.formatMessage({
+                    defaultMessage: 'No metrics available',
+                    description: 'Text shown in a disabled multi-selector when there are no selectable metrics.',
+                  })
+                : intl.formatMessage({
+                    defaultMessage: 'Select metrics',
+                    description: 'Placeholder text for a metric multi-selector when configuring a line chart',
+                  })
+            }
             value={emptyMetricsList ? [] : (state.selectedMetricKeys ?? (state.metricKey ? [state.metricKey] : []))}
             onChange={updateSelectedMetrics}
             disabled={emptyMetricsList}

@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { Button, CopyIcon, ParagraphSkeleton, Tabs, Typography, useDesignSystemTheme } from '@databricks/design-system';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { AssistantSparkleIcon, useAssistant } from '../../../assistant';
 import { CopyButton } from '@mlflow/mlflow/src/shared/building_blocks/CopyButton';
@@ -56,6 +56,7 @@ export const AgentActionCard = ({
   onActiveTabChange?: (tab: string) => void;
 }) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const { openPanel, prefillPrompt, canUseAssistant } = useAssistant();
   const defaultTab: TabKey = showAgentSetupTab ? 'agent-setup' : 'copy-prompt';
   // Typed as string, not TabKey, because extraTabs contribute arbitrary string values to the
@@ -240,7 +241,13 @@ export const AgentActionCard = ({
             >
               {codeSnippet.isLoading ? (
                 <div css={{ padding: `${theme.spacing.sm}px ${theme.spacing.md}px` }}>
-                  <ParagraphSkeleton seed={`${componentId}.snippet`} label="Loading code snippet" />
+                  <ParagraphSkeleton
+                    seed={`${componentId}.snippet`}
+                    label={intl.formatMessage({
+                      defaultMessage: 'Loading code snippet',
+                      description: 'Accessible name for a code snippet that is still loading',
+                    })}
+                  />
                 </div>
               ) : (
                 <>

@@ -1,6 +1,7 @@
 import type { Table } from '@tanstack/react-table';
 
 import { ParagraphSkeleton, TableSkeletonRows, useDesignSystemTheme } from '@databricks/design-system';
+import { useIntl } from 'react-intl';
 
 import type { EvalTraceComparisonEntry } from './types';
 
@@ -12,6 +13,11 @@ export const GenAITracesTableBodySkeleton = ({
   table?: Table<EvalTraceComparisonEntry>;
 }) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
+  const loadingLabel = intl.formatMessage({
+    defaultMessage: 'Loading...',
+    description: 'Accessible name for a loading placeholder',
+  });
   return (
     <div
       css={{
@@ -25,9 +31,9 @@ export const GenAITracesTableBodySkeleton = ({
       className={className}
     >
       {table ? (
-        <TableSkeletonRows label="Loading..." numRows={3} table={table} />
+        <TableSkeletonRows label={loadingLabel} numRows={3} table={table} />
       ) : (
-        [...Array(10).keys()].map((i) => <ParagraphSkeleton label="Loading..." key={i} seed={`s-${i}`} />)
+        [...Array(10).keys()].map((i) => <ParagraphSkeleton label={loadingLabel} key={i} seed={`s-${i}`} />)
       )}
     </div>
   );

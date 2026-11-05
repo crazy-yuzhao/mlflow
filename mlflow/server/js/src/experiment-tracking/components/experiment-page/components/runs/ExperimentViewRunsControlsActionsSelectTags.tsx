@@ -18,7 +18,7 @@ import { useDispatch } from 'react-redux';
 import type { ThunkDispatch } from '@mlflow/mlflow/src/redux-types';
 import { ExperimentViewRunsControlsActionsAddNewTagModal } from './ExperimentViewRunsControlsActionsAddNewTagModal';
 import { uniq } from 'lodash';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import Utils from '@mlflow/mlflow/src/common/utils/Utils';
 import { ErrorWrapper } from '@mlflow/mlflow/src/common/utils/ErrorWrapper';
 
@@ -89,6 +89,7 @@ export const ExperimentViewRunsControlsActionsSelectTags = ({
   refreshRuns: () => void;
 }) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const [selectedTags, setSelectedTags] = useState<Record<string, boolean | undefined>>({});
   const [isAddNewTagModalOpen, setIsAddNewTagModalOpen] = useState(false);
   const [isMultiSelectOpen, setIsMultiSelectOpen] = useState(false);
@@ -175,7 +176,10 @@ export const ExperimentViewRunsControlsActionsSelectTags = ({
       <DialogCombobox
         componentId="codegen_mlflow_app_src_experiment-tracking_components_experiment-page_components_runs_experimentviewrunscontrolsactionsselecttags.tsx_162"
         open={isMultiSelectOpen}
-        label="Add tags"
+        label={intl.formatMessage({
+          defaultMessage: 'Add tags',
+          description: 'Button that adds tags to selected runs',
+        })}
         id="runs-tag-multiselect"
         multiSelect
       >

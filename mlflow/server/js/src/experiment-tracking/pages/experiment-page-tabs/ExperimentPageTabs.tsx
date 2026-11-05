@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useIntl } from 'react-intl';
 import {
   Button,
   GenericSkeleton,
@@ -59,6 +60,7 @@ const RunEvaluationButton = React.lazy(() =>
 const ExperimentPageTabsImpl = () => {
   const { experimentId, tabName } = useParams();
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const navigate = useNavigate();
   const isFileStore = useIsFileStore();
 
@@ -209,7 +211,14 @@ const ExperimentPageTabsImpl = () => {
       fallback={
         <>
           {[...Array(8).keys()].map((i) => (
-            <ParagraphSkeleton label="Loading..." key={i} seed={`s-${i}`} />
+            <ParagraphSkeleton
+              label={intl.formatMessage({
+                defaultMessage: 'Loading...',
+                description: 'Accessible name for a loading placeholder',
+              })}
+              key={i}
+              seed={`s-${i}`}
+            />
           ))}
         </>
       }

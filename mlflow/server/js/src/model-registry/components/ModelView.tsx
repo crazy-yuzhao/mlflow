@@ -369,7 +369,12 @@ export class ModelViewImpl extends React.Component<ModelViewImplProps, ModelView
         </Descriptions>
         {this.sharedTaggingUIEnabled && (
           <Descriptions columns={1} data-testid="model-view-tags">
-            <Descriptions.Item label="Tags">
+            <Descriptions.Item
+              label={this.props.intl.formatMessage({
+                defaultMessage: 'Tags',
+                description: 'Label for the tags section on a registered model',
+              })}
+            >
               <TagList tags={this.getTags()} onEdit={this.handleEditTags} />
             </Descriptions.Item>
           </Descriptions>

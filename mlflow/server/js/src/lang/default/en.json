@@ -255,6 +255,10 @@
     "defaultMessage": "Fallback",
     "description": "Gateway > Endpoint details > Label on connector between fallback model sections"
   },
+  "+nilic": {
+    "defaultMessage": "Params",
+    "description": "Label for parameters shown on a parallel coordinates chart"
+  },
   "+o0xUA": {
     "defaultMessage": "An error occurred while attempting to fetch trace data (ID: {traceId}). Please ensure that the MLflow tracking server is running, and that the trace data exists. Error details:",
     "description": "An error message explaining that an error occurred while fetching trace data"
@@ -962,6 +966,10 @@
   "16BvfJ": {
     "defaultMessage": "{timeSince, plural, =1 {1 year} other {# years}} ago",
     "description": "Text for time in years since given date for MLflow views"
+  },
+  "16j641": {
+    "defaultMessage": "Metric type",
+    "description": "Label for choosing a logged metric or a custom chart expression"
   },
   "16onEc": {
     "defaultMessage": "Please add or remove one or more tags before saving",
@@ -1942,6 +1950,10 @@
   "48M+kw": {
     "defaultMessage": "Owner",
     "description": "Queue settings: owner field label"
+  },
+  "48YOd4": {
+    "defaultMessage": "Info",
+    "description": "Accessible name for the experiment details info icon"
   },
   "48ek2n": {
     "defaultMessage": "{count} of {total, plural, one {# trace} other {# traces}}",
@@ -3463,6 +3475,10 @@
     "defaultMessage": "Created by:",
     "description": "MCP compare metadata created by label"
   },
+  "8cpSNU": {
+    "defaultMessage": "Metrics",
+    "description": "Label for metrics shown on a parallel coordinates chart"
+  },
   "8eVxXM": {
     "defaultMessage": "Cancel",
     "description": "Cancel delete webhook button"
@@ -3623,6 +3639,10 @@
     "defaultMessage": "This saved view no longer exists.",
     "description": "Error toast shown when opening a saved traces view that has been deleted"
   },
+  "97Vc7V": {
+    "defaultMessage": "Model Trace Explorer",
+    "description": "Accessible name for the embedded model trace explorer"
+  },
   "97xY+o": {
     "defaultMessage": "Loading endpoints...",
     "description": "Loading message for endpoints list"
@@ -3730,6 +3750,10 @@
   "9LdIqO": {
     "defaultMessage": "Groups are sorted by the baseline trace’s value. Ties use the other runs in displayed order. Missing values appear last.",
     "description": "Explains baseline-first comparison group sorting on the active column sort toggle"
+  },
+  "9LsRj1": {
+    "defaultMessage": "More information",
+    "description": "Accessible name for the notebook trace display help icon"
   },
   "9MHcPE": {
     "defaultMessage": "Overview",
@@ -7043,6 +7067,10 @@
     "defaultMessage": "This is an estimate",
     "description": "Tooltip explaining that trace cost totals are estimates"
   },
+  "JXuh5i": {
+    "defaultMessage": "Add new",
+    "description": "Button that adds another chart expression"
+  },
   "JYVQuV": {
     "defaultMessage": "Run ID",
     "description": "Run page > Overview > Run ID section label"
@@ -7170,6 +7198,10 @@
   "JuHp/q": {
     "defaultMessage": "Hugging Face",
     "description": "Experiment dataset drawer > source type > Hugging Face source type label"
+  },
+  "JuZ6mA": {
+    "defaultMessage": "Add",
+    "description": "Button that adds aliases to a model version"
   },
   "JwYyw9": {
     "defaultMessage": "Timestamp",
@@ -7679,6 +7711,10 @@
     "defaultMessage": "Span type",
     "description": "Trace filter field: span type"
   },
+  "LO+ziu": {
+    "defaultMessage": "Metric",
+    "description": "Group label for a metric in the compare-runs plot"
+  },
   "LOJumx": {
     "defaultMessage": "Prompt",
     "description": "Column label for linked prompts"
@@ -7963,6 +7999,10 @@
     "defaultMessage": "Violates guidelines",
     "description": "Evaluation results > conversational guidelines assessment > negative value label. Displayed if the assistant violates guidelines at any point in the conversation."
   },
+  "MJomvc": {
+    "defaultMessage": "Frame Skeleton",
+    "description": "Accessible name for the notebook trace viewer loading placeholder"
+  },
   "MJzMo3": {
     "defaultMessage": "Absolute difference: {delta}",
     "description": "Tooltip for an evaluation run configuration comparison percentage change"
@@ -8118,6 +8158,10 @@
   "MhccYX": {
     "defaultMessage": "Associated model version",
     "description": "Tooltip description for the Logged Model column in the traces table"
+  },
+  "MhkfbM": {
+    "defaultMessage": "Loading trace...",
+    "description": "Accessible name for a trace that is still loading"
   },
   "MhtxHm": {
     "defaultMessage": "You cannot evaluate this cell, this run was not created using served LLM model route",
@@ -8771,6 +8815,10 @@
     "defaultMessage": "False",
     "description": "False value in the evaluations table."
   },
+  "Oa3eee": {
+    "defaultMessage": "Tags",
+    "description": "Label for the tags section on a registered model"
+  },
   "OaRUyM": {
     "defaultMessage": "Edit experiment",
     "description": "experiment page > edit experiment modal > title"
@@ -8870,6 +8918,10 @@
   "OtV8ht": {
     "defaultMessage": "Group by",
     "description": "Display menu item opening the evaluation-runs group-by submenu"
+  },
+  "OtuTJM": {
+    "defaultMessage": "Loading...",
+    "description": "Accessible name for a loading placeholder"
   },
   "OvkqyX": {
     "defaultMessage": "Add Tag",
@@ -9430,6 +9482,10 @@
   "QXUMWA": {
     "defaultMessage": "Expand run details",
     "description": "Footer control to expand the evaluation run sidebar"
+  },
+  "QXh0hV": {
+    "defaultMessage": "MLflow Trace UI",
+    "description": "Title of the trace viewer embedded in a notebook"
   },
   "QYLyqS": {
     "defaultMessage": "Scorers",
@@ -11231,6 +11287,10 @@
     "defaultMessage": "Exit shared view",
     "description": "Experiment page > shared view banner > button that stops previewing the shared view and restores the user's own view"
   },
+  "W5tqKz": {
+    "defaultMessage": "Metric",
+    "description": "Label for the metric shown on a chart axis"
+  },
   "W60/kq": {
     "defaultMessage": "regression",
     "description": "A short label for experiments focused on regression modeling"
@@ -11450,6 +11510,10 @@
   "Wg/fjN": {
     "defaultMessage": "Build with Assistant",
     "description": "Button label to start building the custom trace view with the MLflow Assistant"
+  },
+  "Wg1ySr": {
+    "defaultMessage": "Edit aliases",
+    "description": "Tooltip for the button that edits model version aliases"
   },
   "Wh+aKq": {
     "defaultMessage": "Details & Timeline",
@@ -12939,6 +13003,10 @@
     "defaultMessage": "Cancel detection",
     "description": "Experiment issues tab > Action to cancel the issue detection in progress"
   },
+  "bMd8AA": {
+    "defaultMessage": "Parallel Coordinates",
+    "description": "Title of the parallel coordinates runs chart"
+  },
   "bO0wxq": {
     "defaultMessage": "Advanced settings",
     "description": "Collapsible section for advanced settings"
@@ -13758,6 +13826,10 @@
   "dp7Jva": {
     "defaultMessage": "Cancel",
     "description": "Cancel-button label on the playground save-prompt-version modal"
+  },
+  "dpoMv4": {
+    "defaultMessage": "Expression",
+    "description": "Label for a custom expression on a line chart axis"
   },
   "dq8MJd": {
     "defaultMessage": "Contour Plot",
@@ -15331,6 +15403,10 @@
     "defaultMessage": "Execution",
     "description": "Issue category title for execution"
   },
+  "i5nJpy": {
+    "defaultMessage": "Loading code snippet",
+    "description": "Accessible name for a code snippet that is still loading"
+  },
   "i5yOgI": {
     "defaultMessage": "Fit to view",
     "description": "Tooltip for the button that fits the graph to the viewport"
@@ -15666,6 +15742,10 @@
   "iwD/Dv": {
     "defaultMessage": "Cancel",
     "description": "Cancel button text to cancel the flow to register the model"
+  },
+  "iwvKLL": {
+    "defaultMessage": "Add tags",
+    "description": "Button that adds tags to selected runs"
   },
   "iz9koK": {
     "defaultMessage": "Copy file contents",
@@ -17859,6 +17939,10 @@
     "defaultMessage": "Preview",
     "description": "Review question preview panel header"
   },
+  "pSq5ms": {
+    "defaultMessage": "No parameters available",
+    "description": "Text shown when a parallel coordinates chart has no parameters to select"
+  },
   "pSym0n": {
     "defaultMessage": "Preview icon.",
     "description": "Accessible name for the artifact preview illustration"
@@ -18446,6 +18530,10 @@
   "rBVvLq": {
     "defaultMessage": "Compare ({numRuns})",
     "description": "Standalone eval-runs compare button label with the number of selected runs"
+  },
+  "rBuGzS": {
+    "defaultMessage": "Parameters",
+    "description": "Group label for parameters in the compare-runs box plot"
   },
   "rBydei": {
     "defaultMessage": "The retrieval-relevance LLM judge determines whether the chunks returned by the retriever are relevant to the input request. Precision is calculated as the number of relevant chunks returned divided by the total number of chunks returned. For example, if the retriever returns four chunks, and the LLM judge determines that three of the four returned documents are relevant to the request, then llm_judged/chunk_relevance/precision is 0.75.",
@@ -19495,6 +19583,10 @@
     "defaultMessage": "Comparing {runs} MLflow Runs",
     "description": "Page title for the compare runs page"
   },
+  "ufumOZ": {
+    "defaultMessage": "Add aliases",
+    "description": "Tooltip for the button that adds model version aliases"
+  },
   "uge5xr": {
     "defaultMessage": "{count, plural, one {# numeric scorer changed} other {# numeric scorers changed}}; direction is not rated as better or worse.",
     "description": "Comparison fallback explaining neutral numeric changes"
@@ -20151,6 +20243,10 @@
     "defaultMessage": "Unable to fetch trace data for trace ID: {traceId}",
     "description": "Body shown in the V4 trace drawer when the trace fails to load"
   },
+  "weCmfl": {
+    "defaultMessage": "Metrics",
+    "description": "Group label for metrics in the compare-runs box plot"
+  },
   "weYjQS": {
     "defaultMessage": "Constrain how the model formats its output:",
     "description": "Intro line in the info popover next to the Response format section header"
@@ -20639,6 +20735,10 @@
     "defaultMessage": "In progress",
     "description": "Experiment page > traces table > status label > in progress"
   },
+  "y6+ruY": {
+    "defaultMessage": "Plot chart",
+    "description": "Tooltip for the link that plots a metric"
+  },
   "y6KMoc": {
     "defaultMessage": "Run the judge on the selected group of {isTraces, select, true {traces} other {sessions}}",
     "description": "Description for running judge on traces or sessions"
@@ -20934,6 +21034,10 @@
   "z4aclU": {
     "defaultMessage": "Discard",
     "description": "Confirm-button text for the discard-unsaved-changes prompt"
+  },
+  "z4ydMS": {
+    "defaultMessage": "Parameter",
+    "description": "Group label for a parameter in the compare-runs plot"
   },
   "z55yPh": {
     "defaultMessage": "Status",

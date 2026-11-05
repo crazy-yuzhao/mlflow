@@ -34,7 +34,15 @@ const renderMetricSelectorV1 = ({
   return (
     <LegacySelect
       css={{ width: '100%' }}
-      value={emptyMetricsList ? 'No metrics available' : metricKey}
+      placeholder={
+        emptyMetricsList ? (
+          <FormattedMessage
+            defaultMessage="No metrics available"
+            description="Text shown in a disabled multi-selector when there are no selectable metrics."
+          />
+        ) : undefined
+      }
+      value={emptyMetricsList ? undefined : metricKey}
       onChange={updateMetric}
       disabled={emptyMetricsList}
       dangerouslySetAntdProps={{ showSearch: true }}
@@ -217,7 +225,15 @@ export const RunsChartsYAxisMetricAndExpressionSelector = ({
   return (
     <>
       {usingChartExpressions && (
-        <RunsChartsConfigureField title="Metric type" compact>
+        <RunsChartsConfigureField
+          title={
+            <FormattedMessage
+              defaultMessage="Metric type"
+              description="Label for choosing a logged metric or a custom chart expression"
+            />
+          }
+          compact
+        >
           <Radio.Group
             componentId="codegen_mlflow_app_src_experiment-tracking_components_runs-charts_components_runschartsyaxismetricandexpressionselector.tsx_221"
             name="runs-charts-field-group-metric-type-y-axis"
@@ -240,7 +256,15 @@ export const RunsChartsYAxisMetricAndExpressionSelector = ({
         </RunsChartsConfigureField>
       )}
       {usingChartExpressions && state.yAxisKey === RunsChartsLineChartYAxisType.EXPRESSION ? (
-        <RunsChartsConfigureField title="Expression" compact>
+        <RunsChartsConfigureField
+          title={
+            <FormattedMessage
+              defaultMessage="Expression"
+              description="Label for a custom expression on a line chart axis"
+            />
+          }
+          compact
+        >
           <div css={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: theme.spacing.sm }}>
             {temporaryChartExpressions.map((chartExpression, index) => {
               return (
@@ -259,12 +283,15 @@ export const RunsChartsYAxisMetricAndExpressionSelector = ({
               icon={<PlusIcon />}
               onClick={addNewYAxisExpressionTemporary}
             >
-              Add new
+              <FormattedMessage defaultMessage="Add new" description="Button that adds another chart expression" />
             </Button>
           </div>
         </RunsChartsConfigureField>
       ) : (
-        <RunsChartsConfigureField title="Metric" compact>
+        <RunsChartsConfigureField
+          title={<FormattedMessage defaultMessage="Metric" description="Label for the metric shown on a chart axis" />}
+          compact
+        >
           {renderMetricSelectorV2({
             metricKeyList,
             selectedMetricKeys: state.selectedMetricKeys,

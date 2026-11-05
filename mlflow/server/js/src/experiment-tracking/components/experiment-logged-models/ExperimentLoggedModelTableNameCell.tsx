@@ -13,12 +13,13 @@ import {
 } from './ExperimentLoggedModelListPageTable.utils';
 import { isSymbol } from 'lodash';
 import { useExperimentLoggedModelRegisteredVersions } from './hooks/useExperimentLoggedModelRegisteredVersions';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import React, { useMemo } from 'react';
 import { shouldUnifyLoggedModelsAndRegisteredModels } from '@mlflow/mlflow/src/common/utils/FeatureUtils';
 
 export const ExperimentLoggedModelTableNameCell = (props: { data: LoggedModelsTableRow }) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const { data } = props;
   const loggedModelData = isLoggedModelRow(data) ? (data as LoggedModelProto) : null;
   const loggedModels = useMemo(() => (loggedModelData ? [loggedModelData] : []), [loggedModelData]);
@@ -103,7 +104,12 @@ export const ExperimentLoggedModelTableNameCell = (props: { data: LoggedModelsTa
         }}
       >
         <RunColorPill color={getStableColorForRun(data.info?.model_id || '')} />
-        <ParagraphSkeleton label="Loading..." />
+        <ParagraphSkeleton
+          label={intl.formatMessage({
+            defaultMessage: 'Loading...',
+            description: 'Accessible name for a loading placeholder',
+          })}
+        />
       </div>
     );
   }

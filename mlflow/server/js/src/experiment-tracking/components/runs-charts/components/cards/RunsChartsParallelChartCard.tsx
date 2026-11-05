@@ -13,7 +13,7 @@ import {
   RunsChartsChartsDragGroup,
   RunsChartCardLoadingPlaceholder,
 } from './ChartCard.common';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useUpdateExperimentViewUIState } from '../../../experiment-page/contexts/ExperimentPageUIStateContext';
 import { downloadChartDataCsv } from '../../../experiment-page/utils/experimentPage.common-utils';
 import type { RunsGroupByConfig } from '../../../experiment-page/utils/experimentPage.group-row-utils';
@@ -104,11 +104,16 @@ export const RunsChartsParallelChartCard = ({
   ...reorderProps
 }: RunsChartsParallelChartCardProps) => {
   const updateUIState = useUpdateExperimentViewUIState();
+  const intl = useIntl();
+  const parallelCoordinatesTitle = intl.formatMessage({
+    defaultMessage: 'Parallel Coordinates',
+    description: 'Title of the parallel coordinates runs chart',
+  });
 
   const toggleFullScreenChart = () => {
     setFullScreenChart?.({
       config,
-      title: 'Parallel Coordinates',
+      title: parallelCoordinatesTitle,
       subtitle: displaySubtitle ? subtitle : null,
     });
   };
@@ -237,7 +242,7 @@ export const RunsChartsParallelChartCard = ({
     <RunsChartCardWrapper
       onEdit={onEdit}
       onDelete={onDelete}
-      title="Parallel Coordinates"
+      title={parallelCoordinatesTitle}
       subtitle={displaySubtitle ? subtitle : null}
       uuid={config.uuid}
       tooltip={

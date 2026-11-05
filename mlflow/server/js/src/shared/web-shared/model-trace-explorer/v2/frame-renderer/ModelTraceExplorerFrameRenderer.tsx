@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { useDesignSystemTheme, Typography, ChevronDownIcon, ChevronRightIcon, Button } from '@databricks/design-system';
 import type { ModelTrace } from '../ModelTrace.types';
@@ -51,6 +52,7 @@ export const ModelTraceExplorerFrameRenderer = ({
   const fullIframeSrc = sqlWarehouseId ? `${rendererVersionSrc}?sqlWarehouseId=${sqlWarehouseId}` : rendererVersionSrc;
 
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent<ModelTraceChildToParentFrameMessageType>) => {
@@ -124,15 +126,24 @@ export const ModelTraceExplorerFrameRenderer = ({
             onClick={() => setExpanded(!expanded)}
           />
           <Typography.Title level={4} withoutMargins>
-            MLflow Trace UI
+            <FormattedMessage
+              defaultMessage="MLflow Trace UI"
+              description="Title of the trace viewer embedded in a notebook"
+            />
           </Typography.Title>
           <Typography.Link
             componentId="mlflow.notebook.trace-ui-learn-more-link"
             href="https://mlflow.org/docs/latest/llms/tracing/index.html"
             openInNewTab
-            title="Learn More"
+            title={intl.formatMessage({
+              defaultMessage: 'Learn More',
+              description: 'Link to MLflow documentation for more information on MLflow tracing',
+            })}
           >
-            Learn More
+            <FormattedMessage
+              defaultMessage="Learn More"
+              description="Link to MLflow documentation for more information on MLflow tracing"
+            />
           </Typography.Link>
         </div>
       </div>
@@ -144,11 +155,19 @@ export const ModelTraceExplorerFrameRenderer = ({
             height,
           }}
         >
-          <ModelTraceExplorerSkeleton label="Frame Skeleton" />
+          <ModelTraceExplorerSkeleton
+            label={intl.formatMessage({
+              defaultMessage: 'Frame Skeleton',
+              description: 'Accessible name for the notebook trace viewer loading placeholder',
+            })}
+          />
         </div>
       )}
       <iframe
-        title="Model Trace Explorer"
+        title={intl.formatMessage({
+          defaultMessage: 'Model Trace Explorer',
+          description: 'Accessible name for the embedded model trace explorer',
+        })}
         src={fullIframeSrc}
         ref={iframeRef}
         css={{
