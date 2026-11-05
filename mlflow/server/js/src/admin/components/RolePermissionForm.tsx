@@ -17,12 +17,17 @@ import { FieldLabel } from './FieldLabel';
 import { useResourceOptionsQuery } from '../hooks';
 import { useWorkspacesEnabled } from '../../experiment-tracking/hooks/useServerInfo';
 import {
+  ResourceRequiredError,
+  useResourcePickerMessages,
+  useResourceTypeLabel,
+  WildcardOnlyHint,
+} from '../resourceTypeLabels';
+import {
   ALL_RESOURCE_PATTERN_LABEL,
   PERMISSIONS,
   RESOURCE_TYPES,
   isWildcardOnlyResourceType,
   getGrantablePermissions,
-  getResourceTypeLabel,
 } from '../types';
 
 export type RolePermissionScope = 'specific' | 'all';
@@ -77,6 +82,7 @@ export const RolePermissionForm = ({
   showResourceRequiredError = false,
 }: RolePermissionFormProps) => {
   const { theme } = useDesignSystemTheme();
+  const labelFor = useResourceTypeLabel();
   const [resourceSearch, setResourceSearch] = useState('');
   // Hide ``workspace`` in single-tenant mode where the workspace concept
   // collapses to the single ``default`` slot.
@@ -86,7 +92,8 @@ export const RolePermissionForm = ({
     [workspacesEnabled, workspacesLoading],
   );
 
-  const typeLabel = getResourceTypeLabel(value.resourceType);
+  const typeLabel = labelFor(value.resourceType);
+  const picker = useResourcePickerMessages(typeLabel);
 
   const {
     options: resourceOptions,
@@ -138,7 +145,7 @@ export const RolePermissionForm = ({
         >
           {resourceTypes.map((rt) => (
             <SimpleSelectOption key={rt} value={rt}>
-              {getResourceTypeLabel(rt)}
+              {labelFor(rt)}
             </SimpleSelectOption>
           ))}
         </SimpleSelect>
@@ -152,7 +159,10 @@ export const RolePermissionForm = ({
           <Typography.Text color="secondary">
             {workspace ?? 'default'}{' '}
             <Typography.Text color="secondary" size="sm">
-              (this grant applies to the role's workspace)
+              <FormattedMessage
+                defaultMessage="(this grant applies to the role's workspace)"
+                description="Hint that a workspace permission applies to the role's own workspace"
+              />
             </Typography.Text>
           </Typography.Text>
         </div>
@@ -176,13 +186,13 @@ export const RolePermissionForm = ({
               layout="vertical"
             >
               <Radio value="specific" disabled={wildcardOnly}>
-                Specific {typeLabel.toLowerCase()}
+                {picker.specificScope}
               </Radio>
-              <Radio value="all">All {typeLabel.toLowerCase()}s</Radio>
+              <Radio value="all">{picker.allScope}</Radio>
             </Radio.Group>
             {wildcardOnly && (
               <Typography.Text color="secondary" size="sm">
-                {typeLabel} grants are workspace-wide — they cannot target one {typeLabel.toLowerCase()}.
+                <WildcardOnlyHint resourceLabel={typeLabel} />
               </Typography.Text>
             )}
           </div>
@@ -196,8 +206,7 @@ export const RolePermissionForm = ({
                   css={{ display: 'block', marginBottom: theme.spacing.xs }}
                   data-testid="admin.role_permission_form.resource_required_error"
                 >
-                  Select a specific {typeLabel.toLowerCase()} or switch the scope to{' '}
-                  <strong>All {typeLabel.toLowerCase()}s</strong> before submitting.
+                  <ResourceRequiredError resourceLabel={typeLabel} />
                 </Typography.Text>
               )}
               <DialogCombobox
@@ -207,7 +216,7 @@ export const RolePermissionForm = ({
               >
                 <DialogComboboxTrigger
                   withInlineLabel={false}
-                  placeholder={`Select ${typeLabel.toLowerCase()}`}
+                  placeholder={picker.selectPlaceholder}
                   renderDisplayedValue={() => (selectedOption ? renderOption(selectedOption) : value.resourceId)}
                   onClear={() => onChange({ ...value, resourceId: '' })}
                   width="100%"
@@ -219,7 +228,7 @@ export const RolePermissionForm = ({
                 >
                   {resourceOptionsError && (
                     <div css={{ padding: theme.spacing.sm, color: theme.colors.textValidationDanger }}>
-                      Failed to load {typeLabel.toLowerCase()}s
+                      {picker.failedToLoad}
                     </div>
                   )}
                   <DialogComboboxOptionList>
@@ -229,7 +238,7 @@ export const RolePermissionForm = ({
                     >
                       {filteredOptions.length === 0 && !resourceOptionsLoading ? (
                         <DialogComboboxOptionListSelectItem value="" onChange={() => {}} checked={false} disabled>
-                          {resourceSearch ? 'No matching results' : 'No resources found'}
+                          {resourceSearch ? picker.noMatchingResults : picker.noResourcesFound}
                         </DialogComboboxOptionListSelectItem>
                       ) : (
                         filteredOptions.map((option) => (

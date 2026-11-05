@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import {
   Button,
   CloseIcon,
@@ -11,7 +11,8 @@ import {
   useDesignSystemTheme,
 } from '@databricks/design-system';
 import { FieldLabel } from './FieldLabel';
-import { formatResourcePattern, getResourceTypeLabel } from '../types';
+import { useResourceTypeLabel } from '../resourceTypeLabels';
+import { formatResourcePattern } from '../types';
 import {
   RolePermissionForm,
   ROLE_PERMISSION_DRAFT_DEFAULT,
@@ -72,6 +73,8 @@ export const RolePermissionsSection = ({
   onUnsavedDraftChange,
 }: RolePermissionsSectionProps) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
+  const labelFor = useResourceTypeLabel();
   const [draft, setDraft] = useState<RolePermissionDraft>(ROLE_PERMISSION_DRAFT_DEFAULT);
 
   const canAdd = isRolePermissionDraftFillable(draft);
@@ -129,13 +132,19 @@ export const RolePermissionsSection = ({
         <Table scrollable noMinHeight css={{ border: `1px solid ${theme.colors.border}` }}>
           <TableRow isHeader>
             <TableHeader componentId="admin.role_permissions.staged_type" css={{ flex: 1 }}>
-              Resource type
+              <FormattedMessage
+                defaultMessage="Resource type"
+                description="Column header for the resource type of a staged permission"
+              />
             </TableHeader>
             <TableHeader componentId="admin.role_permissions.staged_pattern" css={{ flex: 1 }}>
-              Pattern
+              <FormattedMessage
+                defaultMessage="Pattern"
+                description="Column header for a staged role permission resource pattern"
+              />
             </TableHeader>
             <TableHeader componentId="admin.role_permissions.staged_level" css={{ flex: 1 }}>
-              Permission
+              <FormattedMessage defaultMessage="Permission" description="Column header for a staged permission level" />
             </TableHeader>
             <TableHeader
               componentId="admin.role_permissions.staged_actions"
@@ -147,7 +156,7 @@ export const RolePermissionsSection = ({
           {value.map((p, i) => (
             <TableRow key={`${p.resourceType}-${p.resourcePattern}-${p.permission}-${i}`}>
               <TableCell css={{ flex: 1 }}>
-                <Tag componentId="admin.role_permissions.staged_type_tag">{getResourceTypeLabel(p.resourceType)}</Tag>
+                <Tag componentId="admin.role_permissions.staged_type_tag">{labelFor(p.resourceType)}</Tag>
               </TableCell>
               <TableCell css={{ flex: 1 }}>
                 <code>{formatResourcePattern(p.resourcePattern)}</code>
@@ -163,7 +172,13 @@ export const RolePermissionsSection = ({
                   type="tertiary"
                   size="small"
                   icon={<CloseIcon />}
-                  aria-label={`Remove ${p.resourceType} ${formatResourcePattern(p.resourcePattern)}`}
+                  aria-label={intl.formatMessage(
+                    {
+                      defaultMessage: 'Remove {resourceType} {pattern}',
+                      description: 'Accessible name for the button that removes a staged role permission',
+                    },
+                    { resourceType: p.resourceType, pattern: formatResourcePattern(p.resourcePattern) },
+                  )}
                   onClick={() => handleRemove(i)}
                   disabled={disabled}
                 />
@@ -203,11 +218,11 @@ export const RolePermissionsSection = ({
               onClick={() => setDraft(ROLE_PERMISSION_DRAFT_DEFAULT)}
               disabled={disabled}
             >
-              Clear
+              <FormattedMessage defaultMessage="Clear" description="Button that resets an unsaved permission draft" />
             </Button>
           )}
           <Button componentId="admin.role_permissions.add" onClick={handleAdd} disabled={!canAdd || disabled}>
-            Add
+            <FormattedMessage defaultMessage="Add" description="Button that stages a permission on a role or user" />
           </Button>
         </div>
       </div>

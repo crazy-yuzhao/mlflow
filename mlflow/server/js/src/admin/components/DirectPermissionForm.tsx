@@ -15,7 +15,13 @@ import {
 } from '@databricks/design-system';
 import { FieldLabel } from './FieldLabel';
 import { useResourceOptionsQuery } from '../hooks';
-import { PERMISSIONS, getGrantablePermissions, getResourceTypeLabel, isWildcardOnlyResourceType } from '../types';
+import {
+  ResourceRequiredError,
+  useResourcePickerMessages,
+  useResourceTypeLabel,
+  WildcardOnlyHint,
+} from '../resourceTypeLabels';
+import { PERMISSIONS, getGrantablePermissions, isWildcardOnlyResourceType } from '../types';
 
 // Resource types eligible for per-user direct grants. ``workspace`` is excluded
 // because the backend's ``grant_user_resource_permission`` rejects it (workspace
@@ -96,6 +102,7 @@ export const DirectPermissionForm = ({
   showResourceRequiredError = false,
 }: DirectPermissionFormProps) => {
   const { theme } = useDesignSystemTheme();
+  const labelFor = useResourceTypeLabel();
   const [search, setSearch] = useState('');
   const {
     options: resourceOptions,
@@ -113,7 +120,8 @@ export const DirectPermissionForm = ({
 
   const selectedOption = resourceOptions.find((o) => o.id === value.resourceId);
   const renderOption = (o: { id: string; name: string }) => (o.name === o.id ? o.name : `${o.name} (${o.id})`);
-  const typeLabel = getResourceTypeLabel(value.resourceType);
+  const typeLabel = labelFor(value.resourceType);
+  const picker = useResourcePickerMessages(typeLabel);
   const wildcardOnly = isWildcardOnlyResourceType(value.resourceType);
 
   return (
@@ -144,7 +152,7 @@ export const DirectPermissionForm = ({
         >
           {DIRECT_GRANT_RESOURCE_TYPES.map((rt) => (
             <SimpleSelectOption key={rt} value={rt}>
-              {getResourceTypeLabel(rt)}
+              {labelFor(rt)}
             </SimpleSelectOption>
           ))}
         </SimpleSelect>
@@ -167,13 +175,13 @@ export const DirectPermissionForm = ({
           layout="vertical"
         >
           <Radio value="specific" disabled={wildcardOnly}>
-            Specific {typeLabel.toLowerCase()}
+            {picker.specificScope}
           </Radio>
-          <Radio value="all">All {typeLabel.toLowerCase()}s</Radio>
+          <Radio value="all">{picker.allScope}</Radio>
         </Radio.Group>
         {wildcardOnly && (
           <Typography.Text color="secondary" size="sm">
-            {typeLabel} grants are workspace-wide — they cannot target one {typeLabel.toLowerCase()}.
+            <WildcardOnlyHint resourceLabel={typeLabel} />
           </Typography.Text>
         )}
       </div>
@@ -187,11 +195,7 @@ export const DirectPermissionForm = ({
               css={{ display: 'block', marginBottom: theme.spacing.xs }}
               data-testid="admin.direct_permission.resource_required_error"
             >
-              {/* "Select a specific X" keeps the "a" article correct
-                  regardless of the resource label (so "a experiment" /
-                  "a endpoint" never slips through). */}
-              Select a specific {typeLabel.toLowerCase()} or switch the scope to{' '}
-              <strong>All {typeLabel.toLowerCase()}s</strong> before submitting.
+              <ResourceRequiredError resourceLabel={typeLabel} />
             </Typography.Text>
           )}
           <DialogCombobox
@@ -201,7 +205,7 @@ export const DirectPermissionForm = ({
           >
             <DialogComboboxTrigger
               withInlineLabel={false}
-              placeholder={`Select ${typeLabel.toLowerCase()}`}
+              placeholder={picker.selectPlaceholder}
               renderDisplayedValue={() => (selectedOption ? renderOption(selectedOption) : value.resourceId)}
               onClear={() => onChange({ ...value, resourceId: '' })}
               width="100%"
@@ -210,14 +214,14 @@ export const DirectPermissionForm = ({
             <DialogComboboxContent style={{ zIndex: theme.options.zIndexBase + 100 }} loading={resourceOptionsLoading}>
               {resourceOptionsError && (
                 <div css={{ padding: theme.spacing.sm, color: theme.colors.textValidationDanger }}>
-                  Failed to load {typeLabel.toLowerCase()}s
+                  {picker.failedToLoad}
                 </div>
               )}
               <DialogComboboxOptionList>
                 <DialogComboboxOptionListSearch controlledValue={search} setControlledValue={setSearch}>
                   {filteredOptions.length === 0 && !resourceOptionsLoading ? (
                     <DialogComboboxOptionListSelectItem value="" onChange={() => {}} checked={false} disabled>
-                      {search ? 'No matching results' : 'No resources found'}
+                      {search ? picker.noMatchingResults : picker.noResourcesFound}
                     </DialogComboboxOptionListSelectItem>
                   ) : (
                     filteredOptions.map((option) => (

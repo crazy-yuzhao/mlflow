@@ -121,7 +121,12 @@ export const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
     // async path resets it. Every branch below replaces or closes.
     const trimmedUsername = username.trim();
     if (createdUsername === null && (!trimmedUsername || !password)) {
-      setError('Username and password are required');
+      setError(
+        intl.formatMessage({
+          defaultMessage: 'Username and password are required',
+          description: 'Error when the create user dialog is submitted without credentials',
+        }),
+      );
       return;
     }
 
@@ -133,7 +138,13 @@ export const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
         await createUser.mutateAsync({ username: trimmedUsername, password });
         setCreatedUsername(trimmedUsername);
       } catch (e: any) {
-        setError(e?.message || 'Failed to create user');
+        setError(
+          e?.message ||
+            intl.formatMessage({
+              defaultMessage: 'Failed to create user',
+              description: 'Error when creating a user fails',
+            }),
+        );
         setSubmitting(false);
         return;
       }
@@ -141,13 +152,25 @@ export const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
 
     // The user exists. Treat the follow-up steps as best-effort: surface
     // partial failures inline rather than rolling back the user.
+    const unknownError = intl.formatMessage({
+      defaultMessage: 'unknown error',
+      description: 'Fallback text when a failed admin request has no error message',
+    });
     const failures: string[] = [];
     if (isAdmin) {
       try {
         await AdminApi.updateAdmin({ username: trimmedUsername, is_admin: true });
         queryClient.invalidateQueries({ queryKey: AdminQueryKeys.users });
       } catch (e: any) {
-        failures.push(`Setting admin status failed: ${e?.message ?? 'unknown error'}`);
+        failures.push(
+          intl.formatMessage(
+            {
+              defaultMessage: 'Setting admin status failed: {error}',
+              description: 'Error when a new user was created but admin status could not be set',
+            },
+            { error: e?.message ?? unknownError },
+          ),
+        );
       }
     }
     if (wantsRoles) {
@@ -155,7 +178,15 @@ export const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
         try {
           await AdminApi.assignRole(trimmedUsername, roleId);
         } catch (e: any) {
-          failures.push(`Role assignment (id ${roleId}) failed: ${e?.message ?? 'unknown error'}`);
+          failures.push(
+            intl.formatMessage(
+              {
+                defaultMessage: 'Role assignment (id {roleId}) failed: {error}',
+                description: 'Error when assigning a role to a new user fails',
+              },
+              { roleId, error: e?.message ?? unknownError },
+            ),
+          );
         }
       }
       queryClient.invalidateQueries({ queryKey: AccountQueryKeys.userRoles(trimmedUsername) });
@@ -178,7 +209,18 @@ export const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
           });
         } catch (e: any) {
           failures.push(
-            `Direct permission ${p.resourceType}:${p.resourceId} → ${p.permission} failed: ${e?.message ?? 'unknown error'}`,
+            intl.formatMessage(
+              {
+                defaultMessage: 'Direct permission {resourceType}:{resourceId} → {permission} failed: {error}',
+                description: 'Error when granting a direct permission to a new user fails',
+              },
+              {
+                resourceType: p.resourceType,
+                resourceId: p.resourceId,
+                permission: p.permission,
+                error: e?.message ?? unknownError,
+              },
+            ),
           );
         }
       }
@@ -189,8 +231,16 @@ export const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
       return;
     }
     setError(
-      `User ${trimmedUsername} created, but some grants failed:\n${failures.join('\n')}\n` +
-        `Open the user's detail page and click "Edit access" to retry.`,
+      `${intl.formatMessage(
+        {
+          defaultMessage: 'User {username} created, but some grants failed:',
+          description: 'Error when a user was created but some grants failed',
+        },
+        { username: trimmedUsername },
+      )}\n${failures.join('\n')}\n${intl.formatMessage({
+        defaultMessage: 'Open the user\'s detail page and click "Edit access" to retry.',
+        description: 'Hint to finish grants for a new user from the user detail page',
+      })}`,
     );
     setSubmitting(false);
   }, [
@@ -206,6 +256,7 @@ export const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
     createUser,
     queryClient,
     grantPermission,
+    intl,
     onClose,
   ]);
 
@@ -221,7 +272,7 @@ export const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
       footer={
         <div css={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
           <Button componentId="admin.create_user_modal.cancel" onClick={onClose} disabled={submitting}>
-            Cancel
+            <FormattedMessage defaultMessage="Cancel" description="Button that closes the dialog without saving" />
           </Button>
           <Button
             componentId="admin.create_user_modal.submit"
@@ -234,10 +285,19 @@ export const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
             disabled={!canSubmit}
           >
             {createdUsername !== null
-              ? 'Retry failed grants'
+              ? intl.formatMessage({
+                  defaultMessage: 'Retry failed grants',
+                  description: 'Button that retries grants that failed after creating a user or role',
+                })
               : isAdmin || wantsRoles || wantsDirect
-                ? 'Create user and grant access'
-                : 'Create user'}
+                ? intl.formatMessage({
+                    defaultMessage: 'Create user and grant access',
+                    description: 'Button that creates a user and applies the staged roles and permissions',
+                  })
+                : intl.formatMessage({
+                    defaultMessage: 'Create user',
+                    description: 'Button that submits the create user dialog',
+                  })}
           </Button>
         </div>
       }
@@ -312,7 +372,10 @@ export const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
         defaultCollapsed
       >
         <Typography.Text color="secondary" css={{ display: 'block', marginBottom: theme.spacing.sm }}>
-          Assign one or more existing roles to give this user reusable bundles of permissions.
+          <FormattedMessage
+            defaultMessage="Assign one or more existing roles to give this user reusable bundles of permissions."
+            description="Help text in the create user dialog role assignment section"
+          />
         </Typography.Text>
         <RoleAssignmentForm value={roleValue} onChange={setRoleValue} disabled={submitting} />
       </LongFormSection>
@@ -328,7 +391,10 @@ export const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
         hideDivider={!isCurrentUserAdmin}
       >
         <Typography.Text color="secondary" css={{ display: 'block', marginBottom: theme.spacing.sm }}>
-          Grant one or more one-off permissions on specific resources.
+          <FormattedMessage
+            defaultMessage="Grant one or more one-off permissions on specific resources."
+            description="Help text in the create user dialog direct permissions section"
+          />
         </Typography.Text>
         {showWorkspaceSelector && (
           <div css={{ marginBottom: theme.spacing.md }}>
@@ -349,8 +415,10 @@ export const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
               ))}
             </SimpleSelect>
             <Typography.Text color="secondary" size="sm" css={{ display: 'block', marginTop: theme.spacing.xs }}>
-              Grants land on the user's per-workspace direct-grant role. Pick a workspace other than your active one to
-              grant access there.
+              <FormattedMessage
+                defaultMessage="Grants land on the user's per-workspace direct-grant role. Pick a workspace other than your active one to grant access there."
+                description="Help text for choosing which workspace a new user's direct permissions apply to"
+              />
             </Typography.Text>
           </div>
         )}

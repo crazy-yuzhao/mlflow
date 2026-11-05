@@ -151,6 +151,10 @@
     "defaultMessage": "Optional description",
     "description": "Webhook description placeholder"
   },
+  "+VMeEF": {
+    "defaultMessage": "Username and password are required",
+    "description": "Error when the create user dialog is submitted without credentials"
+  },
   "+WPAn1": {
     "defaultMessage": "Enter model name...",
     "description": "Placeholder for custom model input"
@@ -743,6 +747,10 @@
     "defaultMessage": "Delete logged model",
     "description": "A header of the modal used for deleting logged models"
   },
+  "0KZ8Ma": {
+    "defaultMessage": "Select a workspace from the workspace selector to choose roles.",
+    "description": "Hint shown when no workspace is active and roles cannot be listed"
+  },
   "0LfePE": {
     "defaultMessage": "Automatically evaluate new traces using this scorer",
     "description": "Hint text for automatic evaluation toggle"
@@ -810,6 +818,10 @@
   "0WTeD+": {
     "defaultMessage": "Chat completion failed",
     "description": "Title of the error alert shown on the playground when a chat completion request fails"
+  },
+  "0WrucJ": {
+    "defaultMessage": "Grants land on the user's per-workspace direct-grant role. Pick a workspace other than your active one to grant access there.",
+    "description": "Help text for choosing which workspace a new user's direct permissions apply to"
   },
   "0WzWvy": {
     "defaultMessage": "Issues detected on the trace by automatic issue detection",
@@ -1355,6 +1367,10 @@
     "defaultMessage": "10",
     "description": "Label for 10 first runs visible in run count selector within runs compare configuration modal"
   },
+  "2KRwlV": {
+    "defaultMessage": "Role \"{name}\" created, but some follow-ups failed:",
+    "description": "Error when a role was created but some grants failed"
+  },
   "2KvJ9X": {
     "defaultMessage": "Search",
     "description": "Placeholder for filtering group-by options on the experiment runs page"
@@ -1434,6 +1450,10 @@
   "2WOke0": {
     "defaultMessage": "Stage",
     "description": "Guardrail stage column header"
+  },
+  "2XAnue": {
+    "defaultMessage": "LLM endpoint",
+    "description": "Admin permission picker label for the LLM endpoint resource type"
   },
   "2XFh4r": {
     "defaultMessage": "Filter operator",
@@ -1823,6 +1843,10 @@
     "defaultMessage": "Enter a model name not listed above. Capabilities may not be detected.",
     "description": "Help text for custom model input"
   },
+  "3nZhd9": {
+    "defaultMessage": "Failed to load {resource}s",
+    "description": "Error shown when the resource picker cannot load options"
+  },
   "3oBg7C": {
     "defaultMessage": "AI Gateway",
     "description": "Feature card title for AI Gateway"
@@ -1994,6 +2018,10 @@
   "4H11jY": {
     "defaultMessage": "Add a custom expectation to this trace.",
     "description": "Hint message prompting user to add a new expectation to a trace"
+  },
+  "4HK/av": {
+    "defaultMessage": "Finish wiring up the role from the role detail page.",
+    "description": "Hint to finish a partially created role from its detail page"
   },
   "4HKr3y": {
     "defaultMessage": "Attributes",
@@ -2606,6 +2634,10 @@
   "68Lr/+": {
     "defaultMessage": "Save",
     "description": "MCP registry edit access endpoint modal save button"
+  },
+  "69uxX5": {
+    "defaultMessage": "{resourceLabel} grants are workspace-wide — they cannot target one {resource}.",
+    "description": "Hint that this resource type can only be granted across the whole workspace"
   },
   "6AUuoS": {
     "defaultMessage": "Run judge on {isTraces, select, true {traces} other {sessions}}",
@@ -3231,6 +3263,10 @@
     "defaultMessage": "Delete runs",
     "description": "Delete evaluation runs action"
   },
+  "7vHBJT": {
+    "defaultMessage": "Direct permission {resourceType}:{resourceId} → {permission} failed: {error}",
+    "description": "Error when granting a direct permission to a new user fails"
+  },
   "7vws6u": {
     "defaultMessage": "Trace",
     "description": "Button to open the raw trace from the detail"
@@ -3298,6 +3334,10 @@
   "83wDn8": {
     "defaultMessage": "Total",
     "description": "Label for the total tokensin the tooltip for the tokens cell."
+  },
+  "841cAi": {
+    "defaultMessage": "Permissions: {details}",
+    "description": "List of permissions that failed while creating a role"
   },
   "849iAo": {
     "defaultMessage": "Regression",
@@ -3678,6 +3718,10 @@
   "9EibEs": {
     "defaultMessage": "Metadata:",
     "description": "MCP server version detail metadata label"
+  },
+  "9EvRu3": {
+    "defaultMessage": "Role assignment (id {roleId}) failed: {error}",
+    "description": "Error when assigning a role to a new user fails"
   },
   "9FaThs": {
     "defaultMessage": "No providers available",
@@ -4166,6 +4210,10 @@
   "AbCFL2": {
     "defaultMessage": "Response from the endpoint after clicking Send request.",
     "description": "Response body tooltip"
+  },
+  "AbMmZg": {
+    "defaultMessage": "LLM connection",
+    "description": "Admin permission picker label for the LLM connection resource type"
   },
   "AeRhuI": {
     "defaultMessage": "Conversational guidelines",
@@ -4819,6 +4867,10 @@
     "defaultMessage": "Create and manage judges",
     "description": "Title for the empty state of the judges page"
   },
+  "CSGveC": {
+    "defaultMessage": "Create user and grant access",
+    "description": "Button that creates a user and applies the staged roles and permissions"
+  },
   "CSrxJY": {
     "defaultMessage": "Aliases allow you to assign a mutable, named reference to a particular MCP server version.",
     "description": "Description for the edit aliases modal on the MCP server detail page"
@@ -4962,6 +5014,10 @@
   "Csmj/2": {
     "defaultMessage": "Select all runs",
     "description": "Experiment page > runs table > select all rows > accessible label"
+  },
+  "Cu/EVq": {
+    "defaultMessage": "Add one or more permissions to this role. You can add more later from the role detail page.",
+    "description": "Help text in the create role dialog permissions section"
   },
   "Cu5P8e": {
     "defaultMessage": "Tokens",
@@ -5551,6 +5607,10 @@
     "defaultMessage": "Couldn't open the selected trace",
     "description": "Title of the error shown when an evaluation run cannot validate a selected trace"
   },
+  "F1cFcp": {
+    "defaultMessage": "unknown",
+    "description": "Fallback text when a failed admin request has no error message"
+  },
   "F2cMi+": {
     "defaultMessage": "API providers",
     "description": "Provider picker section label for assistant providers backed by external hosted APIs"
@@ -5631,6 +5691,10 @@
     "defaultMessage": "Endpoint Name",
     "description": "Label for endpoint name input"
   },
+  "FHte34": {
+    "defaultMessage": "No roles available",
+    "description": "Empty state when the role picker has no roles to show"
+  },
   "FI8zLo": {
     "defaultMessage": "Status:",
     "description": "MCP server version detail status label"
@@ -5698,6 +5762,10 @@
   "FZL3HX": {
     "defaultMessage": "When enabled, all requests to this endpoint will be logged as traces. This allows you to monitor usage, debug issues, and analyze performance.",
     "description": "Tooltip explaining what usage tracking does"
+  },
+  "FZNkl2": {
+    "defaultMessage": "Role name cannot be empty",
+    "description": "Error when the create role dialog is submitted without a name"
   },
   "FZPIHc": {
     "defaultMessage": "Minute",
@@ -6699,6 +6767,10 @@
     "defaultMessage": "Couldn't load the files for this version.",
     "description": "Skill version file list load error"
   },
+  "INUmqX": {
+    "defaultMessage": "{username} ({error})",
+    "description": "One user assignment that failed while creating a role"
+  },
   "INrdWe": {
     "defaultMessage": "{count, plural, one {1 trace selected} other {# traces selected}}",
     "description": "Label showing number of traces selected"
@@ -6839,6 +6911,10 @@
     "defaultMessage": "To manually instrument your own traces, the most convenient method is to use the {code} function decorator. This will cause the inputs and outputs of the function to be captured in the trace. For more information, please visit the <a>official documentation</a> for manual tracing.",
     "description": "Description of how to log custom code traces using MLflow. This message is followed by a code example. The link leads to the MLflow documentation for the user to learn more."
   },
+  "ImS7xe": {
+    "defaultMessage": "No matching roles",
+    "description": "Empty state when the role search has no matches"
+  },
   "InNAAD": {
     "defaultMessage": "Name is required",
     "description": "Validation error when no prompt name is provided in the playground save-prompt-version modal"
@@ -6870,6 +6946,10 @@
   "Itto3x": {
     "defaultMessage": "Transport",
     "description": "Endpoint drawer transport label"
+  },
+  "ItySqz": {
+    "defaultMessage": "Trace",
+    "description": "Admin permission picker label for the trace resource type"
   },
   "Iu4oRn": {
     "defaultMessage": "{totalCount, plural, one {# run} other {# runs}}",
@@ -7575,6 +7655,10 @@
     "defaultMessage": "(Draft)",
     "description": "Marker shown next to a custom trace view name when it has unsaved changes"
   },
+  "L+px7S": {
+    "defaultMessage": "Prompt version",
+    "description": "Admin permission picker label for the prompt version resource type"
+  },
   "L/4iQO": {
     "defaultMessage": "Delete",
     "description": "Label for the delete experiments action on the experiments list page"
@@ -7582,6 +7666,10 @@
   "L/U++H": {
     "defaultMessage": "Runs",
     "description": "Label for the runs tab in the MLflow experiment navbar"
+  },
+  "L/s6TJ": {
+    "defaultMessage": "Logged model",
+    "description": "Admin permission picker label for the logged model resource type"
   },
   "L0a+li": {
     "defaultMessage": "Path within the source",
@@ -7606,6 +7694,10 @@
   "L3szkg": {
     "defaultMessage": "Failed to create assessment. Error: {error}",
     "description": "Error message when creating an assessment fails"
+  },
+  "L4INin": {
+    "defaultMessage": "unknown error",
+    "description": "Fallback text when a failed admin request has no error message"
   },
   "L5JD17": {
     "defaultMessage": "Sort descending",
@@ -8026,6 +8118,10 @@
   "MOGbwm": {
     "defaultMessage": "Could not delete queue: {error}",
     "description": "Review queue: error toast when deleting a queue fails"
+  },
+  "MONhpI": {
+    "defaultMessage": "Experiment",
+    "description": "Admin permission picker label for the experiment resource type"
   },
   "MP+H1B": {
     "defaultMessage": "No webhooks configured. Create one to get started. <link>Learn more about webhooks.</link>",
@@ -8586,6 +8682,10 @@
   "O+/hDQ": {
     "defaultMessage": "For local development, MLflow uses a default passphrase. For production deployments, server administrators must set a secure encryption passphrase on the tracking server before starting it:",
     "description": "AI Gateway setup guide > Step 3 description"
+  },
+  "O+D3l/": {
+    "defaultMessage": "Pattern",
+    "description": "Column header for a staged role permission resource pattern"
   },
   "O+djDa": {
     "defaultMessage": "Copy this snippet into your project, set your API key, and run it.",
@@ -9159,6 +9259,10 @@
     "defaultMessage": "Spans",
     "description": "Header for the spans column within the MLflow trace UI"
   },
+  "Pdt0s6": {
+    "defaultMessage": "Scorer version",
+    "description": "Admin permission picker label for the scorer version resource type"
+  },
   "Pe0JMj": {
     "defaultMessage": "Failed to update password",
     "description": "Generic error when password update fails for an unknown reason"
@@ -9326,6 +9430,10 @@
   "Q1t+2P": {
     "defaultMessage": "Run judge",
     "description": "Button text for running a single judge from the run evaluation modal"
+  },
+  "Q2DS/e": {
+    "defaultMessage": "Run",
+    "description": "Admin permission picker label for the run resource type"
   },
   "Q5CR/y": {
     "defaultMessage": "Create a new key if a different name is needed.",
@@ -9531,9 +9639,17 @@
     "defaultMessage": "Retry",
     "description": "Button to retry loading a session in the V4 trace drawer"
   },
+  "QkJAmr": {
+    "defaultMessage": "{count} users selected",
+    "description": "Summary shown when more than one user is selected"
+  },
   "QnZkGt": {
     "defaultMessage": "Not configured",
     "description": "Summary not configured"
+  },
+  "Qo+4S7": {
+    "defaultMessage": "Cancel",
+    "description": "Button that closes the dialog without saving"
   },
   "QoUtJA": {
     "defaultMessage": "Run locally",
@@ -9638,6 +9754,10 @@
   "R3TrL7": {
     "defaultMessage": "Provider",
     "description": "Provider label"
+  },
+  "R4dkWL": {
+    "defaultMessage": "Failed to create user",
+    "description": "Error when creating a user fails"
   },
   "R6dCZ5": {
     "defaultMessage": "View your traces",
@@ -10082,6 +10202,10 @@
   "STEhnv": {
     "defaultMessage": "Description",
     "description": "Header for the description column in the experiments table"
+  },
+  "SUSwGw": {
+    "defaultMessage": "Setting admin status failed: {error}",
+    "description": "Error when a new user was created but admin status could not be set"
   },
   "SUbQI6": {
     "defaultMessage": "Delete",
@@ -11119,6 +11243,10 @@
     "defaultMessage": "All sources",
     "description": "Skill catalog source filter option for any source"
   },
+  "VYNaZU": {
+    "defaultMessage": "Add",
+    "description": "Button that stages a permission on a role or user"
+  },
   "VYfxMp": {
     "defaultMessage": "{hours}h ago",
     "description": "Review queue table: date-added cell, hours ago"
@@ -11126,6 +11254,10 @@
   "VYlxnd": {
     "defaultMessage": "Collapse evidence for {traceName}",
     "description": "Experiment issues tab > Evidence card > Collapse evidence"
+  },
+  "VZ3YRh": {
+    "defaultMessage": "Assign one or more users to this role. You can assign more later from the role detail page.",
+    "description": "Help text in the create role dialog user assignment section"
   },
   "VZRc73": {
     "defaultMessage": "Using the list of logged table artifacts, select at least one to start comparing results.",
@@ -11182,6 +11314,10 @@
   "VkK38/": {
     "defaultMessage": "Equivalence",
     "description": "LLM template option"
+  },
+  "VkKtHL": {
+    "defaultMessage": "Remove {resourceType} {pattern}",
+    "description": "Accessible name for the button that removes a staged role permission"
   },
   "VkQ8k5": {
     "defaultMessage": "It's been <bold>{days} days</bold> and <bold>{traceCount, plural, one {# new trace} other {# new traces}}</bold> since your last issue detection.",
@@ -11442,6 +11578,10 @@
   "WSx3WY": {
     "defaultMessage": "Sort ascending",
     "description": "Traces table column header menu item to sort the column in ascending order"
+  },
+  "WSyVHk": {
+    "defaultMessage": "Grant one or more one-off permissions on specific resources.",
+    "description": "Help text in the create user dialog direct permissions section"
   },
   "WVUF2N": {
     "defaultMessage": "Are you sure you want to delete the prompt?",
@@ -11891,6 +12031,10 @@
     "defaultMessage": "Select a queue to get started",
     "description": "Review queue: empty state title when no queue selected"
   },
+  "XqQ5Md": {
+    "defaultMessage": "Scorer",
+    "description": "Admin permission picker label for the scorer resource type"
+  },
   "Xs1oJm": {
     "defaultMessage": "Search metric charts",
     "description": "Run page > Charts tab > Filter metric charts input > placeholder"
@@ -11970,6 +12114,10 @@
   "Y4EXhe": {
     "defaultMessage": "Node {nodeId}",
     "description": "Label for a specific compute node in the node level metric charts node selector"
+  },
+  "Y4cZGv": {
+    "defaultMessage": "Registered model",
+    "description": "Admin permission picker label for the registered model resource type"
   },
   "Y5Rr5k": {
     "defaultMessage": "See less",
@@ -12570,6 +12718,10 @@
   "Zzuohs": {
     "defaultMessage": "Pinned version: v{version}",
     "description": "Pinned Skill version shown in the use-skill modal"
+  },
+  "a+LEEK": {
+    "defaultMessage": "Resource type",
+    "description": "Column header for the resource type of a staged permission"
   },
   "a02Pn6": {
     "defaultMessage": "Step",
@@ -13931,6 +14083,10 @@
     "defaultMessage": "Show all runs",
     "description": "Experiment page > compare runs tab > chart header > move down option"
   },
+  "e7K3KI": {
+    "defaultMessage": "MCP server version",
+    "description": "Admin permission picker label for the MCP server version resource type"
+  },
   "e8Fk1j": {
     "defaultMessage": "Compared to <baselineLink>evaluation baseline run</baselineLink>.",
     "description": "Tooltip explaining that a scorer delta is relative to the baseline evaluation run"
@@ -14443,6 +14599,10 @@
     "defaultMessage": "Medium",
     "description": "Medium row size"
   },
+  "fdMwV8": {
+    "defaultMessage": "No matching results",
+    "description": "Empty state when a resource search has no matches"
+  },
   "fdP5uH": {
     "defaultMessage": "{label} · R",
     "description": "Tooltip for flagging a trace for review with the keyboard shortcut"
@@ -14563,6 +14723,10 @@
     "defaultMessage": "No more results",
     "description": "Title for the traces end-of-results state"
   },
+  "fxRZOW": {
+    "defaultMessage": "Assessment",
+    "description": "Admin permission picker label for the assessment resource type"
+  },
   "fyVs2o": {
     "defaultMessage": "Examples:",
     "description": "Text header for examples of logged models search syntax"
@@ -14651,6 +14815,10 @@
     "defaultMessage": "Feedback",
     "description": "Trace filter field: feedback assessment"
   },
+  "gBIDDu": {
+    "defaultMessage": "(this grant applies to the role's workspace)",
+    "description": "Hint that a workspace permission applies to the role's own workspace"
+  },
   "gBORqQ": {
     "defaultMessage": "MLflow Assistant is not available from this client. Ask your MLflow server administrator to enable remote access if you need to use it remotely.",
     "description": "Message explaining that the Assistant is blocked by the server's remote-access settings"
@@ -14714,6 +14882,10 @@
   "gLytYK": {
     "defaultMessage": "Parameters",
     "description": "Evaluation-runs group-by parameters"
+  },
+  "gM8KzX": {
+    "defaultMessage": "{count} roles selected",
+    "description": "Summary shown when more than one role is selected"
   },
   "gMX8Zp": {
     "defaultMessage": "MLflow assistant",
@@ -14962,6 +15134,10 @@
   "gyKTCv": {
     "defaultMessage": "Run evaluation",
     "description": "Label for the page action button that opens the run-evaluation modal"
+  },
+  "gyMfiD": {
+    "defaultMessage": "Skill",
+    "description": "Admin permission picker label for the skill resource type"
   },
   "gyq74j": {
     "defaultMessage": "Trace name",
@@ -15587,6 +15763,10 @@
     "defaultMessage": "Discard unsaved role permission?",
     "description": "Title of the dialog that warns an unsaved role permission will be discarded"
   },
+  "iYMBDD": {
+    "defaultMessage": "Failed to create role",
+    "description": "Error when creating a role fails"
+  },
   "iYmFCZ": {
     "defaultMessage": "compare to",
     "description": "Label for \"to\" in compare to, which is split between two dropdowns of two runs to compare"
@@ -15806,6 +15986,10 @@
   "j5NkP3": {
     "defaultMessage": "Run issue detection",
     "description": "Experiment issues tab > Empty state action to run issue detection"
+  },
+  "j6Kn7X": {
+    "defaultMessage": "Clear",
+    "description": "Button that resets an unsaved permission draft"
   },
   "j6buGr": {
     "defaultMessage": "Start tracing your agent with one command to send traces to MLflow.",
@@ -16042,6 +16226,10 @@
   "jlGW/p": {
     "defaultMessage": "Linked span",
     "description": "Label for the span referenced by a same-trace span link"
+  },
+  "jm1owA": {
+    "defaultMessage": "Users: {details}",
+    "description": "List of user assignments that failed while creating a role"
   },
   "jmQK7U": {
     "defaultMessage": "Ref is only used for Git sources.",
@@ -16563,6 +16751,10 @@
     "defaultMessage": "This assessment is produced by a custom metric.",
     "description": "Custom judge assessment description"
   },
+  "lQIN6T": {
+    "defaultMessage": "MCP server",
+    "description": "Admin permission picker label for the MCP server resource type"
+  },
   "lRO4km": {
     "defaultMessage": "Quality",
     "description": "Label for the quality tab in the experiment overview page"
@@ -16591,9 +16783,17 @@
     "defaultMessage": "Detection runs on the server, so you can leave this page and return later.",
     "description": "Experiment issues tab > In-progress issue detection guidance about leaving the page"
   },
+  "lV9h3P": {
+    "defaultMessage": "No matching users",
+    "description": "Empty state when the user search has no matches"
+  },
   "lVtl/C": {
     "defaultMessage": "Copy SKILL.md",
     "description": "Aria label for copying the SKILL.md preview on a skill page"
+  },
+  "lWc9rw": {
+    "defaultMessage": "Create user",
+    "description": "Button that submits the create user dialog"
   },
   "lY4pBq": {
     "defaultMessage": "Delete \"{name}\"? This can't be undone.",
@@ -16670,6 +16870,10 @@
   "lncLMa": {
     "defaultMessage": "Adherence",
     "description": "Experiment issues tab > Adherence category filter option"
+  },
+  "lnjx5s": {
+    "defaultMessage": "Assign one or more existing roles to give this user reusable bundles of permissions.",
+    "description": "Help text in the create user dialog role assignment section"
   },
   "lnxy2u": {
     "defaultMessage": "Workspace",
@@ -16822,6 +17026,10 @@
   "mGUpJv": {
     "defaultMessage": "Failed to create record",
     "description": "Generic fallback save-error text for the dataset record side panel (create mode)"
+  },
+  "mGV3BR": {
+    "defaultMessage": "Review queue",
+    "description": "Admin permission picker label for the review queue resource type"
   },
   "mHAue4": {
     "defaultMessage": "Detect Issues in Your Traces",
@@ -17338,6 +17546,10 @@
   "nddV+2": {
     "defaultMessage": "Show less",
     "description": "Models table > tags column > show less toggle button"
+  },
+  "nf2r47": {
+    "defaultMessage": "{resourceType}:{pattern} → {permission} ({error})",
+    "description": "One permission that failed to attach while creating a role"
   },
   "nf5iTh": {
     "defaultMessage": "Value",
@@ -18103,6 +18315,10 @@
     "defaultMessage": "Tokens",
     "description": "Column label for tokens"
   },
+  "q011Mz": {
+    "defaultMessage": "User {username} created, but some grants failed:",
+    "description": "Error when a user was created but some grants failed"
+  },
   "q0fV0H": {
     "defaultMessage": "Latency",
     "description": "Issue category title for latency"
@@ -18214,6 +18430,10 @@
   "qKGnLV": {
     "defaultMessage": "Model Config:",
     "description": "Label for model configuration in the prompt details page"
+  },
+  "qLKhBG": {
+    "defaultMessage": "No users available",
+    "description": "Empty state when the user picker has no users to show"
   },
   "qMwRy3": {
     "defaultMessage": "Registered Models",
@@ -18831,6 +19051,10 @@
     "defaultMessage": "In progress",
     "description": "Traces table state badge label for an in-progress trace"
   },
+  "sBqqep": {
+    "defaultMessage": "Model version",
+    "description": "Admin permission picker label for the model version resource type"
+  },
   "sBsRzu": {
     "defaultMessage": "Value",
     "description": "Tag value label in unified trace tag assignment modal"
@@ -19135,6 +19359,10 @@
     "defaultMessage": "Delete skill",
     "description": "Title for confirming deletion of a skill"
   },
+  "t2GFo/": {
+    "defaultMessage": "All {resource}s",
+    "description": "Radio option for a permission scoped to every resource of this type"
+  },
   "t3mHNt": {
     "defaultMessage": "Errors",
     "description": "Title for the errors chart"
@@ -19406,6 +19634,10 @@
   "u5B9TA": {
     "defaultMessage": "Load prompt",
     "description": "Label for the playground top-bar button that opens the registered prompt picker"
+  },
+  "u7VwM9": {
+    "defaultMessage": "Select a specific {resource} or switch the scope to <strong>All {resource}s</strong> before submitting.",
+    "description": "Error shown when a specific resource has not been chosen for a permission"
   },
   "u9ZeuA": {
     "defaultMessage": "State",
@@ -19735,6 +19967,10 @@
     "defaultMessage": "Delete",
     "description": "Bulk-delete button on the roles table (no rows selected)"
   },
+  "vAjScg": {
+    "defaultMessage": "Select {resource}",
+    "description": "Placeholder for choosing one resource of the given type"
+  },
   "vBKFgp": {
     "defaultMessage": "X axis",
     "description": "Label for X axis in scatter chart configurator in compare runs chart config modal"
@@ -19995,6 +20231,10 @@
     "defaultMessage": "Sort descending",
     "description": "Label for the sort descending button in the logged model list page"
   },
+  "w0XO0e": {
+    "defaultMessage": "No resources found",
+    "description": "Empty state when a resource type has nothing to pick"
+  },
   "w0ZdqD": {
     "defaultMessage": "Last modified",
     "description": "Header for the last modified column in the Skill Registry table"
@@ -20030,6 +20270,10 @@
   "w80phd": {
     "defaultMessage": "Error",
     "description": "Title for error fallback component in experiment evaluation runs UI"
+  },
+  "w9Bhr1": {
+    "defaultMessage": "Open the user's detail page and click \"Edit access\" to retry.",
+    "description": "Hint to finish grants for a new user from the user detail page"
   },
   "wBEWh2": {
     "defaultMessage": "To make this a workspace manager role, add a permission with resource type <strong>workspace</strong>, resource pattern <strong>{pattern}</strong>, and permission <strong>MANAGE</strong> in the next section.",
@@ -20175,6 +20419,10 @@
     "defaultMessage": "Create MCP server",
     "description": "MCP servers empty state CTA button"
   },
+  "wU3DtL": {
+    "defaultMessage": "Create role",
+    "description": "Button that submits the create role dialog"
+  },
   "wU8Ziv": {
     "defaultMessage": "Which run is better?",
     "description": "Question shown while reviewing two traces side by side"
@@ -20290,6 +20538,10 @@
   "wrNl6F": {
     "defaultMessage": "Preview",
     "description": "Label for the preview mode on the registered prompt details page"
+  },
+  "wtNVz7": {
+    "defaultMessage": "Workspace",
+    "description": "Admin permission picker label for the workspace resource type"
   },
   "wtcucM": {
     "defaultMessage": "View rendered",
@@ -20659,6 +20911,10 @@
     "defaultMessage": "Hide raw tools JSON",
     "description": "Toggle to hide raw tools JSON"
   },
+  "xplNI/": {
+    "defaultMessage": "Permission",
+    "description": "Column header for a staged permission level"
+  },
   "xpwj4T": {
     "defaultMessage": "Presence Penalty",
     "description": "Label for presence penalty input"
@@ -20674,6 +20930,10 @@
   "xsZPQg": {
     "defaultMessage": "Clear",
     "description": "Experiment issues tab > Clear all filters button"
+  },
+  "xuKjD8": {
+    "defaultMessage": "Resource",
+    "description": "Column header for the resource a staged permission applies to"
   },
   "xvd8So": {
     "defaultMessage": "Logs",
@@ -20779,6 +21039,10 @@
     "defaultMessage": "{tokenCount, number} tokens",
     "description": "Compact token count in the trace details header"
   },
+  "yFBJsZ": {
+    "defaultMessage": "Prompt",
+    "description": "Admin permission picker label for the prompt resource type"
+  },
   "yFl8nB": {
     "defaultMessage": "This model will be deprecated on {date}",
     "description": "Deprecation warning in modal footer"
@@ -20866,6 +21130,10 @@
   "yXMgCt": {
     "defaultMessage": "Python",
     "description": "Python format of the skill pull instructions"
+  },
+  "yYAqQO": {
+    "defaultMessage": "Specific {resource}",
+    "description": "Radio option for a permission scoped to one resource of this type"
   },
   "yYLKl8": {
     "defaultMessage": "Please select at least 1 run to delete",
@@ -20978,6 +21246,10 @@
   "yzf17M": {
     "defaultMessage": "Some assessments are hidden by your time range filter: \"{filterLabel}\".",
     "description": "Message shown when assessments are hidden by time filter"
+  },
+  "yzgmA4": {
+    "defaultMessage": "Retry failed grants",
+    "description": "Button that retries grants that failed after creating a user or role"
   },
   "yzxYIm": {
     "defaultMessage": "Points:",
@@ -21294,6 +21566,10 @@
   "zqCgyk": {
     "defaultMessage": "Build a custom trace view",
     "description": "Heading for the custom view authoring empty state in the model trace explorer"
+  },
+  "zqtwCJ": {
+    "defaultMessage": "Remove {resourceType} {resourceId}",
+    "description": "Accessible name for the button that removes a staged direct permission"
   },
   "zt66ty": {
     "defaultMessage": "About sampling parameters",
