@@ -17,6 +17,7 @@ import { FieldLabel } from './FieldLabel';
 import { useResourceOptionsQuery } from '../hooks';
 import {
   ResourceRequiredError,
+  usePermissionLabel,
   useResourcePickerMessages,
   useResourceTypeLabel,
   WildcardOnlyHint,
@@ -103,6 +104,7 @@ export const DirectPermissionForm = ({
 }: DirectPermissionFormProps) => {
   const { theme } = useDesignSystemTheme();
   const labelFor = useResourceTypeLabel();
+  const permissionLabel = usePermissionLabel();
   const [search, setSearch] = useState('');
   const {
     options: resourceOptions,
@@ -257,7 +259,7 @@ export const DirectPermissionForm = ({
         >
           {getGrantablePermissions(value.resourceType).map((p) => (
             <SimpleSelectOption key={p} value={p}>
-              {p}
+              {permissionLabel(p)}
             </SimpleSelectOption>
           ))}
         </SimpleSelect>

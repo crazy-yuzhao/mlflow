@@ -56,5 +56,10 @@
   "Create user": "创建用户",
   "Assign one or more existing roles to give this user reusable bundles of permissions.": "为此用户分配一个或多个现有角色，以授予可复用的权限组合。",
   "Grant one or more one-off permissions on specific resources.": "为特定资源授予一项或多项一次性权限。",
-  "Grants land on the user's per-workspace direct-grant role. Pick a workspace other than your active one to grant access there.": "授权会记在该用户于各工作区的直接授权角色上。选择当前活动工作区以外的工作区，即可在该工作区授予访问权限。"
+  "Grants land on the user's per-workspace direct-grant role. Pick a workspace other than your active one to grant access there.": "授权会记在该用户于各工作区的直接授权角色上。选择当前活动工作区以外的工作区，即可在该工作区授予访问权限。",
+  "READ": "读取",
+  "USE": "使用",
+  "EDIT": "编辑",
+  "MANAGE": "管理",
+  "DENY": "拒绝"
 }
