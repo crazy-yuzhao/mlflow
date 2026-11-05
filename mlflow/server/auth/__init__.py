@@ -43,10 +43,13 @@ from flask import (
     has_request_context,
     jsonify,
     make_response,
+    redirect,
     render_template_string,
     request,
+    session,
 )
 from starlette.requests import Request as StarletteRequest
+from starlette.responses import RedirectResponse
 from starlette.responses import Response as StarletteResponse
 from starlette.routing import BaseRoute, Match, Mount
 from werkzeug.datastructures import Authorization
@@ -286,7 +289,6 @@ from mlflow.server._request_keys import (
 from mlflow.server.asgi_utils import get_routed_asgi_path
 from mlflow.server.auth.config import DEFAULT_AUTHORIZATION_FUNCTION, read_auth_config
 from mlflow.server.auth.entities import GetUserPermissionResult, User
-from mlflow.server.auth.logo import MLFLOW_LOGO
 from mlflow.server.auth.permissions import (
     DENY as DENY,
 )
@@ -411,6 +413,8 @@ from mlflow.server.auth.routes import (
     LIST_USER_PERMISSIONS,
     LIST_USER_ROLES,
     LIST_USERS,
+    LOGIN,
+    LOGOUT,
     ONLINE_SCORING_CONFIG,
     ONLINE_SCORING_CONFIGS,
     REMOVE_ROLE_PERMISSION,
@@ -631,6 +635,12 @@ def _invalidate_user_auth_cache(username: str) -> None:
 _UNPROTECTED_PATH_PREFIXES = ("/static", "/favicon.ico", "/health")
 
 
+def _is_public_auth_page(path: str) -> bool:
+    # Exact match only: a prefix check would also exempt ``/login-admin`` and friends.
+    normalized = path[:-1] if len(path) > 1 and path.endswith("/") else path
+    return normalized in {LOGIN, LOGOUT}
+
+
 def is_unprotected_route(path: str) -> bool:
     # When ``_MLFLOW_STATIC_PREFIX`` is set, the health/static routes are
     # actually served from e.g. ``/mlflow/health``, not ``/health``. Strip the
@@ -639,13 +649,37 @@ def is_unprotected_route(path: str) -> bool:
     bare_path = _strip_static_prefix(path)
     if bare_path.startswith(_UNPROTECTED_PATH_PREFIXES):
         return True
+    # Login and logout must render for anonymous browsers. Signup stays gated.
+    if _is_public_auth_page(bare_path):
+        return True
     # Server-info is public, including on a basic-auth server, so a client can read
     # how the server is configured before logging in. Keep the payload free of
     # secrets; see build_server_info_payload.
     return _matches_route_suffix(bare_path, _PUBLIC_ROUTE_SUFFIXES)
 
 
+def _request_should_see_login_page() -> bool:
+    # Custom authorization plugins keep their own challenge. Only the built-in
+    # basic-auth app replaces the browser popup with /login.
+    if auth_config.authorization_function != DEFAULT_AUTHORIZATION_FUNCTION:
+        return False
+    if not has_request_context():
+        return False
+    from mlflow.server.auth.login_ui import prefers_browser_login_page
+
+    return prefers_browser_login_page(request.headers)
+
+
 def make_basic_auth_response() -> Response:
+    if _request_should_see_login_page():
+        from mlflow.server.auth.login_ui import login_redirect_location
+
+        query = request.query_string.decode("latin-1")
+        location = login_redirect_location(request.path, query)
+        response = redirect(location, code=302)
+        response.headers["Cache-Control"] = "no-store"
+        response.headers["Vary"] = "Accept"
+        return response
     res = make_response(
         "You are not authenticated. Please see "
         "https://www.mlflow.org/docs/latest/auth/index.html#authenticating-to-mlflow "
@@ -5964,24 +5998,78 @@ def get_auth_func(authorization_function: str) -> Callable[[], Authorization | R
     return getattr(module, fn_name)
 
 
-def authenticate_request_basic_auth() -> Authorization | Response:
-    """Authenticate the request using basic auth."""
-    if request.authorization is None:
-        return make_basic_auth_response()
-
-    username = request.authorization.username
-    password = request.authorization.password
+def _basic_authorization_matches(authorization: Authorization) -> bool:
+    username = authorization.username
+    password = authorization.password
+    if not username or password is None:
+        return False
     # When the cache is disabled, don't pay the extra get_user round-trip that
     # _authenticate_cached does for the sake of cache-population — the Flask
     # path only cares about the yes/no auth decision.
     if _USER_AUTH_CACHE is None:
-        if store.authenticate_user(username, password) and not _is_disabled_legacy_admin_login(
-            username, password
-        ):
-            return request.authorization
-    elif _authenticate_cached(username, password):
-        return request.authorization
-    # let user attempt login again
+        return bool(
+            store.authenticate_user(username, password)
+            and not _is_disabled_legacy_admin_login(username, password)
+        )
+    return _authenticate_cached(username, password) is not None
+
+
+def _user_for_login_session(username: object, tag: object) -> User | None:
+    from mlflow.server.auth.login_ui import password_tag
+
+    if not isinstance(username, str) or not username or not isinstance(tag, str):
+        return None
+    try:
+        user = store.get_user(username)
+    except MlflowException:
+        return None
+    expected = password_tag(user.password_hash or "")
+    if not expected or len(expected) != len(tag) or not hmac.compare_digest(expected, tag):
+        return None
+    return user
+
+
+def _authorization_from_login_session() -> Authorization | None:
+    if not has_request_context():
+        return None
+    from mlflow.server.auth.login_ui import SESSION_PASSWORD_TAG_KEY, SESSION_USERNAME_KEY
+
+    user = _user_for_login_session(
+        session.get(SESSION_USERNAME_KEY), session.get(SESSION_PASSWORD_TAG_KEY)
+    )
+    if user is None:
+        return None
+    return Authorization("basic", {"username": user.username, "password": ""})
+
+
+def _user_from_login_session_cookie(cookie_value: object) -> User | None:
+    from mlflow.server.auth.login_ui import (
+        SESSION_PASSWORD_TAG_KEY,
+        SESSION_USERNAME_KEY,
+        decode_flask_session,
+    )
+
+    if not isinstance(cookie_value, str) or not cookie_value:
+        return None
+    data = decode_flask_session(cookie_value)
+    if data is None:
+        return None
+    return _user_for_login_session(
+        data.get(SESSION_USERNAME_KEY), data.get(SESSION_PASSWORD_TAG_KEY)
+    )
+
+
+def authenticate_request_basic_auth() -> Authorization | Response:
+    """Authenticate the request using HTTP Basic credentials or a browser login session."""
+    authorization = request.authorization
+    if authorization is not None and _basic_authorization_matches(authorization):
+        return authorization
+    # Browsers keep replaying cached Basic credentials after logout overwrites them
+    # with a bogus pair. Those headers are not a deliberate API call: if they fail,
+    # a valid login-session cookie still authenticates the UI. curl and the MLflow
+    # client do not send that cookie, so a wrong password is still a 401.
+    if (session_authorization := _authorization_from_login_session()) is not None:
+        return session_authorization
     return make_basic_auth_response()
 
 
@@ -7936,80 +8024,82 @@ def alert(href: str):
     )
 
 
+def _html_response(body: str, status: int = HTTPStatus.OK) -> Response:
+    response = make_response(body, status)
+    response.headers["Content-Type"] = "text/html; charset=utf-8"
+    response.headers["Cache-Control"] = "no-store"
+    response.headers.pop("WWW-Authenticate", None)
+    return response
+
+
 def signup():
-    return render_template_string(
-        r"""
-<style>
-  form {
-    background-color: #F5F5F5;
-    border: 1px solid #CCCCCC;
-    border-radius: 4px;
-    padding: 20px;
-    max-width: 400px;
-    margin: 0 auto;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    line-height: 1.5;
-  }
+    from flask_wtf.csrf import generate_csrf
 
-  input[type=text], input[type=password] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #CCCCCC;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  input[type=submit] {
-    background-color: rgb(34, 114, 180);
-    color: #FFFFFF;
-    border: none;
-    border-radius: 4px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-  }
+    from mlflow.server.auth.login_ui import render_signup_page
 
-  input[type=submit]:hover {
-    background-color: rgb(14, 83, 139);
-  }
+    return _html_response(render_signup_page(csrf_token=generate_csrf()))
 
-  .logo-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 10px;
-  }
 
-  .logo {
-    max-width: 150px;
-    margin-right: 10px;
-  }
-</style>
+def login(csrf):
+    from flask_wtf.csrf import generate_csrf
 
-<form action="{{ users_route }}" method="post">
-  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-  <div class="logo-container">
-    {% autoescape false %}
-    {{ mlflow_logo }}
-    {% endautoescape %}
-  </div>
-  <label for="username">Username:</label>
-  <br>
-  <input type="text" id="username" name="username" minlength="4">
-  <br>
-  <label for="password">Password:</label>
-  <br>
-  <input type="password" id="password" name="password" minlength="12">
-  <br>
-  <br>
-  <input type="submit" value="Sign up">
-</form>
-""",
-        mlflow_logo=MLFLOW_LOGO,
-        users_route=CREATE_USER_UI,
+    from mlflow.server.auth.login_ui import (
+        SESSION_PASSWORD_TAG_KEY,
+        SESSION_USERNAME_KEY,
+        password_tag,
+        render_login_page,
+        safe_next_url,
     )
+
+    if request.method == "POST":
+        csrf.protect()
+        username = (request.form.get("username") or "").strip()
+        password = request.form.get("password") or ""
+        nxt = safe_next_url(request.form.get("next"))
+        if not username or not password:
+            return _html_response(
+                render_login_page(
+                    csrf_token=generate_csrf(),
+                    username=username,
+                    next_url=nxt,
+                    error="请输入用户名和密码",
+                ),
+                HTTPStatus.UNAUTHORIZED,
+            )
+        user = _authenticate_cached(username, password)
+        if user is None:
+            return _html_response(
+                render_login_page(
+                    csrf_token=generate_csrf(),
+                    username=username,
+                    next_url=nxt,
+                    error="用户名或密码不正确",
+                ),
+                HTTPStatus.UNAUTHORIZED,
+            )
+        session.clear()
+        session[SESSION_USERNAME_KEY] = user.username
+        session[SESSION_PASSWORD_TAG_KEY] = password_tag(user.password_hash or "")
+        session.permanent = True
+        response = redirect(nxt, code=HTTPStatus.SEE_OTHER)
+        response.headers["Cache-Control"] = "no-store"
+        return response
+
+    nxt = safe_next_url(request.args.get("next"))
+    return _html_response(
+        render_login_page(csrf_token=generate_csrf(), next_url=nxt),
+    )
+
+
+def logout():
+    from mlflow.server.auth.login_ui import render_logout_page
+
+    session.clear()
+    # Bogus basic-auth user so the page can overwrite credentials the browser cached
+    # from an earlier native prompt. The value changes per response so it cannot
+    # collide with a real account.
+    bogus_user = f"mlflow-logged-out-{secrets.token_hex(8)}"
+    return _html_response(render_logout_page(bogus_user=bogus_user))
 
 
 @catch_mlflow_exception
@@ -8669,13 +8759,21 @@ def _authenticate_fastapi_request(request: StarletteRequest) -> User | None:
         return user
 
     request_path = _strip_static_prefix(get_routed_asgi_path(request))
-    if not (credentials := _basic_auth_credentials(request, request_path)):
-        return None
-    username, password = credentials
-    try:
-        return _authenticate_cached(username, password)
-    except Exception:
-        return None
+    if credentials := _basic_auth_credentials(request, request_path):
+        username, password = credentials
+        try:
+            if user := _authenticate_cached(username, password):
+                return user
+        except Exception:
+            return None
+    # Same session fallback as the Flask path. Native FastAPI routes (gateway, jobs,
+    # artifacts) otherwise ignore the cookie set by POST /login.
+    from mlflow.server.auth.login_ui import session_cookie_name
+
+    cookies = getattr(request, "cookies", None)
+    getter = getattr(cookies, "get", None)
+    cookie_value = getter(session_cookie_name()) if callable(getter) else None
+    return _user_from_login_session_cookie(cookie_value)
 
 
 def _authenticate_custom_for_fastapi(
@@ -9757,6 +9855,28 @@ def authenticate_fastapi_request_user(
     return _authenticate_fastapi_request(request)
 
 
+def _fastapi_unauthenticated_response(request: StarletteRequest) -> StarletteResponse:
+    from mlflow.server.auth.login_ui import login_redirect_location, prefers_browser_login_page
+
+    if (
+        auth_config.authorization_function == DEFAULT_AUTHORIZATION_FUNCTION
+        and prefers_browser_login_page(request.headers)
+    ):
+        location = login_redirect_location(get_routed_asgi_path(request), request.url.query or "")
+        return RedirectResponse(
+            location,
+            status_code=HTTPStatus.FOUND,
+            headers={"Cache-Control": "no-store", "Vary": "Accept"},
+        )
+    return PlainTextResponse(
+        "You are not authenticated. Please see "
+        "https://www.mlflow.org/docs/latest/auth/index.html#authenticating-to-mlflow "
+        "on how to authenticate.",
+        status_code=HTTPStatus.UNAUTHORIZED,
+        headers={"WWW-Authenticate": 'Basic realm="mlflow"'},
+    )
+
+
 def add_fastapi_permission_middleware(app: FastAPI) -> None:
     """
     Add permission middleware to FastAPI app for routes not handled by Flask.
@@ -9822,13 +9942,7 @@ def add_fastapi_permission_middleware(app: FastAPI) -> None:
                 content=json.loads(e.serialize_as_json()),
             )
         if user is None:
-            return PlainTextResponse(
-                "You are not authenticated. Please see "
-                "https://www.mlflow.org/docs/latest/auth/index.html#authenticating-to-mlflow "
-                "on how to authenticate.",
-                status_code=HTTPStatus.UNAUTHORIZED,
-                headers={"WWW-Authenticate": 'Basic realm="mlflow"'},
-            )
+            return _fastapi_unauthenticated_response(request)
 
         # Store user info in request state for downstream handlers (e.g., gateway tracing)
         request.state.username = user.username
@@ -10022,10 +10136,14 @@ def create_app(app: Flask = app):
     # CSRF protection. it's important that this is a static key,
     # otherwise CSRF validation won't work across workers.
     app.secret_key = get_flask_server_secret_key()
+    # The login session is an HttpOnly cookie. SameSite=Lax keeps it off cross-site
+    # POSTs while still sending it on same-site UI navigations and fetch().
+    app.config["SESSION_COOKIE_HTTPONLY"] = True
+    app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+    app.config["SESSION_COOKIE_NAME"] = "mlflow_session"
 
-    # we only need to protect the CREATE_USER_UI route, since that's
-    # the only browser-accessible route. the rest are client / REST
-    # APIs that do not have access to the CSRF token for validation
+    # Browser forms (login and the create-user page) opt into CSRF with csrf.protect().
+    # REST clients do not have a token, so the check stays off unless a view asks for it.
     app.config["WTF_CSRF_CHECK_DEFAULT"] = False
     csrf = CSRFProtect()
     csrf.init_app(app)
@@ -10038,6 +10156,23 @@ def create_app(app: Flask = app):
         rule=SIGNUP,
         view_func=signup,
         methods=["GET"],
+    )
+
+    def _login_view():
+        return login(csrf)
+
+    _login_view.__name__ = "login"
+    from mlflow.server.auth.login_ui import login_path, logout_path
+
+    app.add_url_rule(
+        rule=login_path(),
+        view_func=_login_view,
+        methods=["GET", "POST"],
+    )
+    app.add_url_rule(
+        rule=logout_path(),
+        view_func=logout,
+        methods=["GET", "POST"],
     )
     app.add_url_rule(
         rule=CREATE_USER_UI,
