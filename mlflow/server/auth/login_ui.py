@@ -12,6 +12,7 @@ import os
 import re
 import urllib.parse
 from collections.abc import Mapping
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -22,6 +23,11 @@ from mlflow.server.handlers import STATIC_PREFIX_ENV_VAR
 
 SESSION_USERNAME_KEY = "mlflow_basic_auth_username"
 SESSION_PASSWORD_TAG_KEY = "mlflow_basic_auth_pw_tag"
+# 「7 天内保持登录」. The browser cookie expires after this window when the box is
+# checked. Server-side signature checks still use ``permanent_session_lifetime``,
+# which ``install_remember_me_session`` raises to at least this long.
+REMEMBER_ME_LIFETIME = timedelta(days=7)
+_REMEMBER_FORM_VALUES = {"1", "on", "true", "yes"}
 
 _TEMPLATE = Environment(autoescape=True).from_string(
     (Path(__file__).parent / "templates" / "auth_page.html").read_text(encoding="utf-8")
@@ -194,12 +200,59 @@ def session_cookie_name() -> str:
     return app.config.get("SESSION_COOKIE_NAME", "session")
 
 
+def remember_requested(value: str | None) -> bool:
+    return (value or "").strip().lower() in _REMEMBER_FORM_VALUES
+
+
+def install_remember_me_session(app) -> None:
+    """Let a checked remember-me box issue a cookie the server will still accept.
+
+    Flask validates the session signature against ``permanent_session_lifetime``
+    (31 days by default). A deployment that configured a shorter lifetime would
+    drop a seven-day cookie early, so raise that floor once at startup. The
+    browser expiry itself is applied per login in ``apply_remember_me``.
+    """
+    if app.permanent_session_lifetime < REMEMBER_ME_LIFETIME:
+        app.permanent_session_lifetime = REMEMBER_ME_LIFETIME
+    interface = app.session_interface
+    if getattr(interface, "_mlflow_remember_wrapped", False):
+        return
+    original = interface.get_expiration_time
+
+    def get_expiration_time(app, session):
+        lifetime = getattr(session, "mlflow_auth_lifetime", None)
+        if lifetime is not None and session.permanent:
+            return datetime.now(timezone.utc) + lifetime
+        return original(app, session)
+
+    interface.get_expiration_time = get_expiration_time
+    interface._mlflow_remember_wrapped = True
+
+
+def apply_remember_me(session, *, remember: bool) -> None:
+    """Checked: persistent cookie for seven days. Unchecked: browser session cookie.
+
+    The basic-auth login already stores a permanent session. Checking the box
+    keeps that persistence and sets the browser expiry to seven days (shorter
+    than Flask's 31-day default, which is what the label promises). Leaving it
+    unchecked drops ``Expires`` so the cookie ends when the browser closes.
+    """
+    if remember:
+        session.permanent = True
+        session.mlflow_auth_lifetime = REMEMBER_ME_LIFETIME
+        return
+    session.permanent = False
+    if hasattr(session, "mlflow_auth_lifetime"):
+        del session.mlflow_auth_lifetime
+
+
 def render_login_page(
     *,
     csrf_token: str,
     username: str = "",
     next_url: str = "/",
     error: str | None = None,
+    remember: bool = True,
 ) -> str:
     return _render(
         page="login",
@@ -208,19 +261,9 @@ def render_login_page(
         username=username,
         next_url=next_url,
         error=error or "",
-        subtitle="企业级模型评测与追踪",
-        submit_label="登录",
-        username_placeholder="请输入用户名",
-        password_placeholder="请输入密码",
+        remember=remember,
         password_autocomplete="current-password",
-        alt_prefix="还没有账号？",
-        alt_label="注册",
-        alt_href=_signup_path(),
-        show_next=True,
         show_fields=True,
-        username_minlength="",
-        password_minlength="",
-        password_hint="",
     )
 
 
@@ -232,15 +275,8 @@ def render_signup_page(*, csrf_token: str) -> str:
         username="",
         next_url="",
         error="",
-        subtitle="创建账号",
-        submit_label="注册",
-        username_placeholder="请输入用户名",
-        password_placeholder="至少 12 位密码",
         password_autocomplete="new-password",
-        alt_prefix="已有账号？",
-        alt_label="登录",
         alt_href=login_path(),
-        show_next=False,
         show_fields=True,
         username_minlength="4",
         password_minlength="12",
@@ -273,27 +309,10 @@ def render_logout_page(*, bogus_user: str) -> str:
         username="",
         next_url="",
         error="",
-        subtitle="正在退出登录",
-        submit_label="",
-        username_placeholder="",
-        password_placeholder="",
-        password_autocomplete="",
-        alt_prefix="",
-        alt_label="返回登录",
         alt_href=login_url,
-        show_next=False,
         show_fields=False,
-        username_minlength="",
-        password_minlength="",
-        password_hint="",
         logout_script=Markup(f"<script>{script}</script>"),
     )
-
-
-def _signup_path() -> str:
-    from mlflow.server.auth.routes import SIGNUP
-
-    return SIGNUP
 
 
 def _signup_action() -> str:
@@ -302,6 +321,28 @@ def _signup_action() -> str:
     return CREATE_USER_UI
 
 
+def _js_string(value: str) -> Markup:
+    encoded = (
+        json
+        .dumps(value, ensure_ascii=False)
+        .replace("<", "\\u003c")
+        .replace(">", "\\u003e")
+        .replace("&", "\\u0026")
+    )
+    return Markup(encoded)
+
+
 def _render(**context: object) -> str:
     context.setdefault("logout_script", Markup(""))
+    context.setdefault("error", "")
+    context.setdefault("remember", True)
+    context.setdefault("username", "")
+    context.setdefault("next_url", "/")
+    context.setdefault("username_minlength", "")
+    context.setdefault("password_minlength", "")
+    context.setdefault("password_hint", "")
+    context.setdefault("password_autocomplete", "")
+    context.setdefault("alt_href", "")
+    context.setdefault("show_fields", False)
+    context["error_js"] = _js_string(str(context.get("error") or ""))
     return _TEMPLATE.render(**context)

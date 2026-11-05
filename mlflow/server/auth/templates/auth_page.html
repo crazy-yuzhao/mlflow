@@ -1,293 +1,351 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex" />
-    <title>评测平台</title>
-    <link
-      rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 54 54'%3E%3Ccircle cx='27' cy='27' r='27' fill='%23e8f8ef'/%3E%3Ccircle cx='27' cy='27' r='17' fill='none' stroke='%2322a559' stroke-width='5'/%3E%3Cpath d='M19 27.2 l5.2 5.2 11-11.6' fill='none' stroke='%231f9d4e' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
-    />
-    <style>
-      :root {
-        color-scheme: light;
-        --ink: #1c2128;
-        --muted: #8b939e;
-        --line: #e4e8ee;
-        --green: #22a559;
-        --green-dark: #178a46;
-        --danger: #c2413a;
-        --danger-bg: #fff4f2;
-      }
-      * { box-sizing: border-box; }
-      html, body { height: 100%; }
-      body {
-        margin: 0;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 28px 16px;
-        font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", "Segoe UI", sans-serif;
-        color: var(--ink);
-        background:
-          radial-gradient(980px 560px at -8% 8%, rgba(186, 228, 200, 0.95), transparent 58%),
-          radial-gradient(860px 620px at 108% 100%, rgba(186, 206, 220, 0.9), transparent 52%),
-          linear-gradient(118deg, #e7f6ee 0%, #eef4f2 42%, #e4eef3 100%);
-      }
-      .card {
-        width: min(460px, 100%);
-        background: rgba(255, 255, 255, 0.94);
-        border: 1px solid rgba(255, 255, 255, 0.85);
-        border-radius: 22px;
-        box-shadow:
-          0 1px 1px rgba(32, 48, 40, 0.04),
-          0 22px 50px rgba(48, 78, 68, 0.1);
-        padding: 36px 36px 26px;
-        backdrop-filter: blur(16px);
-      }
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        margin-bottom: 28px;
-      }
-      .brand h1 {
-        margin: 0;
-        font-size: 28px;
-        line-height: 1.15;
-        font-weight: 700;
-        letter-spacing: 0.01em;
-      }
-      .brand p {
-        margin: 4px 0 0;
-        color: var(--muted);
-        font-size: 14px;
-        line-height: 1.4;
-      }
-      .error {
-        margin: 0 0 16px;
-        padding: 10px 12px;
-        border-radius: 10px;
-        background: var(--danger-bg);
-        color: var(--danger);
-        font-size: 14px;
-        line-height: 1.45;
-      }
-      .field {
-        display: grid;
-        grid-template-columns: 64px minmax(0, 1fr);
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 16px;
-      }
-      .field label {
-        font-size: 15px;
-        color: #3c4450;
-      }
-      .control { position: relative; }
-      input[type="text"], input[type="password"] {
-        width: 100%;
-        height: 42px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        padding: 0 12px;
-        font: inherit;
-        font-size: 14px;
-        color: var(--ink);
-        background: #fff;
-        outline: none;
-      }
-      input[type="password"] { padding-right: 40px; }
-      input::placeholder { color: #b4bac3; }
-      input:focus {
-        border-color: var(--green);
-        box-shadow: 0 0 0 3px rgba(34, 165, 89, 0.16);
-      }
-      .eye {
-        position: absolute;
-        top: 50%;
-        right: 6px;
-        transform: translateY(-50%);
-        width: 32px;
-        height: 32px;
-        border: 0;
-        padding: 0;
-        background: transparent;
-        color: #98a0aa;
-        cursor: pointer;
-        border-radius: 6px;
-      }
-      .eye:hover, .eye:focus-visible { color: #5d6772; background: #f4f6f8; }
-      .hint {
-        margin: -8px 0 12px 76px;
-        color: var(--muted);
-        font-size: 12px;
-      }
-      button[type="submit"] {
-        width: 100%;
-        height: 46px;
-        margin-top: 8px;
-        border: 0;
-        border-radius: 8px;
-        background: var(--green);
-        color: #fff;
-        font: inherit;
-        font-size: 16px;
-        font-weight: 600;
-        letter-spacing: 0.08em;
-        cursor: pointer;
-      }
-      button[type="submit"]:hover { background: var(--green-dark); }
-      button[type="submit"]:focus-visible { outline: 3px solid rgba(34, 165, 89, 0.35); outline-offset: 2px; }
-      .switch {
-        margin: 16px 0 0;
-        text-align: center;
-        color: #5c6570;
-        font-size: 14px;
-      }
-      .switch a {
-        color: var(--green);
-        font-weight: 600;
-        text-decoration: none;
-      }
-      .switch a:hover { text-decoration: underline; }
-      .footer {
-        margin: 22px 0 0;
-        text-align: center;
-        color: #a3aab3;
-        font-size: 12px;
-        letter-spacing: 0.02em;
-      }
-      .logout-note {
-        margin: 0;
-        text-align: center;
-        color: #5c6570;
-        font-size: 14px;
-        line-height: 1.6;
-      }
-      @media (max-width: 520px) {
-        .card { padding: 28px 20px 22px; border-radius: 18px; }
-        .field { grid-template-columns: 1fr; gap: 6px; }
-        .hint { margin-left: 0; }
-        .brand h1 { font-size: 24px; }
-      }
-    </style>
-  </head>
-  <body>
-    <main class="card">
-      <div class="brand">
-        <svg class="mark" width="54" height="54" viewBox="0 0 54 54" aria-hidden="true">
-          <circle cx="27" cy="27" r="27" fill="#e8f8ef" />
-          <circle cx="27" cy="27" r="17" fill="none" stroke="#d7f3e3" stroke-width="5" />
-          <path
-            d="M27 10 a17 17 0 1 1 -14.7 8.4"
-            fill="none"
-            stroke="#22a559"
-            stroke-width="5"
-            stroke-linecap="round"
-          />
-          <path
-            d="M19 27.2 l5.2 5.2 11-11.6"
-            fill="none"
-            stroke="#1f9d4e"
-            stroke-width="3.2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10211f">
+  <meta name="robots" content="noindex">
+  <title>衡鉴 · Agent 评测平台</title>
+  <link
+    rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%2310211f'/%3E%3Cpath d='M20 6.2 32.6 13.4v14.2L20 34.8 7.4 27.6V13.4L20 6.2Z' stroke='%23D7F36A' stroke-width='1.2' fill='none'/%3E%3Cpath d='M13.2 24.2h3.2v3.1h-3.2zm5.4-5.4h3.2v8.5h-3.2zm5.4-4.3h3.2v12.8h-3.2' fill='%23D7F36A'/%3E%3C/svg%3E"
+  >
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #142320;
+      --muted: #73807b;
+      --paper: #f4f3ee;
+      --line: #e4e7df;
+      --forest: #10211f;
+      --forest-2: #19312d;
+      --lime: #d7f36a;
+      --lime-deep: #badb48;
+      --coral: #ef8664;
+      --sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      --display: "Avenir Next", "Gill Sans", "Trebuchet MS", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .page { min-height: 100vh; display: grid; grid-template-columns: minmax(560px, 1.12fr) minmax(430px, .88fr); }
+    .story {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      padding: 35px clamp(34px, 5vw, 76px) 30px;
+      color: #f3f6ed;
+      background:
+        radial-gradient(ellipse at 77% 17%, rgba(73, 115, 96, .22), transparent 38%),
+        radial-gradient(ellipse at 6% 96%, rgba(75, 112, 94, .18), transparent 36%),
+        var(--forest);
+      isolation: isolate;
+    }
+    .story::before {
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      content: "";
+      opacity: .17;
+      background-image: linear-gradient(rgba(218, 239, 202, .11) 1px, transparent 1px), linear-gradient(90deg, rgba(218, 239, 202, .11) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: linear-gradient(130deg, black, transparent 78%);
+    }
+    .story::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      width: 370px;
+      height: 370px;
+      border: 1px solid rgba(215, 243, 106, .09);
+      border-radius: 50%;
+      top: 7%;
+      right: -190px;
+      box-shadow: 0 0 0 34px rgba(215,243,106,.025), 0 0 0 68px rgba(215,243,106,.018);
+    }
+    .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
+    .brand-mark { width: 38px; height: 38px; flex: none; }
+    .brand-name { display: grid; gap: 2px; }
+    .brand-name strong { font-size: 18px; font-weight: 650; letter-spacing: .11em; }
+    .brand-name span { color: #9bada5; font-family: var(--display); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; }
+    .edition { position: absolute; top: 43px; right: clamp(34px, 5vw, 76px); color: #83968d; font: 10px var(--display); letter-spacing: .19em; }
+    .hero { position: relative; z-index: 1; max-width: 610px; margin-top: clamp(54px, 8vh, 94px); }
+    .eyebrow { display: flex; align-items: center; gap: 10px; color: #b5c4a8; font-size: 11px; letter-spacing: .14em; }
+    .eyebrow::before { content: ""; width: 23px; height: 1px; background: var(--lime); }
+    h1 { margin: 20px 0 16px; font-size: clamp(34px, 4.15vw, 57px); line-height: 1.24; letter-spacing: -.055em; font-weight: 560; }
+    h1 em { color: var(--lime); font-style: normal; }
+    .intro { max-width: 510px; margin: 0; color: #aebcb4; font-size: 14px; line-height: 1.95; letter-spacing: .015em; }
+    .console {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 650px);
+      margin: clamp(38px, 6vh, 66px) 0 0 auto;
+      padding: 17px 18px 15px;
+      border: 1px solid rgba(187, 211, 189, .18);
+      border-radius: 13px;
+      background: linear-gradient(135deg, rgba(34, 58, 52, .92), rgba(22, 42, 38, .92));
+      box-shadow: 0 24px 70px rgba(0,0,0,.22), inset 0 1px rgba(255,255,255,.04);
+      transform: perspective(1200px) rotateY(-2deg) rotateX(1deg);
+      animation: rise .8s cubic-bezier(.2,.7,.2,1) both;
+    }
+    .console-top { display: flex; align-items: center; justify-content: space-between; padding: 0 0 13px; border-bottom: 1px solid rgba(190, 213, 196, .12); }
+    .console-title { display: flex; align-items: center; gap: 9px; font-size: 11px; color: #e6eee3; letter-spacing: .03em; }
+    .live { width: 6px; height: 6px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 11px rgba(215,243,106,.8); }
+    .run-id { color: #82958a; font: 9px var(--display); letter-spacing: .1em; }
+    .console-body { display: grid; grid-template-columns: 1fr 164px; gap: 18px; padding-top: 15px; }
+    .chart-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
+    .chart-head span:first-child { color: #9bad9f; font-size: 10px; }
+    .chart-head strong { color: #f1f4e9; font: 22px var(--display); font-weight: 500; }
+    .chart-head small { color: var(--lime); font: 9px var(--display); margin-left: 5px; }
+    .chart { display: block; width: 100%; height: 95px; overflow: visible; }
+    .chart-labels { display: flex; justify-content: space-between; margin-top: -1px; color: #758980; font: 8px var(--display); }
+    .metrics { display: grid; gap: 8px; }
+    .metric { padding: 10px 11px; border: 1px solid rgba(193,215,191,.11); border-radius: 8px; background: rgba(8,25,21,.23); }
+    .metric-label { display: flex; align-items: center; justify-content: space-between; color: #93a49a; font-size: 9px; }
+    .metric-label i { color: var(--lime); font: normal 8px var(--display); }
+    .metric-value { margin-top: 5px; color: #f1f5e9; font: 19px var(--display); letter-spacing: -.04em; }
+    .metric-value span { color: #91a39a; font: 9px var(--sans); margin-left: 3px; }
+    .run-strip { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; padding-top: 11px; border-top: 1px solid rgba(190, 213, 196, .12); color: #93a59a; font-size: 9px; }
+    .run-strip strong { color: #dfe9dc; font-weight: 500; }
+    .run-strip .pass { color: var(--lime); }
+    .story-foot { position: absolute; left: clamp(34px, 5vw, 76px); right: clamp(34px, 5vw, 76px); bottom: 27px; display: flex; justify-content: space-between; align-items: center; color: #70837a; font: 9px var(--display); letter-spacing: .09em; }
+    .story-foot span:last-child { color: #8b9b92; font-family: var(--sans); letter-spacing: .02em; }
+
+    .access { position: relative; display: grid; place-items: center; min-height: 100vh; padding: 56px clamp(30px, 5.2vw, 82px) 70px; background: var(--paper); }
+    .access::before { position: absolute; content: ""; inset: 18px; border: 1px solid rgba(34, 57, 49, .055); pointer-events: none; }
+    .access-inner { width: min(100%, 390px); animation: fade-in .7s .1s both; }
+    .form-kicker { margin: 0 0 12px; color: #809087; font: 10px var(--display); letter-spacing: .19em; text-transform: uppercase; }
+    h2 { margin: 0; font-size: 30px; letter-spacing: -.055em; font-weight: 620; }
+    .form-sub { margin: 10px 0 35px; color: #89918b; font-size: 12px; line-height: 1.7; }
+    .field { margin-bottom: 19px; }
+    .field-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 9px; color: #374640; font-size: 11px; font-weight: 550; }
+    .field-head a { color: #788d56; text-decoration: none; font-size: 10px; font-weight: 450; }
+    .field-head a:hover { color: #485d30; text-decoration: underline; }
+    .input-wrap { position: relative; }
+    .input-wrap svg { position: absolute; left: 14px; top: 50%; width: 16px; height: 16px; transform: translateY(-50%); color: #8b9991; pointer-events: none; }
+    input[type="text"], input[type="email"], input[type="password"] { width: 100%; height: 49px; padding: 0 42px; border: 1px solid #dce1d8; border-radius: 7px; outline: none; background: rgba(255,255,255,.62); color: var(--ink); font-size: 12px; transition: border .18s, box-shadow .18s, background .18s; }
+    input::placeholder { color: #a7afa8; }
+    input:focus { border-color: #8ea957; background: white; box-shadow: 0 0 0 3px rgba(179, 208, 105, .16); }
+    .show-password { position: absolute; top: 50%; right: 13px; display: grid; place-items: center; width: 24px; height: 24px; padding: 0; transform: translateY(-50%); border: 0; background: transparent; color: #8b9991; }
+    .show-password svg { position: static; width: 16px; height: 16px; transform: none; }
+    .remember { display: flex; align-items: center; gap: 8px; margin: 5px 0 23px; color: #69766f; font-size: 10px; cursor: pointer; }
+    .remember input { appearance: none; width: 14px; height: 14px; margin: 0; border: 1px solid #c6cec2; border-radius: 3px; background: white; cursor: pointer; }
+    .remember input:checked { border-color: #425d35; background: #425d35; box-shadow: inset 0 0 0 3px var(--paper); }
+    .submit { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; height: 49px; border: 0; border-radius: 7px; background: var(--forest); color: #f4f7ec; font-size: 12px; font-weight: 550; letter-spacing: .08em; box-shadow: 0 8px 18px rgba(16,33,31,.12); transition: background .2s, transform .2s, box-shadow .2s; }
+    .submit:hover { background: #244239; transform: translateY(-1px); box-shadow: 0 11px 24px rgba(16,33,31,.18); }
+    .submit svg { width: 15px; height: 15px; color: var(--lime); }
+    .divider { display: flex; align-items: center; gap: 12px; margin: 22px 0; color: #a2aaa3; font-size: 9px; }
+    .divider::before, .divider::after { content: ""; height: 1px; flex: 1; background: #e1e4dd; }
+    .sso { display: flex; align-items: center; justify-content: center; gap: 9px; width: 100%; height: 45px; border: 1px solid #d9dfd5; border-radius: 7px; background: transparent; color: #526159; font-size: 11px; transition: border .2s, background .2s; }
+    .sso:hover { border-color: #9ba88d; background: rgba(255,255,255,.55); }
+    .sso svg { width: 15px; height: 15px; }
+    .security-note { display: flex; align-items: flex-start; gap: 8px; margin-top: 27px; padding: 12px 13px; border: 1px solid #e4e8de; border-radius: 6px; color: #879087; font-size: 9px; line-height: 1.7; }
+    .security-note svg { flex: none; width: 13px; height: 13px; margin-top: 1px; color: #84994f; }
+    .access-foot { position: absolute; bottom: 28px; color: #9ba39b; font: 9px var(--display); letter-spacing: .07em; }
+    .toast { position: fixed; right: 25px; bottom: 23px; z-index: 5; max-width: calc(100vw - 50px); padding: 12px 16px; border: 1px solid rgba(215,243,106,.34); border-radius: 7px; background: #18302b; color: #eef4e7; font-size: 11px; box-shadow: 0 12px 34px rgba(10,28,22,.2); opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity .2s, transform .2s; }
+    .toast.visible { opacity: 1; transform: translateY(0); }
+    .error { margin: -18px 0 18px; padding: 10px 12px; border: 1px solid rgba(239, 134, 100, .45); border-radius: 7px; background: rgba(239, 134, 100, .1); color: #9a3d28; font-size: 12px; line-height: 1.55; }
+    .hint { margin: -8px 0 16px; color: #89918b; font-size: 11px; line-height: 1.6; }
+    .switch { margin: 18px 0 0; color: #69766f; font-size: 12px; text-align: center; }
+    .switch a { color: #788d56; font-weight: 550; text-decoration: none; }
+    .switch a:hover { color: #485d30; text-decoration: underline; }
+    @keyframes rise { from { opacity: 0; transform: perspective(1200px) rotateY(-2deg) rotateX(1deg) translateY(14px); } to { opacity: 1; transform: perspective(1200px) rotateY(-2deg) rotateX(1deg) translateY(0); } }
+    @keyframes fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 980px) { .page { grid-template-columns: minmax(0, 1fr) minmax(370px, .82fr); } .console-body { grid-template-columns: 1fr 135px; } }
+    @media (max-width: 760px) {
+      .page { display: block; }
+      .story { min-height: 680px; padding: 27px 25px 65px; }
+      .edition { top: 36px; right: 25px; }
+      .hero { margin-top: 67px; }
+      h1 { font-size: clamp(35px, 9vw, 48px); }
+      .console { margin-top: 37px; transform: none; }
+      .story-foot { left: 25px; right: 25px; bottom: 22px; }
+      .access { min-height: 690px; padding: 67px 26px 76px; }
+      .access::before { inset: 12px; }
+      .access-foot { bottom: 26px; }
+      @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    }
+    @media (max-width: 440px) { .story { min-height: 720px; } .console-body { grid-template-columns: 1fr; } .metrics { grid-template-columns: 1fr 1fr; } .run-strip span:nth-child(2) { display: none; } .edition { font-size: 8px; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="story" aria-label="衡鉴平台介绍">
+      <a class="brand" href="#top" aria-label="衡鉴 Agent 评测平台">
+        <svg class="brand-mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+          <path d="M20 2.8 36.2 12v16L20 37.2 3.8 28V12L20 2.8Z" stroke="#D7F36A" stroke-width="1.35" opacity=".82"/>
+          <path d="M11 24.5h4.2v4H11zm7-7h4.2v11.1H18zm7-5.6h4.2v16.7H25" fill="#D7F36A"/>
+          <path d="m10.4 16.1 4.1 3.9 7.3-7" stroke="#EFF5E9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="29.7" cy="10.3" r="1.4" fill="#EF8664"/>
         </svg>
-        <div>
-          <h1>评测平台</h1>
-          <p>{{ subtitle }}</p>
-        </div>
+        <span class="brand-name"><strong>衡鉴</strong><span>Agent Evaluation</span></span>
+      </a>
+      <span class="edition">MLFLOW · AGENT QUALITY SYSTEM</span>
+
+      <div class="hero" id="top">
+        <div class="eyebrow">从实验追踪，到可信评测</div>
+        <h1>让每一次智能，<br><em>都经得起验证。</em></h1>
+        <p class="intro">把 Agent 的运行轨迹、评测数据与实验结果，汇聚在一个可追踪、可比较、可复现的工作台。</p>
       </div>
-      {% if error %}
-      <p class="error" role="alert">{{ error }}</p>
-      {% endif %}
-      {% if show_fields %}
-      <form action="{{ form_action }}" method="post" autocomplete="on">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
-        {% if show_next %}
-        <input type="hidden" name="next" id="next" value="{{ next_url }}" />
-        {% endif %}
-        <div class="field">
-          <label for="username">用户名</label>
-          <div class="control">
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value="{{ username }}"
-              placeholder="{{ username_placeholder }}"
-              autocomplete="username"
-              spellcheck="false"
-              {% if username_minlength %}minlength="{{ username_minlength }}"{% endif %}
-              required
-            />
+
+      <div class="console" aria-label="评测工作台示意图">
+        <div class="console-top">
+          <div class="console-title"><i class="live"></i> Agent 评测概览 <span style="color:#82958a">/</span> 生产助手 v2.4</div>
+          <span class="run-id">RUN #24-0918 · JUST NOW</span>
+        </div>
+        <div class="console-body">
+          <div>
+            <div class="chart-head"><span>综合质量得分</span><div><strong>92.8</strong><small>↗ 4.6%</small></div></div>
+            <svg class="chart" viewBox="0 0 400 95" preserveAspectRatio="none" aria-hidden="true">
+              <defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D7F36A" stop-opacity=".22"/><stop offset="1" stop-color="#D7F36A" stop-opacity="0"/></linearGradient></defs>
+              <path d="M0 76H400M0 48H400M0 20H400" stroke="#a9c0ae" stroke-opacity=".13" stroke-dasharray="3 5"/>
+              <path d="M0 74 C25 70 28 57 53 60 S83 65 103 49 131 55 151 44 176 50 198 36 231 43 250 29 278 39 300 23 328 34 347 17 373 23 400 9V95H0Z" fill="url(#area)"/>
+              <path d="M0 74 C25 70 28 57 53 60 S83 65 103 49 131 55 151 44 176 50 198 36 231 43 250 29 278 39 300 23 328 34 347 17 373 23 400 9" fill="none" stroke="#D7F36A" stroke-width="2" vector-effect="non-scaling-stroke"/>
+              <circle cx="347" cy="17" r="3.5" fill="#D7F36A" stroke="#28413a" stroke-width="3"/>
+            </svg>
+            <div class="chart-labels"><span>09:00</span><span>10:30</span><span>12:00</span><span>13:30</span><span>15:00</span></div>
+          </div>
+          <div class="metrics">
+            <div class="metric"><div class="metric-label">任务成功率 <i>+2.1%</i></div><div class="metric-value">98.4<span>%</span></div></div>
+            <div class="metric"><div class="metric-label">事实准确率 <i>+1.8%</i></div><div class="metric-value">94.7<span>%</span></div></div>
           </div>
         </div>
-        <div class="field">
-          <label for="password">密码</label>
-          <div class="control">
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="{{ password_placeholder }}"
-              autocomplete="{{ password_autocomplete }}"
-              {% if password_minlength %}minlength="{{ password_minlength }}"{% endif %}
-              required
-            />
-            <button type="button" class="eye" data-toggle-password aria-label="显示密码" aria-pressed="false">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path
-                  d="M2.5 12S6.2 6.5 12 6.5 21.5 12 21.5 12 17.8 17.5 12 17.5 2.5 12 2.5 12Z"
-                  stroke="currentColor"
-                  stroke-width="1.6"
-                />
-                <circle cx="12" cy="12" r="2.6" stroke="currentColor" stroke-width="1.6" />
-              </svg>
-            </button>
-          </div>
-        </div>
-        {% if password_hint %}
-        <p class="hint">{{ password_hint }}</p>
+        <div class="run-strip"><span>当前实验 <strong>support-agent-prod</strong></span><span>评测集 <strong>客服问题集 · 1,240 条</strong></span><span class="pass">● 全部检查通过</span></div>
+      </div>
+      <div class="story-foot"><span>TRACE EVERY RUN. TRUST EVERY RELEASE.</span><span>由 MLflow 实验追踪能力驱动</span></div>
+    </section>
+
+    <section class="access" aria-label="{% if page == 'signup' %}注册{% elif page == 'logout' %}退出登录{% else %}登录{% endif %}">
+      <div class="access-inner">
+        {% if page == 'signup' %}
+        <p class="form-kicker">CREATE ACCOUNT · HENGJIAN</p>
+        <h2>创建账号</h2>
+        <p class="form-sub">注册后即可在授权范围内追踪实验，让每一个评测结论都有迹可循。</p>
+        {% if error %}
+        <p class="error" role="alert">{{ error }}</p>
         {% endif %}
-        <button type="submit">{{ submit_label }}</button>
-      </form>
-      {% else %}
-      <p class="logout-note">正在清除登录状态，即将返回登录页。</p>
-      {{ logout_script }}
-      <noscript>
-        <p class="switch"><a href="{{ alt_href }}">{{ alt_label }}</a></p>
-      </noscript>
-      {% endif %}
-      {% if show_fields %}
-      <p class="switch">{{ alt_prefix }}<a href="{{ alt_href }}">{{ alt_label }}</a></p>
-      {% endif %}
-      <p class="footer">内部系统 · 请使用管理员下发的账号</p>
-    </main>
-    {% if show_fields %}
-    <script>
-      (function () {
-        var button = document.querySelector("[data-toggle-password]");
-        if (button) {
-          button.addEventListener("click", function () {
-            var input = document.getElementById("password");
-            if (!input) return;
-            var reveal = input.type === "password";
-            input.type = reveal ? "text" : "password";
-            button.setAttribute("aria-label", reveal ? "隐藏密码" : "显示密码");
-            button.setAttribute("aria-pressed", reveal ? "true" : "false");
-          });
-        }
-        var next = document.getElementById("next");
-        if (next && window.location.hash && next.value.indexOf("#") === -1) {
-          next.value += window.location.hash;
-        }
-      })();
-    </script>
-    {% endif %}
-  </body>
+        <form id="signup-form" action="{{ form_action }}" method="post" autocomplete="on">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+          <div class="field">
+            <label class="field-head" for="username">用户名</label>
+            <div class="input-wrap">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 20c.4-3.3 2.7-5.2 6.5-5.2s6.1 1.9 6.5 5.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <input id="username" name="username" type="text" autocomplete="username" placeholder="请输入用户名" spellcheck="false" {% if username_minlength %}minlength="{{ username_minlength }}"{% endif %} required>
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-head"><label for="password">密码</label></div>
+            <div class="input-wrap">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <input id="password" name="password" type="password" autocomplete="{{ password_autocomplete }}" placeholder="至少 12 位密码" {% if password_minlength %}minlength="{{ password_minlength }}"{% endif %} required>
+              <button class="show-password" id="show-password" type="button" aria-label="显示密码" title="显示密码"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12s3.2-5.5 9-5.5 9 5.5 9 5.5-3.2 5.5-9 5.5S3 12 3 12Z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg></button>
+            </div>
+          </div>
+          {% if password_hint %}
+          <p class="hint">{{ password_hint }}</p>
+          {% endif %}
+          <button class="submit" type="submit">注册 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </form>
+        <p class="switch">已有账号？<a href="{{ alt_href }}">登录</a></p>
+        <div class="security-note"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 20 6v5.2c0 5.1-3.3 8.4-8 10.8-4.7-2.4-8-5.7-8-10.8V6l8-3Z" stroke="currentColor" stroke-width="1.6"/><path d="m8.5 12 2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>新账号默认没有管理权限。创建后由管理员授予实验、评测与 Trace 的访问范围。</span></div>
+        {% elif page == 'logout' %}
+        <p class="form-kicker">SIGN OUT · HENGJIAN</p>
+        <h2>正在退出登录</h2>
+        <p class="form-sub">正在清除登录状态，即将返回登录页。</p>
+        {{ logout_script }}
+        <noscript>
+          <p class="switch"><a href="{{ alt_href }}">返回登录</a></p>
+        </noscript>
+        {% else %}
+        <p class="form-kicker">WELCOME BACK · HENGJIAN</p>
+        <h2>登录工作台</h2>
+        <p class="form-sub">继续追踪实验，让每一个评测结论都有迹可循。</p>
+        {% if error %}
+        <p class="error" role="alert">{{ error }}</p>
+        {% endif %}
+        <form id="login-form" action="{{ form_action }}" method="post" autocomplete="on">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+          <input type="hidden" name="next" id="next" value="{{ next_url }}" />
+          <div class="field">
+            <label class="field-head" for="account">账号</label>
+            <div class="input-wrap">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 20c.4-3.3 2.7-5.2 6.5-5.2s6.1 1.9 6.5 5.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <input id="account" name="username" type="text" autocomplete="username" placeholder="请输入工作邮箱或用户名" value="{{ username }}" spellcheck="false" required>
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-head"><label for="password">密码</label><a href="#forgot" id="forgot-link">忘记密码？</a></div>
+            <div class="input-wrap">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <input id="password" name="password" type="password" autocomplete="{{ password_autocomplete }}" placeholder="请输入密码" required>
+              <button class="show-password" id="show-password" type="button" aria-label="显示密码" title="显示密码"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12s3.2-5.5 9-5.5 9 5.5 9 5.5-3.2 5.5-9 5.5S3 12 3 12Z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg></button>
+            </div>
+          </div>
+          <label class="remember"><input type="checkbox" name="remember" value="1"{% if remember %} checked{% endif %}><span>7 天内保持登录</span></label>
+          <button class="submit" type="submit">登录衡鉴工作台 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </form>
+        <div class="divider">或</div>
+        <button class="sso" id="sso-button" type="button"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 20 6v5.2c0 5.1-3.3 8.4-8 10.8-4.7-2.4-8-5.7-8-10.8V6l8-3Z" stroke="currentColor" stroke-width="1.5"/><path d="m8.5 12 2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>使用企业 SSO 登录</button>
+        <div class="security-note"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 20 6v5.2c0 5.1-3.3 8.4-8 10.8-4.7-2.4-8-5.7-8-10.8V6l8-3Z" stroke="currentColor" stroke-width="1.6"/><path d="m8.5 12 2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>你的实验与评测记录受到权限保护。登录后可查看授权范围内的 Tracking、Runs 与 Trace。</span></div>
+        {% endif %}
+      </div>
+      <div class="access-foot">© 2026 HENGJIAN · AGENT EVALUATION PLATFORM</div>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+    (function () {
+      var toast = document.getElementById("toast");
+      var toastTimer;
+      function showToast(message) {
+        if (!toast) return;
+        toast.textContent = message;
+        toast.classList.add("visible");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { toast.classList.remove("visible"); }, 2800);
+      }
+      var toggle = document.getElementById("show-password");
+      if (toggle) {
+        toggle.addEventListener("click", function (event) {
+          var input = document.getElementById("password");
+          if (!input) return;
+          var reveal = input.type === "password";
+          input.type = reveal ? "text" : "password";
+          var label = reveal ? "隐藏密码" : "显示密码";
+          event.currentTarget.setAttribute("aria-label", label);
+          event.currentTarget.title = label;
+        });
+      }
+      var forgot = document.getElementById("forgot-link");
+      if (forgot) {
+        forgot.addEventListener("click", function (event) {
+          event.preventDefault();
+          showToast("请联系平台管理员重置密码。");
+        });
+      }
+      var sso = document.getElementById("sso-button");
+      if (sso) {
+        sso.addEventListener("click", function () {
+          showToast("企业 SSO 入口待接入身份提供方。");
+        });
+      }
+      var next = document.getElementById("next");
+      if (next && window.location.hash && next.value.indexOf("#") === -1) {
+        next.value += window.location.hash;
+      }
+      var initialError = {{ error_js }};
+      if (initialError) showToast(initialError);
+    })();
+  </script>
+</body>
 </html>

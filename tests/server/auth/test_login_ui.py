@@ -1,5 +1,6 @@
 import base64
 import re
+import time
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -31,16 +32,24 @@ _BROWSER = {
     "Sec-Fetch-Dest": "document",
 }
 _PAGE_COPY = (
-    "评测平台",
-    "企业级模型评测与追踪",
-    "用户名",
-    "请输入用户名",
-    "密码",
+    "衡鉴 · Agent 评测平台",
+    "衡鉴",
+    "Agent Evaluation",
+    "让每一次智能",
+    "都经得起验证。",
+    "登录工作台",
+    "账号",
+    "请输入工作邮箱或用户名",
+    "忘记密码？",
     "请输入密码",
-    "登录",
-    "还没有账号？",
-    "注册",
-    "内部系统 · 请使用管理员下发的账号",
+    "7 天内保持登录",
+    "登录衡鉴工作台",
+    "使用企业 SSO 登录",
+    "企业 SSO 入口待接入",
+    "请联系平台管理员重置密码。",
+    'name="username"',
+    'name="csrf_token"',
+    'name="remember"',
 )
 
 
@@ -51,7 +60,12 @@ def _csrf_token(page_text: str) -> str:
 
 
 def _post_login(
-    session: requests.Session, base: str, username: str, password: str, nxt: str | None
+    session: requests.Session,
+    base: str,
+    username: str,
+    password: str,
+    nxt: str | None,
+    remember: str | None = None,
 ):
     page = session.get(f"{base}/login")
     assert page.status_code == 200
@@ -62,7 +76,15 @@ def _post_login(
     }
     if nxt is not None:
         data["next"] = nxt
+    if remember is not None:
+        data["remember"] = remember
     return session.post(f"{base}/login", data=data, allow_redirects=False)
+
+
+def _session_cookie(response: requests.Response):
+    matches = [cookie for cookie in response.cookies if cookie.name == "mlflow_session"]
+    assert len(matches) == 1
+    return matches[0]
 
 
 def _isolate_auth_config(tmp_path: Path) -> dict[str, str]:
@@ -226,6 +248,7 @@ def test_login_page_session_and_basic_auth(auth_server: str):
     assert "WWW-Authenticate" not in page.headers
     for text in _PAGE_COPY:
         assert text in page.text
+    assert re.search(r'name="remember" value="1" checked', page.text)
 
     browser_home = requests.get(f"{base}/", headers=_BROWSER, allow_redirects=False)
     assert browser_home.status_code == 302
@@ -296,13 +319,16 @@ def test_login_page_session_and_basic_auth(auth_server: str):
 
         signup = session.get(f"{base}/signup", auth=(ADMIN_USERNAME, ADMIN_PASSWORD))
         assert signup.status_code == 200
-        assert "评测平台" in signup.text
+        assert "衡鉴" in signup.text
         assert "创建账号" in signup.text
+        assert "密码至少 12 位" in signup.text
+        assert "#10211f" in signup.text
         assert _csrf_token(signup.text)
 
         logged_out = session.get(f"{base}/logout")
         assert logged_out.status_code == 200
-        assert "评测平台" in logged_out.text
+        assert "衡鉴" in logged_out.text
+        assert "正在退出登录" in logged_out.text
         assert "mlflow-logged-out-" in logged_out.text
         assert session.get(f"{base}/version").status_code == 401
 
@@ -317,3 +343,23 @@ def test_login_page_session_and_basic_auth(auth_server: str):
     assert no_session.headers["WWW-Authenticate"].startswith("Basic")
     basic_ok = requests.get(f"{base}/version", auth=(ADMIN_USERNAME, ADMIN_PASSWORD))
     assert basic_ok.status_code == 200
+
+
+def test_remember_me_extends_cookie_to_seven_days(auth_server: str):
+    base = auth_server
+    with requests.Session() as session:
+        kept = _post_login(session, base, ADMIN_USERNAME, ADMIN_PASSWORD, "/version", remember="1")
+    assert kept.status_code == 303
+    assert "WWW-Authenticate" not in kept.headers
+    kept_cookie = _session_cookie(kept)
+    assert kept_cookie.expires is not None
+    remaining = kept_cookie.expires - time.time()
+    assert 6.9 * 86400 < remaining < 7.1 * 86400
+
+    with requests.Session() as session:
+        transient = _post_login(session, base, ADMIN_USERNAME, ADMIN_PASSWORD, "/version")
+    assert transient.status_code == 303
+    transient_cookie = _session_cookie(transient)
+    assert transient_cookie.expires is None
+    version = session.get(f"{base}/version")
+    assert version.status_code == 200

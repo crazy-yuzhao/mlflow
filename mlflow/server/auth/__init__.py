@@ -8085,7 +8085,9 @@ def login(csrf):
     from mlflow.server.auth.login_ui import (
         SESSION_PASSWORD_TAG_KEY,
         SESSION_USERNAME_KEY,
+        apply_remember_me,
         password_tag,
+        remember_requested,
         render_login_page,
         safe_next_url,
     )
@@ -8095,6 +8097,7 @@ def login(csrf):
         username = (request.form.get("username") or "").strip()
         password = request.form.get("password") or ""
         nxt = safe_next_url(request.form.get("next"))
+        remember = remember_requested(request.form.get("remember"))
         if not username or not password:
             return _html_response(
                 render_login_page(
@@ -8102,6 +8105,7 @@ def login(csrf):
                     username=username,
                     next_url=nxt,
                     error="请输入用户名和密码",
+                    remember=remember,
                 ),
                 HTTPStatus.UNAUTHORIZED,
             )
@@ -8113,13 +8117,14 @@ def login(csrf):
                     username=username,
                     next_url=nxt,
                     error="用户名或密码不正确",
+                    remember=remember,
                 ),
                 HTTPStatus.UNAUTHORIZED,
             )
         session.clear()
         session[SESSION_USERNAME_KEY] = user.username
         session[SESSION_PASSWORD_TAG_KEY] = password_tag(user.password_hash or "")
-        session.permanent = True
+        apply_remember_me(session, remember=remember)
         response = redirect(nxt, code=HTTPStatus.SEE_OTHER)
         response.headers["Cache-Control"] = "no-store"
         return response
@@ -10180,6 +10185,10 @@ def create_app(app: Flask = app):
     app.config["SESSION_COOKIE_HTTPONLY"] = True
     app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
     app.config["SESSION_COOKIE_NAME"] = "mlflow_session"
+    from mlflow.server.auth.login_ui import install_remember_me_session
+
+    # 「7 天内保持登录」 needs the signature max-age to cover that window.
+    install_remember_me_session(app)
 
     # Browser forms (login and the create-user page) opt into CSRF with csrf.protect().
     # REST clients do not have a token, so the check stays off unless a view asks for it.
