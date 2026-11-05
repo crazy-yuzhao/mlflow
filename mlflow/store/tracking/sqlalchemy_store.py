@@ -1088,7 +1088,8 @@ class SqlAlchemyStore(
                 run_id,
                 SqlAlchemyStore.ARTIFACTS_FOLDER_NAME,
             )
-            tags = tags.copy() if tags else []
+            # Keep the last value for duplicate tag keys; each key is one row in the tags table.
+            tags = list({tag.key: tag for tag in tags or []}.values())
             run_name_tag = _get_run_name_from_tags(tags)
             if run_name and run_name_tag and (run_name != run_name_tag):
                 raise MlflowException(
@@ -2454,15 +2455,17 @@ class SqlAlchemyStore(
         with self.ManagedSessionMaker(read_only=False) as session:
             run = self._get_run(run_uuid=run_id, session=session)
             self._check_run_is_active(run)
-            try:
-                self._log_params(run_id, params)
-                self._log_metrics(run_id, metrics)
-                self._log_model_metrics(run_id, metrics, experiment_id=run.experiment_id)
-                self._set_tags(run_id, tags)
-            except MlflowException as e:
-                raise e
-            except Exception as e:
-                raise MlflowException(e, INTERNAL_ERROR)
+            experiment_id = run.experiment_id
+        # Each helper owns its transaction, so release the validation connection first.
+        try:
+            self._log_params(run_id, params)
+            self._log_metrics(run_id, metrics)
+            self._log_model_metrics(run_id, metrics, experiment_id=experiment_id)
+            self._set_tags(run_id, tags)
+        except MlflowException as e:
+            raise e
+        except Exception as e:
+            raise MlflowException(e, INTERNAL_ERROR)
 
     def record_logged_model(self, run_id, mlflow_model):
         from mlflow.models import Model
