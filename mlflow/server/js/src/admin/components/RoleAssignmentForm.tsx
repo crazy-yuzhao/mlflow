@@ -117,8 +117,14 @@ export const RoleAssignmentForm = ({ value, onChange, disabled }: RoleAssignment
   const triggerText = useMemo(() => {
     if (selectedRoles.length === 0) return '';
     if (selectedRoles.length === 1) return formatRoleLabel(selectedRoles[0]);
-    return `${selectedRoles.length} roles selected`;
-  }, [selectedRoles]);
+    return intl.formatMessage(
+      {
+        defaultMessage: '{count} roles selected',
+        description: 'Summary shown when more than one role is selected',
+      },
+      { count: selectedRoles.length },
+    );
+  }, [intl, selectedRoles]);
 
   // ``DialogCombobox`` calls ``renderDisplayedValue`` once per entry in
   // ``value`` (joined by ``,``); collapse to a single summary label so the
@@ -142,7 +148,10 @@ export const RoleAssignmentForm = ({ value, onChange, disabled }: RoleAssignment
         </FieldLabel>
         {!queryEnabled ? (
           <Typography.Text color="secondary">
-            Select a workspace from the workspace selector to choose roles.
+            <FormattedMessage
+              defaultMessage="Select a workspace from the workspace selector to choose roles."
+              description="Hint shown when no workspace is active and roles cannot be listed"
+            />
           </Typography.Text>
         ) : isLoading ? (
           <div css={{ padding: theme.spacing.sm }}>
@@ -184,7 +193,15 @@ export const RoleAssignmentForm = ({ value, onChange, disabled }: RoleAssignment
                 <DialogComboboxOptionListSearch controlledValue={search} setControlledValue={setSearch}>
                   {filteredRoles.length === 0 ? (
                     <DialogComboboxOptionListCheckboxItem value="" checked={false} onChange={() => {}} disabled>
-                      {search ? 'No matching roles' : 'No roles available'}
+                      {search
+                        ? intl.formatMessage({
+                            defaultMessage: 'No matching roles',
+                            description: 'Empty state when the role search has no matches',
+                          })
+                        : intl.formatMessage({
+                            defaultMessage: 'No roles available',
+                            description: 'Empty state when the role picker has no roles to show',
+                          })}
                     </DialogComboboxOptionListCheckboxItem>
                   ) : (
                     filteredRoles.map((role) => (

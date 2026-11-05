@@ -48,8 +48,14 @@ export const RoleUsersSection = ({ value, onChange, disabled, workspace }: RoleU
   const triggerText = useMemo(() => {
     if (value.length === 0) return '';
     if (value.length === 1) return value[0];
-    return `${value.length} users selected`;
-  }, [value]);
+    return intl.formatMessage(
+      {
+        defaultMessage: '{count} users selected',
+        description: 'Summary shown when more than one user is selected',
+      },
+      { count: value.length },
+    );
+  }, [intl, value]);
 
   // ``DialogCombobox`` calls ``renderDisplayedValue`` once per entry in
   // ``value`` (joined by ``,``); collapse to a single summary label so the
@@ -104,7 +110,15 @@ export const RoleUsersSection = ({ value, onChange, disabled, workspace }: RoleU
               <DialogComboboxOptionListSearch controlledValue={search} setControlledValue={setSearch}>
                 {filteredUsers.length === 0 ? (
                   <DialogComboboxOptionListCheckboxItem value="" checked={false} onChange={() => {}} disabled>
-                    {search ? 'No matching users' : 'No users available'}
+                    {search
+                      ? intl.formatMessage({
+                          defaultMessage: 'No matching users',
+                          description: 'Empty state when the user search has no matches',
+                        })
+                      : intl.formatMessage({
+                          defaultMessage: 'No users available',
+                          description: 'Empty state when the user picker has no users to show',
+                        })}
                   </DialogComboboxOptionListCheckboxItem>
                 ) : (
                   filteredUsers.map((user) => (

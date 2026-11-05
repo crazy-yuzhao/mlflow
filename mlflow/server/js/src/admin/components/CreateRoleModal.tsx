@@ -105,7 +105,12 @@ export const CreateRoleModal = ({ open, onClose }: CreateRoleModalProps) => {
     // async path resets it. Every branch below replaces or closes.
     const trimmedName = name.trim();
     if (createdRoleId === null && !trimmedName) {
-      setError('Role name cannot be empty');
+      setError(
+        intl.formatMessage({
+          defaultMessage: 'Role name cannot be empty',
+          description: 'Error when the create role dialog is submitted without a name',
+        }),
+      );
       return;
     }
 
@@ -123,7 +128,13 @@ export const CreateRoleModal = ({ open, onClose }: CreateRoleModalProps) => {
         roleId = created.role.id;
         setCreatedRoleId(roleId);
       } catch (e: any) {
-        setError(e?.message || 'Failed to create role');
+        setError(
+          e?.message ||
+            intl.formatMessage({
+              defaultMessage: 'Failed to create role',
+              description: 'Error when creating a role fails',
+            }),
+        );
         setSubmitting(false);
         return;
       }
@@ -131,6 +142,10 @@ export const CreateRoleModal = ({ open, onClose }: CreateRoleModalProps) => {
 
     // Best-effort: partial failures are surfaced, but the role itself
     // already exists by this point.
+    const unknownError = intl.formatMessage({
+      defaultMessage: 'unknown',
+      description: 'Fallback text when a failed admin request has no error message',
+    });
     const permFailures: string[] = [];
     for (const p of permissions) {
       try {
@@ -142,7 +157,18 @@ export const CreateRoleModal = ({ open, onClose }: CreateRoleModalProps) => {
         });
       } catch (e: any) {
         permFailures.push(
-          `${p.resourceType}:${formatResourcePattern(p.resourcePattern)} → ${p.permission} (${e?.message ?? 'unknown'})`,
+          intl.formatMessage(
+            {
+              defaultMessage: '{resourceType}:{pattern} → {permission} ({error})',
+              description: 'One permission that failed to attach while creating a role',
+            },
+            {
+              resourceType: p.resourceType,
+              pattern: formatResourcePattern(p.resourcePattern),
+              permission: p.permission,
+              error: e?.message ?? unknownError,
+            },
+          ),
         );
       }
     }
@@ -151,7 +177,15 @@ export const CreateRoleModal = ({ open, onClose }: CreateRoleModalProps) => {
       try {
         await AdminApi.assignRole(u, roleId);
       } catch (e: any) {
-        userFailures.push(`${u} (${e?.message ?? 'unknown'})`);
+        userFailures.push(
+          intl.formatMessage(
+            {
+              defaultMessage: '{username} ({error})',
+              description: 'One user assignment that failed while creating a role',
+            },
+            { username: u, error: e?.message ?? unknownError },
+          ),
+        );
       }
     }
 
@@ -159,14 +193,42 @@ export const CreateRoleModal = ({ open, onClose }: CreateRoleModalProps) => {
       onClose();
       return;
     }
-    setError(
-      `Role "${trimmedName}" created, but some follow-ups failed:\n` +
-        (permFailures.length > 0 ? `Permissions: ${permFailures.join('; ')}\n` : '') +
-        (userFailures.length > 0 ? `Users: ${userFailures.join('; ')}` : '') +
-        `\nFinish wiring up the role from the role detail page.`,
-    );
+    let message =
+      intl.formatMessage(
+        {
+          defaultMessage: 'Role "{name}" created, but some follow-ups failed:',
+          description: 'Error when a role was created but some grants failed',
+        },
+        { name: trimmedName },
+      ) + '\n';
+    if (permFailures.length > 0) {
+      message +=
+        intl.formatMessage(
+          {
+            defaultMessage: 'Permissions: {details}',
+            description: 'List of permissions that failed while creating a role',
+          },
+          { details: permFailures.join('; ') },
+        ) + '\n';
+    }
+    if (userFailures.length > 0) {
+      message += intl.formatMessage(
+        {
+          defaultMessage: 'Users: {details}',
+          description: 'List of user assignments that failed while creating a role',
+        },
+        { details: userFailures.join('; ') },
+      );
+    }
+    message +=
+      '\n' +
+      intl.formatMessage({
+        defaultMessage: 'Finish wiring up the role from the role detail page.',
+        description: 'Hint to finish a partially created role from its detail page',
+      });
+    setError(message);
     setSubmitting(false);
-  }, [name, workspace, description, permissions, usernames, createdRoleId, createRole, onClose]);
+  }, [name, workspace, description, permissions, usernames, createdRoleId, createRole, intl, onClose]);
 
   return (
     <Modal
@@ -180,7 +242,7 @@ export const CreateRoleModal = ({ open, onClose }: CreateRoleModalProps) => {
       footer={
         <div css={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
           <Button componentId="admin.create_role_modal.cancel" onClick={onClose} disabled={submitting}>
-            Cancel
+            <FormattedMessage defaultMessage="Cancel" description="Button that closes the dialog without saving" />
           </Button>
           <Button
             componentId="admin.create_role_modal.submit"
@@ -192,7 +254,15 @@ export const CreateRoleModal = ({ open, onClose }: CreateRoleModalProps) => {
             loading={submitting}
             disabled={!canSubmit}
           >
-            {createdRoleId !== null ? 'Retry failed grants' : 'Create role'}
+            {createdRoleId !== null
+              ? intl.formatMessage({
+                  defaultMessage: 'Retry failed grants',
+                  description: 'Button that retries grants that failed after creating a user or role',
+                })
+              : intl.formatMessage({
+                  defaultMessage: 'Create role',
+                  description: 'Button that submits the create role dialog',
+                })}
           </Button>
         </div>
       }
@@ -288,7 +358,10 @@ export const CreateRoleModal = ({ open, onClose }: CreateRoleModalProps) => {
         defaultCollapsed
       >
         <Typography.Text color="secondary" css={{ display: 'block', marginBottom: theme.spacing.sm }}>
-          Add one or more permissions to this role. You can add more later from the role detail page.
+          <FormattedMessage
+            defaultMessage="Add one or more permissions to this role. You can add more later from the role detail page."
+            description="Help text in the create role dialog permissions section"
+          />
         </Typography.Text>
         {/* ``key={String(open)}`` forces a fresh mount on every reopen so
             the section's internal ``draft`` can't bleed across close →
@@ -311,7 +384,10 @@ export const CreateRoleModal = ({ open, onClose }: CreateRoleModalProps) => {
         defaultCollapsed
       >
         <Typography.Text color="secondary" css={{ display: 'block', marginBottom: theme.spacing.sm }}>
-          Assign one or more users to this role. You can assign more later from the role detail page.
+          <FormattedMessage
+            defaultMessage="Assign one or more users to this role. You can assign more later from the role detail page."
+            description="Help text in the create role dialog user assignment section"
+          />
         </Typography.Text>
         <RoleUsersSection
           value={usernames}

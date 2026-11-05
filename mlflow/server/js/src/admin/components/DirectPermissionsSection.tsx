@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import {
   Button,
   CloseIcon,
@@ -18,7 +18,8 @@ import {
   type DirectGrantResourceType,
   type DirectPermissionValue,
 } from './DirectPermissionForm';
-import { ALL_RESOURCE_PATTERN, formatResourcePattern, getResourceTypeLabel } from '../types';
+import { useResourceTypeLabel } from '../resourceTypeLabels';
+import { ALL_RESOURCE_PATTERN, formatResourcePattern } from '../types';
 
 // Returns true when the draft differs from the default — i.e. the user has
 // touched the picker. Used to gate the "Clear" affordance and the parent
@@ -69,6 +70,8 @@ export const DirectPermissionsSection = ({
   onUnsavedDraftChange,
 }: DirectPermissionsSectionProps) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
+  const labelFor = useResourceTypeLabel();
   const [draft, setDraft] = useState<DirectPermissionValue>(DIRECT_PERMISSION_DEFAULT);
 
   const handleAdd = () => {
@@ -119,13 +122,19 @@ export const DirectPermissionsSection = ({
         <Table scrollable noMinHeight css={{ border: `1px solid ${theme.colors.border}` }}>
           <TableRow isHeader>
             <TableHeader componentId="admin.direct_permissions.staged_type" css={{ flex: 1 }}>
-              Resource type
+              <FormattedMessage
+                defaultMessage="Resource type"
+                description="Column header for the resource type of a staged permission"
+              />
             </TableHeader>
             <TableHeader componentId="admin.direct_permissions.staged_resource" css={{ flex: 2 }}>
-              Resource
+              <FormattedMessage
+                defaultMessage="Resource"
+                description="Column header for the resource a staged permission applies to"
+              />
             </TableHeader>
             <TableHeader componentId="admin.direct_permissions.staged_level" css={{ flex: 1 }}>
-              Permission
+              <FormattedMessage defaultMessage="Permission" description="Column header for a staged permission level" />
             </TableHeader>
             <TableHeader
               componentId="admin.direct_permissions.staged_actions"
@@ -137,7 +146,7 @@ export const DirectPermissionsSection = ({
           {value.map((p, i) => (
             <TableRow key={`${p.resourceType}-${p.resourceId}-${p.permission}-${i}`}>
               <TableCell css={{ flex: 1 }}>
-                <Tag componentId="admin.direct_permissions.staged_type_tag">{getResourceTypeLabel(p.resourceType)}</Tag>
+                <Tag componentId="admin.direct_permissions.staged_type_tag">{labelFor(p.resourceType)}</Tag>
               </TableCell>
               <TableCell css={{ flex: 2 }}>
                 <code>{formatResourcePattern(p.resourceId)}</code>
@@ -153,7 +162,13 @@ export const DirectPermissionsSection = ({
                   type="tertiary"
                   size="small"
                   icon={<CloseIcon />}
-                  aria-label={`Remove ${p.resourceType} ${p.resourceId}`}
+                  aria-label={intl.formatMessage(
+                    {
+                      defaultMessage: 'Remove {resourceType} {resourceId}',
+                      description: 'Accessible name for the button that removes a staged direct permission',
+                    },
+                    { resourceType: p.resourceType, resourceId: p.resourceId },
+                  )}
                   onClick={() => handleRemove(i)}
                   disabled={disabled}
                 />
@@ -198,11 +213,11 @@ export const DirectPermissionsSection = ({
               onClick={() => setDraft(DIRECT_PERMISSION_DEFAULT)}
               disabled={disabled}
             >
-              Clear
+              <FormattedMessage defaultMessage="Clear" description="Button that resets an unsaved permission draft" />
             </Button>
           )}
           <Button componentId="admin.direct_permissions.add" onClick={handleAdd} disabled={!canAdd || disabled}>
-            Add
+            <FormattedMessage defaultMessage="Add" description="Button that stages a permission on a role or user" />
           </Button>
         </div>
       </div>
