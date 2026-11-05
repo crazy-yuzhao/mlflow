@@ -84,7 +84,9 @@ export const PromptVersionMetadata = ({
     >
       {onEditVersion && (
         <>
-          <Typography.Text bold>Version:</Typography.Text>
+          <Typography.Text bold>
+            <FormattedMessage defaultMessage="Version:" description="Label for a prompt version number" />
+          </Typography.Text>
           <Typography.Text>
             <Typography.Link
               componentId="mlflow.prompts.details.version.goto"

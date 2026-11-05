@@ -5,7 +5,7 @@
  */
 
 import { Button, Typography, WrenchSparkleIcon, useDesignSystemTheme } from '@databricks/design-system';
-import { FormattedMessage } from '@databricks/i18n';
+import { FormattedMessage, useIntl } from '@databricks/i18n';
 
 import type { PermissionRequest } from './types';
 
@@ -36,12 +36,16 @@ export const ToolPermissionPrompt = ({
   onRespond: (allow: boolean) => void;
 }) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const preview = getInputPreview(request.toolName, request.toolInput);
 
   return (
     <div
       role="group"
-      aria-label="Tool permission request"
+      aria-label={intl.formatMessage({
+        defaultMessage: 'Tool permission request',
+        description: 'Accessible label for the assistant tool permission prompt',
+      })}
       css={{
         display: 'flex',
         flexDirection: 'column',

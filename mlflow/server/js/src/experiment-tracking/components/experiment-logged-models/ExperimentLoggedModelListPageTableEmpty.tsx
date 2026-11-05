@@ -2,7 +2,7 @@ import { Button, DangerIcon, Empty, Modal, Spacer, Typography, useDesignSystemTh
 import versionsEmptyImg from '@mlflow/mlflow/src/common/static/versions-empty.svg';
 import { CodeSnippet } from '@databricks/web-shared/snippet';
 import { useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { ExperimentKind, getMlflow3DocsLink } from '../../constants';
 import { useExperimentKind, isGenAIExperimentKind } from '../../utils/ExperimentKindUtils';
 import { useGetExperimentQuery } from '../../hooks/useExperimentQuery';
@@ -137,6 +137,7 @@ export const ExperimentLoggedModelListPageTableEmpty = ({
   badRequestError?: Error;
 }) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const { experimentId } = useParams();
   const cloud = 'AWS';
 
@@ -225,7 +226,14 @@ export const ExperimentLoggedModelListPageTableEmpty = ({
               />
             )}
           </Typography.Paragraph>
-          <img css={{ maxWidth: 'min(100%, 600px)' }} src={versionsEmptyImg} alt="No models found" />
+          <img
+            css={{ maxWidth: 'min(100%, 600px)' }}
+            src={versionsEmptyImg}
+            alt={intl.formatMessage({
+              defaultMessage: 'No models found',
+              description: 'Accessible name for the empty logged models illustration',
+            })}
+          />
           <div css={{ display: 'flex', gap: theme.spacing.sm, marginTop: theme.spacing.md }}>
             <Button
               componentId="mlflow.logged_models.list.show_example_code"

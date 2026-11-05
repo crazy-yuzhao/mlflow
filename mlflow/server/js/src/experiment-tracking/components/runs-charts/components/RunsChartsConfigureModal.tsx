@@ -305,7 +305,9 @@ export const RunsChartsConfigureModal = ({
           }}
         >
           {!isEditing && (
-            <RunsChartsConfigureField title="Chart type">
+            <RunsChartsConfigureField
+              title={<FormattedMessage defaultMessage="Chart type" description="Label for the chart type selector" />}
+            >
               <SimpleSelect
                 componentId="codegen_mlflow_app_src_experiment-tracking_components_runs-charts_components_runschartsconfiguremodal.tsx_296"
                 id="chart-type-select"

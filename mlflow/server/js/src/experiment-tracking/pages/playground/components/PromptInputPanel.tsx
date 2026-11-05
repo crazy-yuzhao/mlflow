@@ -12,7 +12,7 @@ import {
   useDesignSystemTheme,
 } from '@databricks/design-system';
 import { GenAIMarkdownRenderer } from '@databricks/web-shared/genai-markdown-renderer';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage, useIntl, type IntlShape } from 'react-intl';
 import type { ChangeEvent } from 'react';
 import type { ChatRole, ConversationMessage } from '../types';
 import { JsonCodeBlock } from './JsonCodeBlock';
@@ -23,7 +23,15 @@ const COMPONENT_ID = 'mlflow.playground.prompt_input';
 
 const ROLE_OPTIONS: ChatRole[] = ['system', 'user', 'assistant'];
 
-const roleLabel = (role: ChatRole): string => role[0].toUpperCase() + role.slice(1);
+const roleLabel = (role: ChatRole, intl: IntlShape): string => {
+  if (role === 'system') {
+    return intl.formatMessage({ defaultMessage: 'System', description: 'Chat message role: system' });
+  }
+  if (role === 'user') {
+    return intl.formatMessage({ defaultMessage: 'User', description: 'Chat message role: user' });
+  }
+  return intl.formatMessage({ defaultMessage: 'Assistant', description: 'Chat message role: assistant' });
+};
 
 const getNamedToolCalls = (message: ConversationMessage) =>
   message.tool_calls?.filter((toolCall) => Boolean(toolCall.function?.name)) ?? [];
@@ -102,7 +110,7 @@ export const PromptInputPanel = ({ messages, onChange }: Props) => {
                     fontSize: theme.typography.fontSizeSm,
                   }}
                 >
-                  {roleLabel(message.role)}
+                  {roleLabel(message.role, intl)}
                 </Typography.Text>
                 {removeButton(index)}
               </div>
@@ -173,7 +181,7 @@ export const PromptInputPanel = ({ messages, onChange }: Props) => {
                         '&:hover': { color: theme.colors.textPrimary },
                       }}
                     >
-                      {roleLabel(message.role)}
+                      {roleLabel(message.role, intl)}
                       <ChevronDownIcon css={{ fontSize: theme.typography.fontSizeSm }} />
                     </button>
                   </DropdownMenu.Trigger>
@@ -186,7 +194,7 @@ export const PromptInputPanel = ({ messages, onChange }: Props) => {
                       {ROLE_OPTIONS.map((role) => (
                         <DropdownMenu.RadioItem key={role} value={role}>
                           <DropdownMenu.ItemIndicator />
-                          {roleLabel(role)}
+                          {roleLabel(role, intl)}
                         </DropdownMenu.RadioItem>
                       ))}
                     </DropdownMenu.RadioGroup>
@@ -220,22 +228,37 @@ export const PromptInputPanel = ({ messages, onChange }: Props) => {
                       </Typography.Paragraph>
                       <ul css={{ margin: `${theme.spacing.xs}px 0 0`, paddingLeft: theme.spacing.lg }}>
                         <li>
-                          <Typography.Text bold>System</Typography.Text>{' '}
+                          <Typography.Text bold>
+                            <FormattedMessage defaultMessage="System" description="Chat message role: system" />
+                          </Typography.Text>{' '}
                           <FormattedMessage
                             defaultMessage="— instructions or persona for the model (e.g. {example})."
                             description="Description of the system role in the playground role-selector help popover"
-                            values={{ example: <Typography.Text code>You are a helpful assistant</Typography.Text> }}
+                            values={{
+                              example: (
+                                <Typography.Text code>
+                                  <FormattedMessage
+                                    defaultMessage="You are a helpful assistant"
+                                    description="Example system prompt shown in the playground role help"
+                                  />
+                                </Typography.Text>
+                              ),
+                            }}
                           />
                         </li>
                         <li>
-                          <Typography.Text bold>User</Typography.Text>{' '}
+                          <Typography.Text bold>
+                            <FormattedMessage defaultMessage="User" description="Chat message role: user" />
+                          </Typography.Text>{' '}
                           <FormattedMessage
                             defaultMessage="— what the human is asking. This is the typical input."
                             description="Description of the user role in the playground role-selector help popover"
                           />
                         </li>
                         <li>
-                          <Typography.Text bold>Assistant</Typography.Text>{' '}
+                          <Typography.Text bold>
+                            <FormattedMessage defaultMessage="Assistant" description="Chat message role: assistant" />
+                          </Typography.Text>{' '}
                           <FormattedMessage
                             defaultMessage="— what the model has previously said. Useful for priming with example responses."
                             description="Description of the assistant role in the playground role-selector help popover"

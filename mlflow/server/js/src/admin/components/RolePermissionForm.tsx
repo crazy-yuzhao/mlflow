@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 import {
   DialogCombobox,
   DialogComboboxContent,
@@ -110,7 +111,9 @@ export const RolePermissionForm = ({
   return (
     <div css={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.md }}>
       <div>
-        <FieldLabel>Resource Type</FieldLabel>
+        <FieldLabel>
+          <FormattedMessage defaultMessage="Resource Type" description="Label for the resource type of a permission" />
+        </FieldLabel>
         <SimpleSelect
           id="admin-role-permission-form-resource-type"
           componentId="admin.role_permission_form.resource_type"
@@ -143,7 +146,9 @@ export const RolePermissionForm = ({
 
       {value.resourceType === 'workspace' ? (
         <div>
-          <FieldLabel>Workspace</FieldLabel>
+          <FieldLabel>
+            <FormattedMessage defaultMessage="Workspace" description="Label for a workspace field" />
+          </FieldLabel>
           <Typography.Text color="secondary">
             {workspace ?? 'default'}{' '}
             <Typography.Text color="secondary" size="sm">
@@ -154,7 +159,9 @@ export const RolePermissionForm = ({
       ) : (
         <>
           <div>
-            <FieldLabel>Scope</FieldLabel>
+            <FieldLabel>
+              <FormattedMessage defaultMessage="Scope" description="Label for the scope of a permission" />
+            </FieldLabel>
             <Radio.Group
               componentId="admin.role_permission_form.scope"
               name="admin-role-permission-form-scope"
@@ -249,7 +256,9 @@ export const RolePermissionForm = ({
       )}
 
       <div>
-        <FieldLabel>Permission</FieldLabel>
+        <FieldLabel>
+          <FormattedMessage defaultMessage="Permission" description="Label for a permission level" />
+        </FieldLabel>
         <SimpleSelect
           id="admin-role-permission-form-level"
           componentId="admin.role_permission_form.permission_level"

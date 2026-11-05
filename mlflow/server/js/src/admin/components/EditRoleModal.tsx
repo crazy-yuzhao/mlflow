@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import {
   Alert,
   Button,
@@ -58,6 +59,7 @@ interface RoleDiff {
  */
 export const EditRoleModal = ({ open, onClose, roleId }: EditRoleModalProps) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const updateRole = useUpdateRole(roleId);
   const addPermission = useAddPermission(roleId);
   const removePermission = useRemovePermission(roleId);
@@ -322,7 +324,10 @@ export const EditRoleModal = ({ open, onClose, roleId }: EditRoleModalProps) => 
               }}
               disabled={!hasAnyChange || !stateLoaded || !name.trim()}
             >
-              Review changes
+              <FormattedMessage
+                defaultMessage="Review changes"
+                description="Button that opens a summary of pending admin changes"
+              />
             </Button>
           </div>
         ) : (
@@ -334,7 +339,7 @@ export const EditRoleModal = ({ open, onClose, roleId }: EditRoleModalProps) => 
               onClick={() => setStep('edit')}
               disabled={submitting}
             >
-              Back
+              <FormattedMessage defaultMessage="Back" description="Button that returns to the previous step" />
             </Button>
             <Button
               componentId="admin.edit_role_modal.confirm"
@@ -342,7 +347,10 @@ export const EditRoleModal = ({ open, onClose, roleId }: EditRoleModalProps) => 
               onClick={handleConfirm}
               loading={submitting}
             >
-              Apply changes
+              <FormattedMessage
+                defaultMessage="Apply changes"
+                description="Button that saves the reviewed admin changes"
+              />
             </Button>
           </div>
         )
@@ -384,30 +392,49 @@ export const EditRoleModal = ({ open, onClose, roleId }: EditRoleModalProps) => 
             </div>
           ) : (
             <>
-              <LongFormSection title="Role details">
+              <LongFormSection
+                title={
+                  <FormattedMessage
+                    defaultMessage="Role details"
+                    description="Section title for role name and description"
+                  />
+                }
+              >
                 <div css={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.md }}>
                   <div>
-                    <FieldLabel>Name</FieldLabel>
+                    <FieldLabel>
+                      <FormattedMessage defaultMessage="Name" description="Label for a name field" />
+                    </FieldLabel>
                     <Input
                       componentId="admin.edit_role_modal.name"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder="Enter role name"
+                      placeholder={intl.formatMessage({
+                        defaultMessage: 'Enter role name',
+                        description: 'Placeholder for the role name field',
+                      })}
                       disabled={submitting}
                     />
                   </div>
                   <div>
-                    <FieldLabel>Description</FieldLabel>
+                    <FieldLabel>
+                      <FormattedMessage defaultMessage="Description" description="Label for a description field" />
+                    </FieldLabel>
                     <Input
                       componentId="admin.edit_role_modal.description"
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
-                      placeholder="Enter description (optional)"
+                      placeholder={intl.formatMessage({
+                        defaultMessage: 'Enter description (optional)',
+                        description: 'Placeholder for an optional description field',
+                      })}
                       disabled={submitting}
                     />
                   </div>
                   <div>
-                    <FieldLabel>Workspace</FieldLabel>
+                    <FieldLabel>
+                      <FormattedMessage defaultMessage="Workspace" description="Label for a workspace field" />
+                    </FieldLabel>
                     <Typography.Text color="secondary">
                       {currentWorkspace || 'default'}{' '}
                       <Typography.Text color="secondary" size="sm">
@@ -417,7 +444,14 @@ export const EditRoleModal = ({ open, onClose, roleId }: EditRoleModalProps) => 
                   </div>
                 </div>
               </LongFormSection>
-              <LongFormSection title="Permissions">
+              <LongFormSection
+                title={
+                  <FormattedMessage
+                    defaultMessage="Permissions"
+                    description="Section title for a list of permissions"
+                  />
+                }
+              >
                 <Typography.Text color="secondary" css={{ display: 'block', marginBottom: theme.spacing.sm }}>
                   Current permissions are pre-filled. Remove a row to revoke; use the form below to add more.
                 </Typography.Text>
@@ -433,9 +467,20 @@ export const EditRoleModal = ({ open, onClose, roleId }: EditRoleModalProps) => 
                   onUnsavedDraftChange={setHasUnsavedDraft}
                 />
               </LongFormSection>
-              <LongFormSection title="Assigned users" hideDivider>
+              <LongFormSection
+                title={
+                  <FormattedMessage
+                    defaultMessage="Assigned users"
+                    description="Section title for users assigned to a role"
+                  />
+                }
+                hideDivider
+              >
                 <Typography.Text color="secondary" css={{ display: 'block', marginBottom: theme.spacing.sm }}>
-                  Currently assigned users are pre-filled. Remove a user to unassign; use the form below to assign more.
+                  <FormattedMessage
+                    defaultMessage="Currently assigned users are pre-filled. Remove a user to unassign; use the form below to assign more."
+                    description="Help text above the users assigned to a role"
+                  />
                 </Typography.Text>
                 <RoleUsersSection
                   value={usernames}
@@ -452,11 +497,24 @@ export const EditRoleModal = ({ open, onClose, roleId }: EditRoleModalProps) => 
       )}
       <ConfirmationModal
         componentId="admin.edit_role_modal.discard_unsaved_draft"
-        title="Discard unsaved role permission?"
+        title={intl.formatMessage({
+          defaultMessage: 'Discard unsaved role permission?',
+          description: 'Title of the dialog that warns an unsaved role permission will be discarded',
+        })}
         visible={showDiscardConfirm}
-        message="You started adding a permission to this role but didn't click Add. Continuing to Review changes will discard it. Go back to either click Add to stage it, or Clear to drop the draft on the spot."
-        okText="Continue"
-        cancelText="Back"
+        message={intl.formatMessage({
+          defaultMessage:
+            "You started adding a permission to this role but didn't click Add. Continuing to Review changes will discard it. Go back to either click Add to stage it, or Clear to drop the draft on the spot.",
+          description: 'Body of the dialog that warns an unsaved role permission will be discarded',
+        })}
+        okText={intl.formatMessage({
+          defaultMessage: 'Continue',
+          description: 'Button that continues to the next step',
+        })}
+        cancelText={intl.formatMessage({
+          defaultMessage: 'Back',
+          description: 'Button that returns to the previous step',
+        })}
         danger={false}
         onCancel={() => setShowDiscardConfirm(false)}
         onConfirm={() => {
@@ -477,37 +535,133 @@ const ReviewSummary = ({ diff, permissionByIdLabel }: { diff: RoleDiff; permissi
   return (
     <div css={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.md }}>
       <Typography.Text color="secondary">
-        Review the net changes. Click <strong>Apply changes</strong> to commit them, or <strong>Back</strong> to keep
-        editing.
+        <FormattedMessage
+          defaultMessage="Review the net changes. Click <strong>Apply changes</strong> to commit them, or <strong>Back</strong> to keep editing."
+          description="Instructions above the summary of pending role changes"
+          values={{ strong: (chunks) => <strong>{chunks}</strong> }}
+        />
       </Typography.Text>
 
       {diff.nameChange !== null ? (
-        <DiffGroup title="Name" items={[`Rename to "${diff.nameChange}"`]} addColor />
-      ) : (
-        <DiffGroup title="Name" items={[]} emptyLabel="No change to name." />
-      )}
-      {diff.descriptionChange !== null ? (
         <DiffGroup
-          title="Description"
-          items={[diff.descriptionChange ? `Set to "${diff.descriptionChange}"` : 'Clear description']}
+          title={<FormattedMessage defaultMessage="Name" description="Label for a name field" />}
+          items={[
+            <FormattedMessage
+              key="rename"
+              defaultMessage="Rename to {name}"
+              description="Summary line when a role is renamed"
+              values={{ name: diff.nameChange }}
+            />,
+          ]}
           addColor
         />
       ) : (
-        <DiffGroup title="Description" items={[]} emptyLabel="No change to description." />
+        <DiffGroup
+          title={<FormattedMessage defaultMessage="Name" description="Label for a name field" />}
+          items={[]}
+          emptyLabel={
+            <FormattedMessage
+              defaultMessage="No change to name."
+              description="Empty state when a role name is unchanged"
+            />
+          }
+        />
+      )}
+      {diff.descriptionChange !== null ? (
+        <DiffGroup
+          title={<FormattedMessage defaultMessage="Description" description="Label for a description field" />}
+          items={[
+            diff.descriptionChange ? (
+              <FormattedMessage
+                key="set-description"
+                defaultMessage='Set to "{description}"'
+                description="Summary line when a role description is replaced"
+                values={{ description: diff.descriptionChange }}
+              />
+            ) : (
+              <FormattedMessage
+                key="clear-description"
+                defaultMessage="Clear description"
+                description="Summary line when a role description is cleared"
+              />
+            ),
+          ]}
+          addColor
+        />
+      ) : (
+        <DiffGroup
+          title={<FormattedMessage defaultMessage="Description" description="Label for a description field" />}
+          items={[]}
+          emptyLabel={
+            <FormattedMessage
+              defaultMessage="No change to description."
+              description="Empty state when a role description is unchanged"
+            />
+          }
+        />
       )}
       <DiffGroup
-        title="Permissions to add"
+        title={
+          <FormattedMessage
+            defaultMessage="Permissions to add"
+            description="Heading for permissions that will be added to a role"
+          />
+        }
         items={diff.permissionsToAdd.map(renderPerm)}
-        emptyLabel="No new permissions."
+        emptyLabel={
+          <FormattedMessage
+            defaultMessage="No new permissions."
+            description="Empty state when no permissions will be added"
+          />
+        }
         addColor
       />
       <DiffGroup
-        title="Permissions to remove"
+        title={
+          <FormattedMessage
+            defaultMessage="Permissions to remove"
+            description="Heading for permissions that will be removed from a role"
+          />
+        }
         items={diff.permissionIdsToRemove.map(renderRemovedPermId)}
-        emptyLabel="No permissions to remove."
+        emptyLabel={
+          <FormattedMessage
+            defaultMessage="No permissions to remove."
+            description="Empty state when no permissions will be removed"
+          />
+        }
       />
-      <DiffGroup title="Users to assign" items={diff.usersToAssign} emptyLabel="No new user assignments." addColor />
-      <DiffGroup title="Users to unassign" items={diff.usersToUnassign} emptyLabel="No user unassignments." />
+      <DiffGroup
+        title={
+          <FormattedMessage
+            defaultMessage="Users to assign"
+            description="Heading for users that will be assigned to a role"
+          />
+        }
+        items={diff.usersToAssign}
+        emptyLabel={
+          <FormattedMessage
+            defaultMessage="No new user assignments."
+            description="Empty state when no users will be assigned"
+          />
+        }
+        addColor
+      />
+      <DiffGroup
+        title={
+          <FormattedMessage
+            defaultMessage="Users to unassign"
+            description="Heading for users that will be unassigned from a role"
+          />
+        }
+        items={diff.usersToUnassign}
+        emptyLabel={
+          <FormattedMessage
+            defaultMessage="No user unassignments."
+            description="Empty state when no users will be unassigned"
+          />
+        }
+      />
     </div>
   );
 };
@@ -518,9 +672,9 @@ const DiffGroup = ({
   emptyLabel,
   addColor,
 }: {
-  title: string;
-  items: string[];
-  emptyLabel?: string;
+  title: React.ReactNode;
+  items: React.ReactNode[];
+  emptyLabel?: React.ReactNode;
   addColor?: boolean;
 }) => {
   const { theme } = useDesignSystemTheme();
@@ -535,9 +689,9 @@ const DiffGroup = ({
         </Typography.Text>
       ) : (
         <div css={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.xs }}>
-          {items.map((s) => (
+          {items.map((s, index) => (
             <Tag
-              key={s}
+              key={index}
               componentId="admin.edit_role_modal.diff_tag"
               color={addColor ? 'lime' : 'lemon'}
               css={{ alignSelf: 'flex-start' }}

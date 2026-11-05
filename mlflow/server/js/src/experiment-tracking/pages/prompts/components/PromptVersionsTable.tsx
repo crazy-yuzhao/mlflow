@@ -104,7 +104,14 @@ export const PromptVersionsTable = ({
 
   return (
     <div css={{ flex: 1, overflow: 'hidden' }}>
-      <Table scrollable empty={getEmptyState()} aria-label="Prompt versions table">
+      <Table
+        scrollable
+        empty={getEmptyState()}
+        aria-label={intl.formatMessage({
+          defaultMessage: 'Prompt versions table',
+          description: 'Accessible name for the prompt versions table',
+        })}
+      >
         <TableRow isHeader>
           {table.getLeafHeaders().map((header) => (
             <TableHeader componentId="mlflow.prompts.versions.table.header" key={header.id}>

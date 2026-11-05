@@ -229,7 +229,7 @@ export const LogTracesDrawer = () => {
                   }}
                 >
                   {logoSrc && (
-                    <img src={logoSrc} width={28} height={28} alt="icon" aria-hidden css={{ display: 'block' }} />
+                    <img src={logoSrc} width={28} height={28} alt="" aria-hidden css={{ display: 'block' }} />
                   )}
                   {framework.message}
                 </button>

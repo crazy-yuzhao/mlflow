@@ -369,7 +369,10 @@ function GenAiTracesTableImpl({
                 <GenAiTracesTableSearchInput searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
                 <DialogCombobox
                   componentId="mlflow.genai_traces_table.filter_dropdown"
-                  label="Filters"
+                  label={intl.formatMessage({
+                    defaultMessage: 'Filters',
+                    description: 'Button that opens trace table filters',
+                  })}
                   value={Array.from(assessmentFilters).map((filter) => filter.assessmentName)}
                   multiSelect
                 >

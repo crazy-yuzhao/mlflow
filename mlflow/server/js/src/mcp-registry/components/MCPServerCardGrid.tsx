@@ -1,6 +1,6 @@
 import type { CursorPaginationProps } from '@databricks/design-system';
 import { CursorPagination, Spinner, useDesignSystemTheme } from '@databricks/design-system';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import type { MCPServer } from '../types';
 import { MCPServerCard } from './MCPServerCard';
@@ -29,6 +29,7 @@ export const MCPServerCardGrid = ({
   onCreateServer?: () => void;
 }) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
 
   if (isLoading) {
     return (
@@ -61,7 +62,14 @@ export const MCPServerCardGrid = ({
 
   return (
     <div css={{ ...flexColumnContainerStyles, minHeight: 0 }}>
-      <div role="list" aria-label="MCP servers" css={cardGridStyles(theme)}>
+      <div
+        role="list"
+        aria-label={intl.formatMessage({
+          defaultMessage: 'MCP servers',
+          description: 'Accessible name for the list of MCP servers',
+        })}
+        css={cardGridStyles(theme)}
+      >
         {servers.map((server) => (
           <div role="listitem" key={server.name}>
             <MCPServerCard server={server} />

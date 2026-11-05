@@ -579,7 +579,10 @@ export const EditEndpointFormRenderer = ({
                             checked={field.value}
                             onChange={(checked) => void onUsageTrackingUpdate(checked)}
                             disabled={isSubmitting}
-                            aria-label="Enable usage tracking"
+                            aria-label={intl.formatMessage({
+                              defaultMessage: 'Enable usage tracking',
+                              description: 'Switch that turns endpoint usage tracking on or off',
+                            })}
                           />
                           <Typography.Text css={{ fontSize: theme.typography.fontSizeSm }}>
                             {field.value ? (

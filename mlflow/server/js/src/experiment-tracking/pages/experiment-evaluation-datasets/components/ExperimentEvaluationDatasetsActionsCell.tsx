@@ -1,6 +1,6 @@
 import { DropdownMenu, OverflowIcon, Spinner, TableRowAction, TrashIcon } from '@databricks/design-system';
 import { Button } from '@databricks/design-system';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import type { Row } from '@tanstack/react-table';
 import type { EvaluationDataset } from '../types';
 import { SEARCH_EVALUATION_DATASETS_QUERY_KEY } from '../constants';
@@ -11,6 +11,7 @@ import { useCallback } from 'react';
 // Component for rendering dataset actions
 export const ActionsCell = ({ row }: { row: Row<EvaluationDataset> }) => {
   const queryClient = useQueryClient();
+  const intl = useIntl();
 
   const { deleteEvaluationDatasetMutation, isLoading: isDeletingDataset } = useDeleteEvaluationDatasetMutation({
     onSuccess: () => {
@@ -31,7 +32,10 @@ export const ActionsCell = ({ row }: { row: Row<EvaluationDataset> }) => {
             componentId="mlflow.eval-datasets.dataset-actions-menu"
             size="small"
             icon={<OverflowIcon />}
-            aria-label="Dataset actions"
+            aria-label={intl.formatMessage({
+              defaultMessage: 'Dataset actions',
+              description: 'Menu of actions for an evaluation dataset',
+            })}
             css={{ padding: '4px' }}
           />
         </DropdownMenu.Trigger>

@@ -106,7 +106,10 @@ class EditableTagsTableViewImpl extends Component<Props> {
             >
               <Input
                 componentId="codegen_mlflow_app_src_common_components_editabletagstableview.tsx_107"
-                aria-label="tag name"
+                aria-label={this.props.intl.formatMessage({
+                  defaultMessage: 'tag name',
+                  description: 'Accessible name for the tag name input',
+                })}
                 data-testid="tags-form-input-name"
                 placeholder={this.props.intl.formatMessage({
                   defaultMessage: 'Name',
@@ -117,7 +120,10 @@ class EditableTagsTableViewImpl extends Component<Props> {
             <LegacyForm.Item name="value" rules={[]}>
               <Input
                 componentId="codegen_mlflow_app_src_common_components_editabletagstableview.tsx_117"
-                aria-label="tag value"
+                aria-label={this.props.intl.formatMessage({
+                  defaultMessage: 'tag value',
+                  description: 'Accessible name for the tag value input',
+                })}
                 data-testid="tags-form-input-value"
                 placeholder={this.props.intl.formatMessage({
                   defaultMessage: 'Value',

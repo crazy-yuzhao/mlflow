@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import {
   DialogCombobox,
   DialogComboboxContent,
@@ -53,6 +54,7 @@ const formatRoleLabel = (role: Role): string => {
  */
 export const RoleAssignmentForm = ({ value, onChange, disabled }: RoleAssignmentFormProps) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const [search, setSearch] = useState('');
   // Per-workspace scope: platform admins fetch unscoped; workspace
   // managers pass the active workspace. Suppress when none is active.
@@ -135,7 +137,9 @@ export const RoleAssignmentForm = ({ value, onChange, disabled }: RoleAssignment
   return (
     <div css={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.md }}>
       <div>
-        <FieldLabel>Roles</FieldLabel>
+        <FieldLabel>
+          <FormattedMessage defaultMessage="Roles" description="Label for a list of roles" />
+        </FieldLabel>
         {!queryEnabled ? (
           <Typography.Text color="secondary">
             Select a workspace from the workspace selector to choose roles.
@@ -145,14 +149,32 @@ export const RoleAssignmentForm = ({ value, onChange, disabled }: RoleAssignment
             <Spinner size="small" />
           </div>
         ) : error ? (
-          <Typography.Text color="error">Failed to load roles for this workspace.</Typography.Text>
+          <Typography.Text color="error">
+            <FormattedMessage
+              defaultMessage="Failed to load roles for this workspace."
+              description="Error shown when the role list for a workspace cannot be loaded"
+            />
+          </Typography.Text>
         ) : roles.length === 0 ? (
-          <Typography.Text color="secondary">No roles available. Create a role first.</Typography.Text>
+          <Typography.Text color="secondary">
+            <FormattedMessage
+              defaultMessage="No roles available. Create a role first."
+              description="Empty state when a workspace has no roles to assign"
+            />
+          </Typography.Text>
         ) : (
-          <DialogCombobox componentId="admin.role_assignment.roles" label="Roles" multiSelect value={triggerValue}>
+          <DialogCombobox
+            componentId="admin.role_assignment.roles"
+            label={intl.formatMessage({ defaultMessage: 'Roles', description: 'Label for a list of roles' })}
+            multiSelect
+            value={triggerValue}
+          >
             <DialogComboboxTrigger
               withInlineLabel={false}
-              placeholder="Select one or more roles"
+              placeholder={intl.formatMessage({
+                defaultMessage: 'Select one or more roles',
+                description: 'Placeholder for choosing roles to assign',
+              })}
               onClear={() => onChange({ roleIds: [] })}
               width="100%"
               disabled={disabled}

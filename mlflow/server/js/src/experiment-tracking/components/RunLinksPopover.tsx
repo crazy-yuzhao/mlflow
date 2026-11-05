@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Link } from '../../common/utils/RoutingUtils';
 import Routes from '../routes';
 import { IconButton } from '../../common/components/IconButton';
@@ -50,7 +51,12 @@ export class RunLinksPopover extends React.Component<Props> {
     const { handleClose } = this.props;
     return (
       <div>
-        <span>Jump to individual runs</span>
+        <span>
+          <FormattedMessage
+            defaultMessage="Jump to individual runs"
+            description="Title of the popover that links to individual experiment runs"
+          />
+        </span>
         <IconButton
           icon={<i className="fa fa-times" />}
           onClick={handleClose}

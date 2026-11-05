@@ -31,7 +31,7 @@ import previewIcon from '../../../common/static/preview-icon.png';
 import warningSvg from '../../../common/static/warning.svg';
 import { ModelRegistryRoutes } from '../../../model-registry/routes';
 import Utils from '../../../common/utils/Utils';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { ShowArtifactLoggedTableView } from './ShowArtifactLoggedTableView';
 import { Empty, Spacer } from '@databricks/design-system';
 import { LazyShowArtifactAudioView } from './LazyShowArtifactAudioView';
@@ -78,7 +78,7 @@ class ShowArtifactPage extends Component<ShowArtifactPageProps> {
       }
       // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       if (this.props.size > MAX_PREVIEW_ARTIFACT_SIZE_MB * ONE_MB) {
-        return getFileTooLargeView();
+        return <FileTooLargeView />;
       } else if (this.props.isDirectory) {
         if (this.props.runTags && getLoggedModelPathsFromTags(this.props.runTags).includes(this.props.path)) {
           return (
@@ -125,17 +125,25 @@ class ShowArtifactPage extends Component<ShowArtifactPageProps> {
         }
       }
     }
-    return getSelectFileView();
+    return <SelectFileView />;
   }
 }
 
-const getSelectFileView = () => {
+const SelectFileView = () => {
+  const intl = useIntl();
   return (
     <div css={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <Empty
         image={
           <>
-            <img alt="Preview icon." src={previewIcon} css={{ width: 64, height: 64 }} />
+            <img
+              alt={intl.formatMessage({
+                defaultMessage: 'Preview icon.',
+                description: 'Accessible name for the artifact preview illustration',
+              })}
+              src={previewIcon}
+              css={{ width: 64, height: 64 }}
+            />
             <Spacer size="sm" />
           </>
         }
@@ -156,13 +164,21 @@ const getSelectFileView = () => {
   );
 };
 
-const getFileTooLargeView = () => {
+const FileTooLargeView = () => {
+  const intl = useIntl();
   return (
     <div css={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <Empty
         image={
           <>
-            <img alt="Preview icon." src={warningSvg} css={{ width: 64, height: 64 }} />
+            <img
+              alt={intl.formatMessage({
+                defaultMessage: 'Preview icon.',
+                description: 'Accessible name for the artifact preview illustration',
+              })}
+              src={warningSvg}
+              css={{ width: 64, height: 64 }}
+            />
             <Spacer size="sm" />
           </>
         }

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import {
   Alert,
   Breadcrumb,
@@ -26,6 +27,7 @@ import { isSyntheticUserRole, isWorkspaceAdminRole } from '../types';
 
 const UserDetailPage = () => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   // ``useParams`` already URL-decodes path params, so the value here is the
   // raw username (matching what ``getUserDetailRoute(username)`` originally
   // encoded). Decoding it again would either throw on usernames containing
@@ -72,13 +74,28 @@ const UserDetailPage = () => {
   const rolesEmptyState =
     displayRoles.length === 0 ? (
       <Empty
-        title="No roles"
+        title={intl.formatMessage({
+          defaultMessage: 'No roles',
+          description: 'Empty state title when a user has no roles',
+        })}
         description={
           isAdmin
-            ? 'This user has not been assigned to any roles.'
+            ? intl.formatMessage({
+                defaultMessage: 'This user has not been assigned to any roles.',
+                description: 'Empty state when an administrator sees a user with no roles',
+              })
             : activeWorkspace
-              ? `No roles for this user in workspace "${activeWorkspace}".`
-              : 'No roles visible in workspaces you manage.'
+              ? intl.formatMessage(
+                  {
+                    defaultMessage: 'No roles for this user in workspace "{workspace}".',
+                    description: 'Empty state when a user has no roles in the active workspace',
+                  },
+                  { workspace: activeWorkspace },
+                )
+              : intl.formatMessage({
+                  defaultMessage: 'No roles visible in workspaces you manage.',
+                  description: 'Empty state when a workspace manager cannot see roles for a user',
+                })
         }
       />
     ) : null;
@@ -122,7 +139,12 @@ const UserDetailPage = () => {
                 </Tag>
               )}
             </div>
-            <Typography.Text color="secondary">Permissions and roles assigned to this user.</Typography.Text>
+            <Typography.Text color="secondary">
+              <FormattedMessage
+                defaultMessage="Permissions and roles assigned to this user."
+                description="Subtitle on the user detail page"
+              />
+            </Typography.Text>
           </div>
           <Button
             componentId="admin.user_detail.edit_access_button"
@@ -148,8 +170,12 @@ const UserDetailPage = () => {
           }}
         >
           <Tabs.List>
-            <Tabs.Trigger value="roles">Roles</Tabs.Trigger>
-            <Tabs.Trigger value="permissions">Permissions</Tabs.Trigger>
+            <Tabs.Trigger value="roles">
+              <FormattedMessage defaultMessage="Roles" description="Label for a list of roles" />
+            </Tabs.Trigger>
+            <Tabs.Trigger value="permissions">
+              <FormattedMessage defaultMessage="Permissions" description="Section title for a list of permissions" />
+            </Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content value="roles" css={{ paddingTop: theme.spacing.md }}>
             {rolesLoading ? (

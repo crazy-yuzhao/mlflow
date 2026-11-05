@@ -8,7 +8,7 @@ import {
   Typography,
   useDesignSystemTheme,
 } from '@databricks/design-system';
-import { FormattedMessage } from '@databricks/i18n';
+import { FormattedMessage, useIntl } from '@databricks/i18n';
 
 import type { SpanFilterState } from '../ModelTrace.types';
 import { SpanLogLevel } from '../ModelTrace.types';
@@ -64,6 +64,7 @@ export const TimelineTreeFilterButton = ({
   setSpanFilterState: (state: SpanFilterState) => void;
 }) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const sliderIndex = indexFromLogLevel(spanFilterState.minLogLevel);
   const currentLevel = LOG_LEVEL_ORDER[sliderIndex];
   const description = LEVEL_DESCRIPTIONS[currentLevel];
@@ -218,7 +219,10 @@ export const TimelineTreeFilterButton = ({
             />
           </div>
           <div
-            aria-label="Minimum log level"
+            aria-label={intl.formatMessage({
+              defaultMessage: 'Minimum log level',
+              description: 'Accessible name for the minimum span log level filter',
+            })}
             css={{
               display: 'flex',
               flexDirection: 'column',
@@ -250,7 +254,12 @@ export const TimelineTreeFilterButton = ({
               <Slider.Track>
                 <Slider.Range />
               </Slider.Track>
-              <Slider.Thumb aria-label="Minimum log level" />
+              <Slider.Thumb
+                aria-label={intl.formatMessage({
+                  defaultMessage: 'Minimum log level',
+                  description: 'Accessible name for the minimum span log level filter',
+                })}
+              />
             </Slider.Root>
             <div
               css={{

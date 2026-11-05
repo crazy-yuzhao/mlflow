@@ -18,7 +18,7 @@ import {
   useDesignSystemTheme,
   ZoomMarqueeSelection,
 } from '@databricks/design-system';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { PromptVersionsTableMode } from './utils';
 import { useMemo } from 'react';
 import Routes from '../../routes';
@@ -55,6 +55,7 @@ const getAliasesModalTitle = (version: string) => (
 const PromptsDetailsPage = ({ experimentId }: { experimentId?: string } = {}) => {
   const { promptName } = useParams<{ promptName: string }>();
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const navigate = useNavigate();
 
   const dispatch = useDispatch<ThunkDispatch>();
@@ -193,7 +194,10 @@ const PromptsDetailsPage = ({ experimentId }: { experimentId?: string } = {}) =>
                 <Button
                   componentId="mlflow.prompts.details.actions"
                   icon={<OverflowIcon />}
-                  aria-label="More actions"
+                  aria-label={intl.formatMessage({
+                    defaultMessage: 'More actions',
+                    description: 'Button that opens more actions for a prompt',
+                  })}
                 />
               </DropdownMenu.Trigger>
               <DropdownMenu.Content>

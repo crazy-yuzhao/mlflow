@@ -114,7 +114,10 @@ export const EvaluationsOverviewColumnSelectorGrouped: React.FC<React.PropsWithC
   return (
     <DialogCombobox
       componentId="mlflow.evaluations_overview_grouped.column_selector_dropdown"
-      label="Columns"
+      label={intl.formatMessage({
+        defaultMessage: 'Columns',
+        description: 'Button that chooses visible table columns',
+      })}
       multiSelect
     >
       <DialogComboboxCustomButtonTriggerWrapper>

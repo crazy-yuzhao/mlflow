@@ -45,7 +45,14 @@ export const EvaluationsOverviewColumnSelector = ({
   };
 
   return (
-    <DialogCombobox componentId="mlflow.evaluations_overview.column_selector_dropdown" label="Columns" multiSelect>
+    <DialogCombobox
+      componentId="mlflow.evaluations_overview.column_selector_dropdown"
+      label={intl.formatMessage({
+        defaultMessage: 'Columns',
+        description: 'Button that chooses visible table columns',
+      })}
+      multiSelect
+    >
       <DialogComboboxCustomButtonTriggerWrapper>
         <Button endIcon={<ChevronDownIcon />} componentId="mlflow.evaluations_review.table_ui.filter_button">
           <div

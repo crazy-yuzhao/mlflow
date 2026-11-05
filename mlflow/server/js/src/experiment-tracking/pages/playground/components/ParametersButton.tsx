@@ -171,14 +171,21 @@ export const ParametersButton = ({
                 </Typography.Paragraph>
                 <ul css={{ margin: `${theme.spacing.xs}px 0 0`, paddingLeft: theme.spacing.lg }}>
                   <li>
-                    <Typography.Text bold>Auto</Typography.Text>{' '}
+                    <Typography.Text bold>
+                      <FormattedMessage defaultMessage="Auto" description="Tool choice that lets the model decide" />
+                    </Typography.Text>{' '}
                     <FormattedMessage
                       defaultMessage="— The model decides whether to call one or more tools (default)."
                       description="Description of the Auto tool choice in the Tools info popover"
                     />
                   </li>
                   <li>
-                    <Typography.Text bold>Required</Typography.Text>{' '}
+                    <Typography.Text bold>
+                      <FormattedMessage
+                        defaultMessage="Required"
+                        description="Tool choice that requires the model to call a tool"
+                      />
+                    </Typography.Text>{' '}
                     <FormattedMessage
                       defaultMessage="— The model must call at least one tool."
                       description="Description of the Required tool choice in the Tools info popover"
@@ -232,7 +239,9 @@ export const ParametersButton = ({
                 </Typography.Paragraph>
                 <ul css={{ margin: `${theme.spacing.xs}px 0 0`, paddingLeft: theme.spacing.lg }}>
                   <li>
-                    <Typography.Text bold>Text</Typography.Text>{' '}
+                    <Typography.Text bold>
+                      <FormattedMessage defaultMessage="Text" description="Response format that returns plain text" />
+                    </Typography.Text>{' '}
                     <FormattedMessage
                       defaultMessage="— model's natural-language response."
                       description="Description of the Text mode in the response_format info popover"
@@ -246,7 +255,12 @@ export const ParametersButton = ({
                     />
                   </li>
                   <li>
-                    <Typography.Text bold>JSON schema</Typography.Text>{' '}
+                    <Typography.Text bold>
+                      <FormattedMessage
+                        defaultMessage="JSON schema"
+                        description="Response format that follows a JSON schema"
+                      />
+                    </Typography.Text>{' '}
                     <FormattedMessage
                       defaultMessage="— model output conforms to the schema you provide."
                       description="Description of the JSON schema mode in the response_format info popover"

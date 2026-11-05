@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useIntl } from 'react-intl';
 import { ArtifactViewSkeleton } from './ArtifactViewSkeleton';
 import { ArtifactViewErrorState } from './ArtifactViewErrorState';
 import { getArtifactBlob } from '../../../common/utils/ArtifactUtils';
@@ -22,6 +23,7 @@ const ShowArtifactVideoView = ({
   const [videoUrl, setVideoUrl] = useState<string>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error>();
+  const intl = useIntl();
 
   useEffect(() => {
     let objUrl: string | undefined;
@@ -76,7 +78,10 @@ const ShowArtifactVideoView = ({
             src={videoUrl}
             controls
             preload="auto"
-            aria-label="video"
+            aria-label={intl.formatMessage({
+              defaultMessage: 'video',
+              description: 'Accessible name for an artifact video player',
+            })}
           >
             <track kind="captions" srcLang="en" src="" default />
           </video>

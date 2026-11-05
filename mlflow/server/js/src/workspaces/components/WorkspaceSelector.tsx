@@ -170,7 +170,7 @@ export const WorkspaceSelector = () => {
   return (
     <DialogCombobox
       componentId="workspace_selector"
-      label="Workspace"
+      label={intl.formatMessage({ defaultMessage: 'Workspace', description: 'Label for a workspace field' })}
       value={!currentWorkspace ? [] : [currentWorkspace]}
       onOpenChange={handleOpenChange}
     >

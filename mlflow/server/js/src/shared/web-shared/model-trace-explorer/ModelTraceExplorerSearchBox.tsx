@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useIntl } from 'react-intl';
 import { useDebouncedCallback } from 'use-debounce';
 
 import {
@@ -33,6 +34,7 @@ const ModelTraceExplorerSearchBox = ({
   const [searchValue, setSearchValue] = useState(searchFilter);
   const debouncedSetSearchFilter = useDebouncedCallback(setSearchFilter, 350);
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
 
   return (
     <div
@@ -46,7 +48,10 @@ const ModelTraceExplorerSearchBox = ({
       <Input
         componentId="shared.model-trace-explorer.search-input"
         allowClear
-        placeholder="Search"
+        placeholder={intl.formatMessage({
+          defaultMessage: 'Search',
+          description: 'Placeholder for searching within a model trace',
+        })}
         value={searchValue}
         onClear={() => {
           setSearchFilter('');

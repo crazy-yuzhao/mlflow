@@ -254,7 +254,9 @@ export const ExperimentLoggedModelDetailsPageRunsTable = ({
 
   return (
     <div css={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', maxHeight: 400 }}>
-      <Typography.Title css={{ fontSize: 16 }}>Runs</Typography.Title>
+      <Typography.Title css={{ fontSize: 16 }}>
+        <FormattedMessage defaultMessage="Runs" description="Heading for the runs logged with a model" />
+      </Typography.Title>
       <div
         css={{
           padding: theme.spacing.sm,

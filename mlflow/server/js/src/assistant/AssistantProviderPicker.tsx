@@ -1,3 +1,4 @@
+import { useIntl } from 'react-intl';
 import {
   CheckIcon,
   ChevronDownIcon,
@@ -195,6 +196,7 @@ const ProviderMenu = ({
   onSelect: OnSelectProvider;
 }) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const meta = getAssistantProvider(provider.name);
   const llmVendor = provider.model_provider ? getLlmProviderDisplay(provider.model_provider) : undefined;
   const label = provider.model_provider
@@ -246,7 +248,10 @@ const ProviderMenu = ({
     <button
       type="button"
       disabled={disabled}
-      aria-label="Change assistant provider"
+      aria-label={intl.formatMessage({
+        defaultMessage: 'Change assistant provider',
+        description: 'Button that changes the assistant model provider',
+      })}
       css={{
         display: 'inline-flex',
         alignItems: 'center',

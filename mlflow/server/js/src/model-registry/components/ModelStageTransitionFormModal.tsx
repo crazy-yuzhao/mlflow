@@ -109,7 +109,9 @@ export const ModelStageTransitionFormModal = ({
     >
       {transitionDescription}
       <Spacer size="sm" />
-      <FormUI.Label htmlFor="mlflow.model_registry.stage_transition_modal_v2.comment">Comment</FormUI.Label>
+      <FormUI.Label htmlFor="mlflow.model_registry.stage_transition_modal_v2.comment">
+        <FormattedMessage defaultMessage="Comment" description="Label for the comment on a model stage transition" />
+      </FormUI.Label>
       <RHFControlledComponents.TextArea
         name="comment"
         id="mlflow.model_registry.stage_transition_modal_v2.comment"

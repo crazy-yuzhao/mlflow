@@ -253,6 +253,7 @@ const EvaluationsOverviewSortDropdownBodyGrouped = ({
   onOptionSelected: (opt: SortOption, asc: boolean) => void;
 }) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const inputRef = useRef<React.ComponentRef<typeof Input>>(null);
   const firstOptionRef = useRef<HTMLDivElement>(null);
 
@@ -308,7 +309,10 @@ const EvaluationsOverviewSortDropdownBodyGrouped = ({
           ref={inputRef}
           componentId="mlflow.genai_traces_table.sort_dropdown.search"
           prefix={<SearchIcon />}
-          placeholder="Search"
+          placeholder={intl.formatMessage({
+            defaultMessage: 'Search',
+            description: 'Placeholder for filtering sort options',
+          })}
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
           type="search"
@@ -325,14 +329,20 @@ const EvaluationsOverviewSortDropdownBodyGrouped = ({
             icon={<ArrowDownIcon />}
             componentId="mlflow.genai_traces_table.sort_dropdown.sort_desc"
             onClick={() => setOrder(false)}
-            aria-label="Sort descending"
+            aria-label={intl.formatMessage({
+              defaultMessage: 'Sort descending',
+              description: 'Button that sorts in descending order',
+            })}
           />
           <ToggleButton
             pressed={tableSort?.asc === true}
             icon={<ArrowUpIcon />}
             componentId="mlflow.experiment_page.sort_dropdown.sort_asc"
             onClick={() => setOrder(true)}
-            aria-label="Sort ascending"
+            aria-label={intl.formatMessage({
+              defaultMessage: 'Sort ascending',
+              description: 'Button that sorts in ascending order',
+            })}
           />
         </div>
       </div>
@@ -387,6 +397,7 @@ const EvaluationsOverviewSortDropdownBody = ({
   onOptionSelected: (sortOption: SortOption, orderByAsc: boolean) => void;
 }) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
 
   const inputElementRef = useRef<React.ComponentRef<typeof Input>>(null);
   const [filter, setFilter] = useState('');
@@ -441,7 +452,10 @@ const EvaluationsOverviewSortDropdownBody = ({
           value={filter}
           type="search"
           onChange={(e) => setFilter(e.target.value)}
-          placeholder="Search"
+          placeholder={intl.formatMessage({
+            defaultMessage: 'Search',
+            description: 'Placeholder for filtering sort options',
+          })}
           autoFocus
           ref={inputElementRef}
           onKeyDown={(e) => {
@@ -463,7 +477,10 @@ const EvaluationsOverviewSortDropdownBody = ({
             icon={<ArrowDownIcon />}
             componentId="mlflow.experiment_page.sort_dropdown.sort_desc"
             onClick={() => setOrder(false)}
-            aria-label="Sort descending"
+            aria-label={intl.formatMessage({
+              defaultMessage: 'Sort descending',
+              description: 'Button that sorts in descending order',
+            })}
             data-testid="sort-select-desc"
           />
           <ToggleButton
@@ -471,7 +488,10 @@ const EvaluationsOverviewSortDropdownBody = ({
             icon={<ArrowUpIcon />}
             componentId="mlflow.experiment_page.sort_dropdown.sort_asc"
             onClick={() => setOrder(true)}
-            aria-label="Sort ascending"
+            aria-label={intl.formatMessage({
+              defaultMessage: 'Sort ascending',
+              description: 'Button that sorts in ascending order',
+            })}
             data-testid="sort-select-asc"
           />
         </div>

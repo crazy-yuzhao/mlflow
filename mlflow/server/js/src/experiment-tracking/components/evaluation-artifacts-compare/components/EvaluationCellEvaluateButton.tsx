@@ -75,7 +75,7 @@ export const EvaluationCellEvaluateButton = ({
       }}
       icon={<PlayIcon />}
     >
-      <>Evaluate</>
+      <FormattedMessage defaultMessage="Evaluate" description="Button that evaluates a prompt cell" />
     </Button>
   );
 };

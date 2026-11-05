@@ -54,7 +54,14 @@ export const EndpointsColumnsButton = ({ visibleColumns, onColumnsChange }: Endp
   };
 
   return (
-    <DialogCombobox componentId="mlflow.gateway.endpoints-list.columns-dropdown" label="Columns" multiSelect>
+    <DialogCombobox
+      componentId="mlflow.gateway.endpoints-list.columns-dropdown"
+      label={intl.formatMessage({
+        defaultMessage: 'Columns',
+        description: 'Button that chooses visible table columns',
+      })}
+      multiSelect
+    >
       <DialogComboboxCustomButtonTriggerWrapper>
         <Button
           componentId="mlflow.gateway.endpoints-list.columns-button"

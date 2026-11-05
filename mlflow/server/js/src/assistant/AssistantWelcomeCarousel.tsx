@@ -4,6 +4,7 @@
  */
 
 import { useEffect, useState } from 'react';
+import { useIntl } from 'react-intl';
 import { ChevronLeftIcon, ChevronRightIcon, Typography, useDesignSystemTheme } from '@databricks/design-system';
 
 import assistantDebugImg from '../common/static/assistant-debug.svg';
@@ -38,6 +39,7 @@ const TRANSITION_DURATION_MS = 400;
 
 export const AssistantWelcomeCarousel = () => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -124,7 +126,10 @@ export const AssistantWelcomeCarousel = () => {
           {/* Left arrow */}
           <button
             onClick={handlePrevSlide}
-            aria-label="Previous slide"
+            aria-label={intl.formatMessage({
+              defaultMessage: 'Previous slide',
+              description: 'Button that shows the previous assistant welcome slide',
+            })}
             css={{
               display: 'flex',
               alignItems: 'center',
@@ -185,7 +190,10 @@ export const AssistantWelcomeCarousel = () => {
           {/* Right arrow */}
           <button
             onClick={handleNextSlide}
-            aria-label="Next slide"
+            aria-label={intl.formatMessage({
+              defaultMessage: 'Next slide',
+              description: 'Button that shows the next assistant welcome slide',
+            })}
             css={{
               display: 'flex',
               alignItems: 'center',

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
 import { Modal, Typography, CopyIcon, useDesignSystemTheme } from '@databricks/design-system';
 import { CopyButton } from '@mlflow/mlflow/src/shared/building_blocks/CopyButton';
 
@@ -14,6 +15,7 @@ export interface KeyValueTagFullViewModalProps {
 // eslint-disable-next-line react-component-name/react-component-name -- TODO(FEINF-4716)
 export const KeyValueTagFullViewModal = React.memo((props: KeyValueTagFullViewModalProps) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
 
   return (
     <Modal
@@ -40,7 +42,15 @@ export const KeyValueTagFullViewModal = React.memo((props: KeyValueTagFullViewMo
             marginTop: theme.spacing.sm,
           }}
         >
-          <CopyButton copyText={props.tagValue} showLabel={false} icon={<CopyIcon />} aria-label="Copy" />
+          <CopyButton
+            copyText={props.tagValue}
+            showLabel={false}
+            icon={<CopyIcon />}
+            aria-label={intl.formatMessage({
+              defaultMessage: 'Copy',
+              description: 'Button that copies a tag value',
+            })}
+          />
         </div>
       </div>
     </Modal>

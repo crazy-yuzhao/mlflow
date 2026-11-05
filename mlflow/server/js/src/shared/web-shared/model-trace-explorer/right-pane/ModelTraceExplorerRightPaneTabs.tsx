@@ -124,13 +124,21 @@ function ModelTraceExplorerRightPaneTabsImpl({
             />
           </Tabs.Trigger>
         )}
-        {/* no i18n for attributes and events as these are properties specified by code,
-            and it might be confusing for users to have different labels here */}
-        <Tabs.Trigger value="attributes">Attributes</Tabs.Trigger>
-        <Tabs.Trigger value="events">
-          Events {hasException && <ModelTraceExplorerBadge count={exceptionCount} />}
+        <Tabs.Trigger value="attributes">
+          <FormattedMessage defaultMessage="Attributes" description="Label for the span attributes tab." />
         </Tabs.Trigger>
-        <Tabs.Trigger value="links">Links</Tabs.Trigger>
+        <Tabs.Trigger value="events">
+          <FormattedMessage defaultMessage="Events" description="Label for the span events tab." />
+          {hasException && (
+            <>
+              {' '}
+              <ModelTraceExplorerBadge count={exceptionCount} />
+            </>
+          )}
+        </Tabs.Trigger>
+        <Tabs.Trigger value="links">
+          <FormattedMessage defaultMessage="Links" description="Label for the span links tab." />
+        </Tabs.Trigger>
         {displayReadOnlyAssessments && (
           <Tabs.Trigger value="assessments">
             <FormattedMessage

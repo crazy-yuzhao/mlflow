@@ -23,7 +23,7 @@ const useStableId: () => string = reactRuntime.useId ?? useFallbackId;
 
 export interface LongFormSectionProps {
   /** Section title displayed on the left side */
-  title: string;
+  title: ReactNode;
   /**
    * Optional subtitle displayed under the title (e.g. "Optional",
    * "Required", or a short qualifier). Rendered in muted secondary text.

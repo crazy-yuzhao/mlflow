@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, type ReactNode } from 'react';
+import { FormattedMessage } from 'react-intl';
 import {
   Button,
   Typography,
@@ -261,7 +262,12 @@ export const AssistantSettingsForm = ({
                   disabled
                   onChange={() => {}}
                 >
-                  <Typography.Text>Execute MLflow CLI (required)</Typography.Text>
+                  <Typography.Text>
+                    <FormattedMessage
+                      defaultMessage="Execute MLflow CLI (required)"
+                      description="Assistant permission to run the MLflow command-line tool"
+                    />
+                  </Typography.Text>
                 </Checkbox>
                 <Tooltip
                   componentId="mlflow.assistant.setup.project.perm_mlflow_cli_tooltip"
@@ -283,7 +289,12 @@ export const AssistantSettingsForm = ({
                     if (error) setError(null);
                   }}
                 >
-                  <Typography.Text>Read MLflow doc</Typography.Text>
+                  <Typography.Text>
+                    <FormattedMessage
+                      defaultMessage="Read MLflow doc"
+                      description="Assistant permission to read MLflow documentation"
+                    />
+                  </Typography.Text>
                 </Checkbox>
                 <Tooltip
                   componentId="mlflow.assistant.setup.project.perm_read_docs_tooltip"
@@ -305,7 +316,12 @@ export const AssistantSettingsForm = ({
                     if (error) setError(null);
                   }}
                 >
-                  <Typography.Text>Edit project code</Typography.Text>
+                  <Typography.Text>
+                    <FormattedMessage
+                      defaultMessage="Edit project code"
+                      description="Assistant permission to edit project files"
+                    />
+                  </Typography.Text>
                 </Checkbox>
                 <Tooltip
                   componentId="mlflow.assistant.setup.project.perm_edit_files_tooltip"
@@ -375,7 +391,12 @@ export const AssistantSettingsForm = ({
                 css={{ width: '100%' }}
               />
             ) : (
-              <InfoNote>No experiment selected. You can configure project mappings later in Settings.</InfoNote>
+              <InfoNote>
+                <FormattedMessage
+                  defaultMessage="No experiment selected. You can configure project mappings later in Settings."
+                  description="Note shown when assistant project mappings have no selected experiment"
+                />
+              </InfoNote>
             )}
           </div>
 
@@ -414,7 +435,12 @@ export const AssistantSettingsForm = ({
                 >
                   <div css={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.sm }}>
                     <Radio componentId="mlflow.assistant.setup.project.skills_global" value="global">
-                      <Typography.Text>Global</Typography.Text>
+                      <Typography.Text>
+                        <FormattedMessage
+                          defaultMessage="Global"
+                          description="Option for a global assistant skills location"
+                        />
+                      </Typography.Text>
                       <Typography.Text color="secondary" css={{ marginLeft: theme.spacing.xs }}>
                         (~/{getSkillsDir(provider)}/)
                       </Typography.Text>
@@ -425,7 +451,12 @@ export const AssistantSettingsForm = ({
                       value="project"
                       disabled={!projectPath.trim()}
                     >
-                      <Typography.Text color={!projectPath.trim() ? 'secondary' : undefined}>Project</Typography.Text>
+                      <Typography.Text color={!projectPath.trim() ? 'secondary' : undefined}>
+                        <FormattedMessage
+                          defaultMessage="Project"
+                          description="Option for a project-relative assistant skills location"
+                        />
+                      </Typography.Text>
                       <Typography.Text color="secondary" css={{ marginLeft: theme.spacing.xs }}>
                         {projectPath.trim()
                           ? `(${projectPath.trim()}/${getSkillsDir(provider)}/)`
@@ -435,7 +466,12 @@ export const AssistantSettingsForm = ({
 
                     <div>
                       <Radio componentId="mlflow.assistant.setup.project.skills_custom" value="custom">
-                        <Typography.Text>Custom location</Typography.Text>
+                        <Typography.Text>
+                          <FormattedMessage
+                            defaultMessage="Custom location"
+                            description="Option for a custom assistant skills path"
+                          />
+                        </Typography.Text>
                       </Radio>
                       {skillsLocation === 'custom' && (
                         <div css={{ marginTop: theme.spacing.sm, paddingLeft: 24 }}>

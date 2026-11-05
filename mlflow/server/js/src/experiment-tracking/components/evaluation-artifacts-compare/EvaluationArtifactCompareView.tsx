@@ -458,7 +458,10 @@ const EvaluationArtifactCompareViewImpl = ({
                   allowClear={false}
                   showTagAfterValueCount={1}
                   css={{ maxWidth: 300, backgroundColor: theme.colors.backgroundPrimary }}
-                  aria-label='Select "group by" columns'
+                  aria-label={intl.formatMessage({
+                    defaultMessage: 'Select "group by" columns',
+                    description: 'Accessible name for the evaluation artifact group-by column picker',
+                  })}
                 />
                 <DialogComboboxContent css={{ maxWidth: 300 }}>
                   <DialogComboboxOptionList>

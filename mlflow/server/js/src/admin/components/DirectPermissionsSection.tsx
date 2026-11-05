@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 import {
   Button,
   CloseIcon,
@@ -171,7 +172,9 @@ export const DirectPermissionsSection = ({
           gap: theme.spacing.md,
         }}
       >
-        <FieldLabel>Add a permission</FieldLabel>
+        <FieldLabel>
+          <FormattedMessage defaultMessage="Add a permission" description="Label for the form that adds a permission" />
+        </FieldLabel>
         <DirectPermissionForm
           value={draft}
           onChange={setDraft}

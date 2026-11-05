@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 import {
   DialogCombobox,
   DialogComboboxContent,
@@ -118,7 +119,9 @@ export const DirectPermissionForm = ({
   return (
     <div css={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.md }}>
       <div>
-        <FieldLabel>Resource type</FieldLabel>
+        <FieldLabel>
+          <FormattedMessage defaultMessage="Resource type" description="Label for the resource type of a permission" />
+        </FieldLabel>
         <SimpleSelect
           id="admin-direct-permission-resource-type"
           componentId="admin.direct_permission.resource_type"
@@ -147,7 +150,9 @@ export const DirectPermissionForm = ({
         </SimpleSelect>
       </div>
       <div>
-        <FieldLabel>Scope</FieldLabel>
+        <FieldLabel>
+          <FormattedMessage defaultMessage="Scope" description="Label for the scope of a permission" />
+        </FieldLabel>
         <Radio.Group
           componentId="admin.direct_permission.scope"
           name="admin-direct-permission-scope"
@@ -236,7 +241,9 @@ export const DirectPermissionForm = ({
         </div>
       )}
       <div>
-        <FieldLabel>Permission</FieldLabel>
+        <FieldLabel>
+          <FormattedMessage defaultMessage="Permission" description="Label for a permission level" />
+        </FieldLabel>
         <SimpleSelect
           id="admin-direct-permission-level"
           componentId="admin.direct_permission.permission_level"

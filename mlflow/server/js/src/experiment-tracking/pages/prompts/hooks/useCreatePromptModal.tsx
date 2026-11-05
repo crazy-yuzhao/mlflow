@@ -209,7 +209,9 @@ export const useCreatePromptModal = ({
         )}
         {isCreatingNewPrompt && (
           <>
-            <FormUI.Label htmlFor="mlflow.prompts.create.name">Name:</FormUI.Label>
+            <FormUI.Label htmlFor="mlflow.prompts.create.name">
+              <FormattedMessage defaultMessage="Name:" description="Label for the prompt name field" />
+            </FormUI.Label>
             <RHFControlledComponents.Input
               control={form.control}
               id="mlflow.prompts.create.name"
@@ -275,7 +277,9 @@ export const useCreatePromptModal = ({
           )}
         />
         <Spacer />
-        <FormUI.Label htmlFor="mlflow.prompts.create.content">Prompt:</FormUI.Label>
+        <FormUI.Label htmlFor="mlflow.prompts.create.content">
+          <FormattedMessage defaultMessage="Prompt:" description="Label for the prompt content field" />
+        </FormUI.Label>
         {form.watch('promptType') === PROMPT_TYPE_CHAT ? (
           <ChatMessageCreator name="chatMessages" />
         ) : (
@@ -305,7 +309,12 @@ export const useCreatePromptModal = ({
           <FormUI.Message type="error" message={form.formState.errors.draftValue.message} />
         )}
         <Spacer />
-        <FormUI.Label htmlFor="mlflow.prompts.create.commit_message">Commit message (optional):</FormUI.Label>
+        <FormUI.Label htmlFor="mlflow.prompts.create.commit_message">
+          <FormattedMessage
+            defaultMessage="Commit message (optional):"
+            description="Label for the optional prompt commit message"
+          />
+        </FormUI.Label>
         <RHFControlledComponents.Input
           control={form.control}
           id="mlflow.prompts.create.commit_message"

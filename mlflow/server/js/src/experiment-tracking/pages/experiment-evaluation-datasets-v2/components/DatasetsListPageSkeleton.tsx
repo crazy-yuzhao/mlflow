@@ -1,4 +1,5 @@
 import { GenericSkeleton, useDesignSystemTheme } from '@databricks/design-system';
+import { useIntl } from 'react-intl';
 
 // Enough rows to cover any reasonable laptop/desktop viewport; the container clips
 // extras so this never introduces page scroll on shorter viewports.
@@ -13,10 +14,14 @@ const ROW_HEIGHT = 32;
  */
 export const DatasetsListPageSkeleton = () => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   return (
     <div
       role="status"
-      aria-label="Loading datasets"
+      aria-label={intl.formatMessage({
+        defaultMessage: 'Loading datasets',
+        description: 'Accessible name for the datasets list loading placeholder',
+      })}
       css={{
         display: 'flex',
         flexDirection: 'column',

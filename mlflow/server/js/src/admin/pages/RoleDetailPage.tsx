@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import {
   Alert,
   Breadcrumb,
@@ -24,12 +25,22 @@ import { EditRoleModal } from '../components/EditRoleModal';
 
 const PermissionsSection = ({ roleId }: { roleId: number }) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const { data: roleData } = useRoleDetailQuery(roleId);
   const permissions = useMemo(() => roleData?.role?.permissions ?? [], [roleData]);
 
   const emptyState =
     permissions.length === 0 ? (
-      <Empty title="No permissions" description="Use Edit role to add permissions to this role." />
+      <Empty
+        title={intl.formatMessage({
+          defaultMessage: 'No permissions',
+          description: 'Empty state title when a role has no permissions',
+        })}
+        description={intl.formatMessage({
+          defaultMessage: 'Use Edit role to add permissions to this role.',
+          description: 'Empty state hint for adding permissions to a role',
+        })}
+      />
     ) : null;
 
   return (
@@ -75,6 +86,7 @@ const PermissionsSection = ({ roleId }: { roleId: number }) => {
 
 const AssignedUsersSection = ({ roleId, workspace }: { roleId: number; workspace?: string }) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const { data: assignmentsData, isLoading, error: queryError } = useRoleUsersQuery(roleId);
   const { data: usersData, error: usersError } = useUsersQuery(workspace);
 
@@ -110,15 +122,33 @@ const AssignedUsersSection = ({ roleId, workspace }: { roleId: number; workspace
       <Alert
         componentId="admin.role.assignments.fetch_error"
         type="error"
-        message="Failed to load assigned users"
-        description={(fetchError as Error)?.message || 'An error occurred while fetching data.'}
+        message={intl.formatMessage({
+          defaultMessage: 'Failed to load assigned users',
+          description: 'Error title when the users assigned to a role cannot be loaded',
+        })}
+        description={
+          (fetchError as Error)?.message ||
+          intl.formatMessage({
+            defaultMessage: 'An error occurred while fetching data.',
+            description: 'Generic error shown when assigned users cannot be loaded',
+          })
+        }
       />
     );
   }
 
   const emptyState =
     assignments.length === 0 ? (
-      <Empty title="No users assigned" description="Use Edit role to assign users to this role." />
+      <Empty
+        title={intl.formatMessage({
+          defaultMessage: 'No users assigned',
+          description: 'Empty state title when a role has no assigned users',
+        })}
+        description={intl.formatMessage({
+          defaultMessage: 'Use Edit role to assign users to this role.',
+          description: 'Empty state hint for assigning users to a role',
+        })}
+      />
     ) : null;
 
   return (
@@ -280,8 +310,15 @@ const RoleDetailPage = () => {
           }}
         >
           <Tabs.List>
-            <Tabs.Trigger value="permissions">Permissions</Tabs.Trigger>
-            <Tabs.Trigger value="users">Assigned users</Tabs.Trigger>
+            <Tabs.Trigger value="permissions">
+              <FormattedMessage defaultMessage="Permissions" description="Section title for a list of permissions" />
+            </Tabs.Trigger>
+            <Tabs.Trigger value="users">
+              <FormattedMessage
+                defaultMessage="Assigned users"
+                description="Section title for users assigned to a role"
+              />
+            </Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content value="permissions" css={{ paddingTop: theme.spacing.md }}>
             <PermissionsSection roleId={roleId} />

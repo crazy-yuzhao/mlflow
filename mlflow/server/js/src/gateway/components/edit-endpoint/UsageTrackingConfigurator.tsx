@@ -1,5 +1,5 @@
 import { Switch, Typography, useDesignSystemTheme } from '@databricks/design-system';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 type ComponentIds = 'mlflow.gateway.edit-endpoint.usage-tracking' | 'mlflow.gateway.create-endpoint.usage-tracking';
 
@@ -15,6 +15,7 @@ export const UsageTrackingConfigurator = ({
   componentId = 'mlflow.gateway.edit-endpoint.usage-tracking',
 }: UsageTrackingConfiguratorProps) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
 
   return (
     <div css={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.md }}>
@@ -23,7 +24,10 @@ export const UsageTrackingConfigurator = ({
           componentId={`${componentId}.toggle`}
           checked={value}
           onChange={(checked) => onChange(checked)}
-          aria-label="Enable usage tracking"
+          aria-label={intl.formatMessage({
+            defaultMessage: 'Enable usage tracking',
+            description: 'Switch that turns endpoint usage tracking on or off',
+          })}
         />
         <Typography.Text>
           <FormattedMessage defaultMessage="Enable usage tracking" description="Label for usage tracking toggle" />

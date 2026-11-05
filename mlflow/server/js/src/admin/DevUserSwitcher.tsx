@@ -20,6 +20,7 @@
  * localStorage (`admin.dev-user-credentials`) as a dev convenience.
  */
 import { useCallback, useState } from 'react';
+import { useIntl } from 'react-intl';
 import { Alert, Button, Input, Modal, Spinner, Tag, Typography, useDesignSystemTheme } from '@databricks/design-system';
 import { useQueryClient } from '@mlflow/mlflow/src/common/utils/reactQueryHooks';
 import { getAjaxUrl } from '../common/utils/FetchUtils';
@@ -110,6 +111,7 @@ const validateCredentials = async (username: string, password: string): Promise<
 
 export const DevUserSwitcher = () => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const queryClient = useQueryClient();
   const { data, isLoading, error } = useUsersQuery();
   const [passwordPromptFor, setPasswordPromptFor] = useState<string | null>(null);
@@ -206,7 +208,11 @@ export const DevUserSwitcher = () => {
             size="small"
             type="link"
             onClick={handleClearCreds}
-            title="Clear stored switcher creds and the auth cookie, then reload. Use to recover from a stuck Basic Auth state."
+            title={intl.formatMessage({
+              defaultMessage:
+                'Clear stored switcher creds and the auth cookie, then reload. Use to recover from a stuck Basic Auth state.',
+              description: 'Tooltip for the button that clears the development user switcher credentials',
+            })}
           >
             Clear
           </Button>
@@ -295,7 +301,10 @@ export const DevUserSwitcher = () => {
           setCredentialError(null);
         }}
         onOk={handlePasswordSubmit}
-        okText="Switch"
+        okText={intl.formatMessage({
+          defaultMessage: 'Switch',
+          description: 'Button that switches the development user',
+        })}
         confirmLoading={validating}
         okButtonProps={{ disabled: !passwordInput || validating }}
       >
@@ -324,7 +333,10 @@ export const DevUserSwitcher = () => {
               if (credentialError) setCredentialError(null);
             }}
             onPressEnter={handlePasswordSubmit}
-            placeholder="Password"
+            placeholder={intl.formatMessage({
+              defaultMessage: 'Password',
+              description: 'Label for a password field',
+            })}
             autoFocus
           />
         </div>

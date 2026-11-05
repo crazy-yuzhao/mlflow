@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import {
   Alert,
   Button,
@@ -45,6 +46,7 @@ export interface CreateUserModalProps {
  */
 export const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const queryClient = useQueryClient();
   const createUser = useCreateUser();
   const grantPermission = useGrantUserPermission();
@@ -210,7 +212,9 @@ export const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
   return (
     <Modal
       componentId="admin.create_user_modal"
-      title="Create User"
+      title={
+        <FormattedMessage defaultMessage="Create User" description="Title of the dialog that creates an admin user" />
+      }
       visible={open}
       onCancel={onClose}
       size="wide"
@@ -254,45 +258,83 @@ export const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
           }}
         />
       )}
-      <LongFormSection title="User details">
+      <LongFormSection
+        title={
+          <FormattedMessage
+            defaultMessage="User details"
+            description="Section title for a new user's name and password"
+          />
+        }
+      >
         <div css={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.md }}>
           <div>
-            <FieldLabel>Username</FieldLabel>
+            <FieldLabel>
+              <FormattedMessage defaultMessage="Username" description="Label for a username field" />
+            </FieldLabel>
             <Input
               componentId="admin.create_user_modal.username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter username"
+              placeholder={intl.formatMessage({
+                defaultMessage: 'Enter username',
+                description: 'Placeholder for a username field',
+              })}
               autoFocus
               disabled={submitting || createdUsername !== null}
             />
           </div>
           <div>
-            <FieldLabel>Password</FieldLabel>
+            <FieldLabel>
+              <FormattedMessage defaultMessage="Password" description="Label for a password field" />
+            </FieldLabel>
             <Input
               componentId="admin.create_user_modal.password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password"
+              placeholder={intl.formatMessage({
+                defaultMessage: 'Enter password',
+                description: 'Placeholder for a password field',
+              })}
               disabled={submitting || createdUsername !== null}
             />
           </div>
         </div>
       </LongFormSection>
-      <LongFormSection title="Role assignment" collapsible defaultCollapsed>
+      <LongFormSection
+        title={
+          <FormattedMessage
+            defaultMessage="Role assignment"
+            description="Section title for assigning roles to a user"
+          />
+        }
+        collapsible
+        defaultCollapsed
+      >
         <Typography.Text color="secondary" css={{ display: 'block', marginBottom: theme.spacing.sm }}>
           Assign one or more existing roles to give this user reusable bundles of permissions.
         </Typography.Text>
         <RoleAssignmentForm value={roleValue} onChange={setRoleValue} disabled={submitting} />
       </LongFormSection>
-      <LongFormSection title="Direct permissions" collapsible defaultCollapsed hideDivider={!isCurrentUserAdmin}>
+      <LongFormSection
+        title={
+          <FormattedMessage
+            defaultMessage="Direct permissions"
+            description="Section title for permissions granted directly to a user"
+          />
+        }
+        collapsible
+        defaultCollapsed
+        hideDivider={!isCurrentUserAdmin}
+      >
         <Typography.Text color="secondary" css={{ display: 'block', marginBottom: theme.spacing.sm }}>
           Grant one or more one-off permissions on specific resources.
         </Typography.Text>
         {showWorkspaceSelector && (
           <div css={{ marginBottom: theme.spacing.md }}>
-            <FieldLabel>Workspace</FieldLabel>
+            <FieldLabel>
+              <FormattedMessage defaultMessage="Workspace" description="Label for a workspace field" />
+            </FieldLabel>
             <SimpleSelect
               id="admin-create-user-modal-grant-workspace"
               componentId="admin.create_user_modal.grant_workspace"
@@ -331,15 +373,29 @@ export const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
         // Intentionally not ``collapsible``: ``Admin status`` is a single
         // Switch row, so hiding it behind a toggle adds an extra click for
         // no real density win (vs. the multi-field sections above).
-        <LongFormSection title="Admin status" hideDivider>
+        <LongFormSection
+          title={
+            <FormattedMessage
+              defaultMessage="Admin status"
+              description="Section title for whether a user is an administrator"
+            />
+          }
+          hideDivider
+        >
           <Typography.Text color="secondary" css={{ display: 'block', marginBottom: theme.spacing.sm }}>
-            Admins can manage all users, roles, and workspaces.
+            <FormattedMessage
+              defaultMessage="Admins can manage all users, roles, and workspaces."
+              description="Help text for the admin status switch"
+            />
           </Typography.Text>
           <Switch
             componentId="admin.create_user_modal.is_admin"
             checked={isAdmin}
             onChange={setIsAdmin}
-            label="Make this user an admin"
+            label={intl.formatMessage({
+              defaultMessage: 'Make this user an admin',
+              description: 'Switch label for granting administrator status to a new user',
+            })}
             disabled={submitting}
           />
         </LongFormSection>
@@ -350,11 +406,24 @@ export const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
           submit itself stays enabled so the admin can always click through. */}
       <ConfirmationModal
         componentId="admin.create_user_modal.discard_unsaved_draft"
-        title="Discard unsaved direct permission?"
+        title={intl.formatMessage({
+          defaultMessage: 'Discard unsaved direct permission?',
+          description: 'Title of the dialog that warns an unsaved direct permission will be discarded',
+        })}
         visible={showDiscardConfirm}
-        message="You started adding a direct permission but didn't click Add. Continuing will discard it. Go back to either click Add to stage it, or Clear to drop the draft on the spot."
-        okText="Continue"
-        cancelText="Back"
+        message={intl.formatMessage({
+          defaultMessage:
+            "You started adding a direct permission but didn't click Add. Continuing will discard it. Go back to either click Add to stage it, or Clear to drop the draft on the spot.",
+          description: 'Body of the dialog that warns an unsaved direct permission draft will be discarded',
+        })}
+        okText={intl.formatMessage({
+          defaultMessage: 'Continue',
+          description: 'Button that continues to the next step',
+        })}
+        cancelText={intl.formatMessage({
+          defaultMessage: 'Back',
+          description: 'Button that returns to the previous step',
+        })}
         // ``danger=false`` because the OK verb is neutral ("Continue") — the
         // destructive intent is in the title question, not the button.
         danger={false}

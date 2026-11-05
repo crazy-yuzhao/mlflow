@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useIntl } from 'react-intl';
 import {
   Alert,
   Button,
@@ -42,6 +43,7 @@ import { UserRolesCell } from '../components/UserRolesCell';
 
 const UsersTab = () => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const { data: usersData, isLoading: usersLoading, error: queryError } = useUsersQuery();
   const { data: currentUserData, isLoading: currentUserLoading } = useCurrentUserQuery();
   const currentUsername = currentUserData?.user?.username;
@@ -194,7 +196,10 @@ const UsersTab = () => {
                 componentId="admin.users.select_all"
                 isChecked={allSelected}
                 onChange={toggleSelectAll}
-                aria-label="Select all users"
+                aria-label={intl.formatMessage({
+                  defaultMessage: 'Select all users',
+                  description: 'Checkbox that selects every user in the admin table',
+                })}
               />
             </TableHeader>
           )}
@@ -270,17 +275,21 @@ const UsersTab = () => {
       <CreateUserModal open={showCreateModal} onClose={() => setShowCreateModal(false)} />
       <ConfirmationModal
         componentId="admin.users.bulk_delete_modal"
-        title="Delete users"
+        title={intl.formatMessage({
+          defaultMessage: 'Delete users',
+          description: 'Title of the dialog that deletes selected users',
+        })}
         visible={bulkDeleteOpen}
         onCancel={() => setBulkDeleteOpen(false)}
         onConfirm={handleBulkDelete}
         isLoading={deleteUser.isLoading}
-        message={
-          <>
-            Delete {visibleSelectedUsernames.size} user{visibleSelectedUsernames.size === 1 ? '' : 's'}? This action
-            cannot be undone.
-          </>
-        }
+        message={intl.formatMessage(
+          {
+            defaultMessage: 'Delete {count, plural, one {# user} other {# users}}? This action cannot be undone.',
+            description: 'Confirmation that selected users will be deleted',
+          },
+          { count: visibleSelectedUsernames.size },
+        )}
       />
     </div>
   );
@@ -288,6 +297,7 @@ const UsersTab = () => {
 
 const RolesTab = () => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   // Per-workspace scope: platform admins fetch unscoped; workspace managers
   // pass the active workspace (only one viewable at a time on this page).
   // ``canManageRoles`` checks the *active* workspace specifically — managing
@@ -455,7 +465,10 @@ const RolesTab = () => {
                 componentId="admin.roles.select_all"
                 isChecked={allSelected}
                 onChange={toggleSelectAll}
-                aria-label="Select all roles"
+                aria-label={intl.formatMessage({
+                  defaultMessage: 'Select all roles',
+                  description: 'Checkbox that selects every role in the admin table',
+                })}
               />
             </TableHeader>
           )}
@@ -516,17 +529,21 @@ const RolesTab = () => {
       <CreateRoleModal open={showCreateModal} onClose={() => setShowCreateModal(false)} />
       <ConfirmationModal
         componentId="admin.roles.bulk_delete_modal"
-        title="Delete roles"
+        title={intl.formatMessage({
+          defaultMessage: 'Delete roles',
+          description: 'Title of the dialog that deletes selected roles',
+        })}
         visible={bulkDeleteOpen}
         onCancel={() => setBulkDeleteOpen(false)}
         onConfirm={handleBulkDelete}
         isLoading={deleteRole.isLoading}
-        message={
-          <>
-            Delete {visibleSelectedRoleIds.size} role{visibleSelectedRoleIds.size === 1 ? '' : 's'}? This action cannot
-            be undone.
-          </>
-        }
+        message={intl.formatMessage(
+          {
+            defaultMessage: 'Delete {count, plural, one {# role} other {# roles}}? This action cannot be undone.',
+            description: 'Confirmation that selected roles will be deleted',
+          },
+          { count: visibleSelectedRoleIds.size },
+        )}
       />
     </div>
   );

@@ -115,6 +115,10 @@
     "defaultMessage": "Not an issue",
     "description": "Experiment issue reject action"
   },
+  "+JM6Ko": {
+    "defaultMessage": "API reference for the mlflow.pyfunc module",
+    "description": "Link to the mlflow.pyfunc API reference"
+  },
   "+LLlvi": {
     "defaultMessage": "Source Run",
     "description": "Label name for source run metadata in model version page"
@@ -166,6 +170,10 @@
   "+a87Om": {
     "defaultMessage": "{count, plural, one {# question} other {# questions}} selected",
     "description": "Queue settings: questions dropdown selected-count summary"
+  },
+  "+aGYrk": {
+    "defaultMessage": "Use Edit role to assign users to this role.",
+    "description": "Empty state hint for assigning users to a role"
   },
   "+cu+Ai": {
     "defaultMessage": "traces",
@@ -387,6 +395,10 @@
     "defaultMessage": "Create",
     "description": "Create webhook confirm button"
   },
+  "/HiAE5": {
+    "defaultMessage": "Search prompts by name",
+    "description": "Placeholder for filtering prompts by name"
+  },
   "/IyEFR": {
     "defaultMessage": "Trace",
     "description": "Label for trace variable option"
@@ -402,6 +414,10 @@
   "/K6wBr": {
     "defaultMessage": "Input data or prompt template have changed since last evaluation of the output",
     "description": "Experiment page > new run modal > dirty output (out of sync with new data)"
+  },
+  "/KTrL1": {
+    "defaultMessage": "Direct permissions to revoke",
+    "description": "Heading for direct permissions that will be revoked"
   },
   "/LfvdB": {
     "defaultMessage": "Average",
@@ -451,6 +467,10 @@
     "defaultMessage": "Inputs",
     "description": "Model trace explorer > selected span > inputs header"
   },
+  "/TjvyP": {
+    "defaultMessage": "No new role assignments.",
+    "description": "Empty state when no roles will be assigned"
+  },
   "/TolHF": {
     "defaultMessage": "Please input a name for the new workspace.",
     "description": "Error message for name requirement in create workspace modal"
@@ -475,6 +495,10 @@
     "defaultMessage": "Service unavailable error",
     "description": "Request failed due to service being available (HTTP STATUS 503) generic error message"
   },
+  "/XlzVh": {
+    "defaultMessage": "New Chat",
+    "description": "Button that starts a new assistant chat"
+  },
   "/ZsbLo": {
     "defaultMessage": "Add feedback",
     "description": "Label for the button to add new feedback"
@@ -494,6 +518,10 @@
   "/c/HOe": {
     "defaultMessage": "Could not package the folder.",
     "description": "Error when a skill folder cannot be packaged for upload"
+  },
+  "/eInMn": {
+    "defaultMessage": "Permission",
+    "description": "Label for a permission level"
   },
   "/g45Xz": {
     "defaultMessage": "Share and manage machine learning models.",
@@ -671,6 +699,10 @@
     "defaultMessage": "State",
     "description": "Gateway endpoint usage > metrics filter > state column option label"
   },
+  "0CbTmp": {
+    "defaultMessage": "No roles available. Create a role first.",
+    "description": "Empty state when a workspace has no roles to assign"
+  },
   "0EFU+8": {
     "defaultMessage": "Couldn't load this file.",
     "description": "Skill file preview load error"
@@ -678,6 +710,10 @@
   "0ElvS9": {
     "defaultMessage": "Y-axis:",
     "description": "Label text for y-axis in contour plot comparison in MLflow"
+  },
+  "0FKs0X": {
+    "defaultMessage": "Admins can manage all users, roles, and workspaces.",
+    "description": "Help text for the admin status switch"
   },
   "0Gdrou": {
     "defaultMessage": "Retry",
@@ -738,6 +774,10 @@
   "0Rao9q": {
     "defaultMessage": "Error registering model",
     "description": "Notification title for model registration failure on the logged model details page"
+  },
+  "0RyylU": {
+    "defaultMessage": "Links",
+    "description": "Label for the span links tab."
   },
   "0SQ4a6": {
     "defaultMessage": "Compare",
@@ -822,6 +862,10 @@
   "0ktvTS": {
     "defaultMessage": "Trace archival retention unit",
     "description": "Label for trace archival retention unit selector"
+  },
+  "0mFush": {
+    "defaultMessage": "Delete API Key",
+    "description": "Title of the dialog that deletes an API key"
   },
   "0ogj7N": {
     "defaultMessage": "True",
@@ -911,6 +955,10 @@
     "defaultMessage": "View Examples",
     "description": "Experiment page > new run modal > prompt examples button"
   },
+  "15nHsL": {
+    "defaultMessage": "Jump to individual runs",
+    "description": "Title of the popover that links to individual experiment runs"
+  },
   "16BvfJ": {
     "defaultMessage": "{timeSince, plural, =1 {1 year} other {# years}} ago",
     "description": "Text for time in years since given date for MLflow views"
@@ -967,6 +1015,10 @@
     "defaultMessage": "View prompt {promptName} version {promptVersion}",
     "description": "Accessible label for a link that opens the prompt version an evaluation run is linked to"
   },
+  "1GK4PO": {
+    "defaultMessage": "Continue",
+    "description": "Button that continues to the next step"
+  },
   "1HAiNw": {
     "defaultMessage": "Comparison run",
     "description": "Header for a comparison run summary menu"
@@ -1002,6 +1054,10 @@
   "1RAM3C": {
     "defaultMessage": "Failed to delete some API keys. Please try again.",
     "description": "Gateway > Bulk delete API keys modal > Error message"
+  },
+  "1RbBrS": {
+    "defaultMessage": "Required",
+    "description": "Tool choice that requires the model to call a tool"
   },
   "1RxxTj": {
     "defaultMessage": "(Version {sourceModelVersion})",
@@ -1091,6 +1147,10 @@
     "defaultMessage": "Showing only visible runs",
     "description": "Experiment page > compare runs > parallel chart > header > indicator for only visible runs shown"
   },
+  "1hm/dy": {
+    "defaultMessage": "Assigned users",
+    "description": "Section title for users assigned to a role"
+  },
   "1hnR4G": {
     "defaultMessage": "TRUE",
     "description": "True-rate label in a comparison session score summary"
@@ -1142,6 +1202,14 @@
   "1oofcq": {
     "defaultMessage": "Show less",
     "description": "Link that collapses an expanded list when clicked"
+  },
+  "1qj8Hs": {
+    "defaultMessage": "Loading...",
+    "description": "Text shown while the assistant is loading"
+  },
+  "1r3n3C": {
+    "defaultMessage": "No change to description.",
+    "description": "Empty state when a role description is unchanged"
   },
   "1rwkHf": {
     "defaultMessage": "Failed to load trace",
@@ -1282,6 +1350,10 @@
   "2KvJ9X": {
     "defaultMessage": "Search",
     "description": "Placeholder for filtering group-by options on the experiment runs page"
+  },
+  "2LXk4W": {
+    "defaultMessage": "Ask a question...",
+    "description": "Placeholder for the assistant chat input"
   },
   "2N2M5a": {
     "defaultMessage": "Response",
@@ -1647,6 +1719,10 @@
     "defaultMessage": "Use",
     "description": "Header for the use-skill action column in the Skill Registry table"
   },
+  "3Pzzu8": {
+    "defaultMessage": "Delete section",
+    "description": "Menu item that deletes a runs chart section"
+  },
   "3Rb4sG": {
     "defaultMessage": "Delete",
     "description": "String for the delete button to delete a particular experiment run"
@@ -1658,6 +1734,10 @@
   "3S3Ah4": {
     "defaultMessage": "Download data",
     "description": "String for the download csv button to download metrics from this run offline in a CSV format"
+  },
+  "3UVNhz": {
+    "defaultMessage": "Make this user an admin",
+    "description": "Switch label for granting administrator status to a new user"
   },
   "3VURvw": {
     "defaultMessage": "No metrics or parameters available",
@@ -1678,6 +1758,10 @@
   "3YddwH": {
     "defaultMessage": "Traffic split percentages must total 100%",
     "description": "Tooltip shown when save button is disabled due to invalid traffic split total"
+  },
+  "3ZNWJS": {
+    "defaultMessage": "Auto",
+    "description": "Tool choice that lets the model decide"
   },
   "3avJZe": {
     "defaultMessage": "Created {date}",
@@ -2151,6 +2235,10 @@
     "defaultMessage": "Search inputs, expectations…",
     "description": "Placeholder for the search input on the V2 dataset records page"
   },
+  "51OUGj": {
+    "defaultMessage": "Enter username",
+    "description": "Placeholder for a username field"
+  },
   "52j9Ll": {
     "defaultMessage": "{column} (ascending)",
     "description": "Traces table sort option: sort by a column, oldest/smallest first"
@@ -2166,6 +2254,14 @@
   "54bvuq": {
     "defaultMessage": "Once you have endpoints with usage tracking enabled, usage metrics will appear here.",
     "description": "Empty state description for usage tab"
+  },
+  "56D9Gp": {
+    "defaultMessage": "Users",
+    "description": "Label for a list of users"
+  },
+  "56r+lj": {
+    "defaultMessage": "Discard unsaved direct permission?",
+    "description": "Title of the dialog that warns an unsaved direct permission will be discarded"
   },
   "57daBb": {
     "defaultMessage": "Questions",
@@ -2286,6 +2382,10 @@
   "5U3LXq": {
     "defaultMessage": "Response format",
     "description": "Section header for the structured-output picker inside the playground settings drawer"
+  },
+  "5UD7+t": {
+    "defaultMessage": "You started adding a direct permission but didn't click Add. Continuing to Review changes will discard it. Go back to either click Add to stage it, or Clear to drop the draft on the spot.",
+    "description": "Body of the dialog that warns an unsaved direct permission will be discarded"
   },
   "5UrahG": {
     "defaultMessage": "Viewing version {version}",
@@ -2442,6 +2542,10 @@
   "60b0vW": {
     "defaultMessage": "Always show spans with exceptions, regardless of filter conditions",
     "description": "Tooltip for a span filter setting that enables showing spans with exceptions"
+  },
+  "60xXo2": {
+    "defaultMessage": "No change to admin status.",
+    "description": "Empty state when administrator status is unchanged"
   },
   "61P6Da": {
     "defaultMessage": "finetuning",
@@ -2735,6 +2839,10 @@
     "defaultMessage": "Cancel",
     "description": "A cancel label for the modal used for deleting logged models"
   },
+  "6wGY9J": {
+    "defaultMessage": "Enter description (optional)",
+    "description": "Placeholder for an optional description field"
+  },
   "6wOiP1": {
     "defaultMessage": "This view is too large to save.",
     "description": "Error toast shown when overwriting a saved traces view exceeds the experiment-tag size limit"
@@ -2839,6 +2947,10 @@
     "defaultMessage": "Expand tag columns",
     "description": "Column header action for expanding tag columns"
   },
+  "78SBds": {
+    "defaultMessage": "Set to \"{description}\"",
+    "description": "Summary line when a role description is replaced"
+  },
   "79dD5F": {
     "defaultMessage": "There was an error submitting your note.",
     "description": "Error message text when saving an editable note in MLflow"
@@ -2850,6 +2962,10 @@
   "7Bqgvf": {
     "defaultMessage": "Loading evaluation runs chart",
     "description": "Accessible label for the loading skeleton of the eval-runs chart"
+  },
+  "7Bs8Nf": {
+    "defaultMessage": "Runs",
+    "description": "Heading for the runs logged with a model"
   },
   "7Dhfxy": {
     "defaultMessage": "Fail",
@@ -2878,6 +2994,10 @@
   "7GU2wd": {
     "defaultMessage": "Add traces from the Traces tab to start reviewing them with your team.",
     "description": "Review queue: empty queue description"
+  },
+  "7HabBX": {
+    "defaultMessage": "MCP servers",
+    "description": "Accessible name for the list of MCP servers"
   },
   "7IgbLz": {
     "defaultMessage": "light theme",
@@ -2990,6 +3110,10 @@
   "7YjQw1": {
     "defaultMessage": "ERROR RATE",
     "description": "Percentage of completed traces that failed in a comparison column summary"
+  },
+  "7Z3aUJ": {
+    "defaultMessage": "Name",
+    "description": "Label for a name field"
   },
   "7ZHG+d": {
     "defaultMessage": "Identical:",
@@ -3483,6 +3607,10 @@
     "defaultMessage": "{timeSince, plural, =1 {1 second} other {# seconds}} ago",
     "description": "Text for time in seconds since given date for MLflow views"
   },
+  "947bMe": {
+    "defaultMessage": "Project",
+    "description": "Option for a project-relative assistant skills location"
+  },
   "95ScZ3": {
     "defaultMessage": "View name",
     "description": "Placeholder for the name input when saving an experiment view"
@@ -3587,6 +3715,10 @@
     "defaultMessage": "Delete",
     "description": "Experiments page list, delete bulk experiments modal primary button"
   },
+  "9KN9aU": {
+    "defaultMessage": "Read MLflow doc",
+    "description": "Assistant permission to read MLflow documentation"
+  },
   "9KXBFn": {
     "defaultMessage": "Tags",
     "description": "Row group title for tags of runs on the experiment compare runs page"
@@ -3626,6 +3758,10 @@
   "9Sxo9h": {
     "defaultMessage": "Max length",
     "description": "Text max length input"
+  },
+  "9TJ07f": {
+    "defaultMessage": "video",
+    "description": "Accessible name for an artifact video player"
   },
   "9TOU1G": {
     "defaultMessage": "No charts in this section",
@@ -3750,6 +3886,10 @@
   "9pJlQd": {
     "defaultMessage": "No prompt versions created",
     "description": "A header for the empty state in the prompt versions table"
+  },
+  "9pswh3": {
+    "defaultMessage": "Run",
+    "description": "Tag for a run attached to the assistant"
   },
   "9qUuQ6": {
     "defaultMessage": "Average of {count} values",
@@ -3882,6 +4022,10 @@
   "ABM9Yz": {
     "defaultMessage": "Create User",
     "description": "Button to create a new user"
+  },
+  "ABMm1s": {
+    "defaultMessage": "Scope",
+    "description": "Label for the scope of a permission"
   },
   "ABTIKC": {
     "defaultMessage": "Loading trace statistics",
@@ -4019,6 +4163,10 @@
     "defaultMessage": "Tokens",
     "description": "Traces table tokens column name"
   },
+  "AfBjNS": {
+    "defaultMessage": "Dataset",
+    "description": "Tag for a dataset attached to the assistant"
+  },
   "AfYWI/": {
     "defaultMessage": "Tool call: {name}",
     "description": "Accessible label for an expandable assistant tool-call card"
@@ -4095,6 +4243,10 @@
     "defaultMessage": "Showing data up to {date}.",
     "description": "Tooltip for the refresh button showing the current date and time"
   },
+  "As38nE": {
+    "defaultMessage": "Switch",
+    "description": "Button that switches the development user"
+  },
   "At3XhS": {
     "defaultMessage": "Created Time",
     "description": "Label name for the created time under details tab on the model view page"
@@ -4155,6 +4307,10 @@
     "defaultMessage": "Last hour",
     "description": "Date range preset in the evaluation runs filters"
   },
+  "B1AAdy": {
+    "defaultMessage": "Roles to assign",
+    "description": "Heading for roles that will be assigned to a user"
+  },
   "B1Upnc": {
     "defaultMessage": "Relevant",
     "description": "Evaluation results > chunk relevancy assessment > positive value label. Displayed if evaluation result is considered as relevant to the query."
@@ -4202,6 +4358,10 @@
   "BB6In/": {
     "defaultMessage": "Tags",
     "description": "Header for the tags column in the experiments table"
+  },
+  "BC4tfH": {
+    "defaultMessage": "Select one or more roles",
+    "description": "Placeholder for choosing roles to assign"
   },
   "BCpX6U": {
     "defaultMessage": "Registered models",
@@ -4599,6 +4759,18 @@
     "defaultMessage": "Local packages",
     "description": "MCP compare packages heading"
   },
+  "CJIG2n": {
+    "defaultMessage": "Disable",
+    "description": "Button that disables the new model registry UI"
+  },
+  "CJT9DA": {
+    "defaultMessage": "tag value",
+    "description": "Accessible name for the tag value input"
+  },
+  "CKs3PY": {
+    "defaultMessage": "No models found",
+    "description": "Accessible name for the empty logged models illustration"
+  },
   "CKwhUr": {
     "defaultMessage": "Move to Todo",
     "description": "Review focused view: send a completed/declined trace back to the to-do list"
@@ -4614,6 +4786,10 @@
   "COIi12": {
     "defaultMessage": "Run judges",
     "description": "Button text for running multiple judges"
+  },
+  "COjrV/": {
+    "defaultMessage": "Password",
+    "description": "Label for a password field"
   },
   "CPO2ro": {
     "defaultMessage": "GenAI apps & agents",
@@ -4646,6 +4822,10 @@
   "CWlqGc": {
     "defaultMessage": "Issue detection is not enabled for this MLflow server. Ask an administrator to restart the server with MLFLOW_ENABLE_AI_GATEWAY=true.",
     "description": "Analyze overview description shown when issue detection is unavailable"
+  },
+  "CWy3KV": {
+    "defaultMessage": "Select one or more users",
+    "description": "Placeholder for choosing users to assign"
   },
   "CX/MSu": {
     "defaultMessage": "Unsafe",
@@ -4726,6 +4906,10 @@
   "Chht41": {
     "defaultMessage": "Select at least 2 runs to compare",
     "description": "Tooltip for the eval-runs compare button when fewer than 2 runs are selected"
+  },
+  "ChnT0f": {
+    "defaultMessage": "Direct permissions",
+    "description": "Section title for permissions granted directly to a user"
   },
   "CjBv5h": {
     "defaultMessage": "Approve pending request",
@@ -5131,6 +5315,10 @@
     "defaultMessage": "Delete",
     "description": "Delete evaluation runs modal button text"
   },
+  "EC9Sug": {
+    "defaultMessage": "Delete {count, plural, one {# role} other {# roles}}? This action cannot be undone.",
+    "description": "Confirmation that selected roles will be deleted"
+  },
   "ECjBf5": {
     "defaultMessage": "Edit the request body below and click Send request to call the endpoint.",
     "description": "Try it description for unified"
@@ -5175,6 +5363,10 @@
     "defaultMessage": "Metrics:",
     "description": "Label text for metrics in parallel coordinates plot in MLflow"
   },
+  "ELEYr+": {
+    "defaultMessage": "Model configuration help",
+    "description": "Button that explains the prompt model configuration"
+  },
   "ELI1bm": {
     "defaultMessage": "{reviewed} of {total} reviewed ({percentage}%)",
     "description": "Review focused view: queue progress summary"
@@ -5186,6 +5378,10 @@
   "EPcEi9": {
     "defaultMessage": "You have added rows with new input values, but you still need to evaluate the new data in order to save it.",
     "description": "Experiment page > artifact compare view > prompt lab artifact synchronization > unevaluated rows indicator"
+  },
+  "EQFSRR": {
+    "defaultMessage": "Admin status",
+    "description": "Heading for a change to administrator status"
   },
   "ER3oVW": {
     "defaultMessage": "No metrics available",
@@ -5267,6 +5463,10 @@
     "defaultMessage": "Search inputs and expectations",
     "description": "Placeholder for searching evaluation dataset records by inputs or expectations"
   },
+  "EiwUqv": {
+    "defaultMessage": "Previous slide",
+    "description": "Button that shows the previous assistant welcome slide"
+  },
   "EjPmMR": {
     "defaultMessage": "Workspace Manager",
     "description": "Roles table column header for the workspace-admin marker (multi-tenant)"
@@ -5319,6 +5519,10 @@
     "defaultMessage": "Request",
     "description": "Column label for request"
   },
+  "F+3VQ0": {
+    "defaultMessage": "Prompt",
+    "description": "Tag for a prompt attached to the assistant"
+  },
   "F0URWb": {
     "defaultMessage": "Enter a finite duration in milliseconds.",
     "description": "Invalid comparison duration filter value"
@@ -5346,6 +5550,10 @@
   "F5+bEE": {
     "defaultMessage": "{dimension}: {value}",
     "description": "Experiment issues tab > Active filter chip showing a dimension and its selected value"
+  },
+  "F87bfl": {
+    "defaultMessage": "Enable usage tracking",
+    "description": "Switch that turns endpoint usage tracking on or off"
   },
   "F8MqzZ": {
     "defaultMessage": "Path",
@@ -5458,6 +5666,10 @@
   "FX9826": {
     "defaultMessage": "Edit version status",
     "description": "Aria label for edit MCP server version status button"
+  },
+  "FYgAgu": {
+    "defaultMessage": "Add a permission",
+    "description": "Label for the form that adds a permission"
   },
   "FYxQgz": {
     "defaultMessage": "Key",
@@ -5815,6 +6027,10 @@
     "defaultMessage": "Remove filter",
     "description": "Experiment issues tab > Schedule modal aria label for the remove-filter button"
   },
+  "GW4y8w": {
+    "defaultMessage": "Change assistant provider",
+    "description": "Button that changes the assistant model provider"
+  },
   "GWJ0sz": {
     "defaultMessage": "The agent errors, a tool call fails, or an action does not complete.",
     "description": "Issue category description for execution"
@@ -5959,6 +6175,10 @@
     "defaultMessage": "Create experiment",
     "description": "Home page experiments empty state CTA"
   },
+  "GyHnV4": {
+    "defaultMessage": "User",
+    "description": "Chat message role: user"
+  },
   "GyyqO1": {
     "defaultMessage": "To submit:",
     "description": "Lead-in line of the popup shown when the playground Submit button is disabled"
@@ -6006,6 +6226,10 @@
   "H7JwOl": {
     "defaultMessage": "Delete version",
     "description": "A label for a button to delete prompt version on the prompt details page"
+  },
+  "H8TeZX": {
+    "defaultMessage": "Currently assigned users are pre-filled. Remove a user to unassign; use the form below to assign more.",
+    "description": "Help text above the users assigned to a role"
   },
   "H9MulE": {
     "defaultMessage": "Always show parents of matched spans, regardless of filter conditions",
@@ -6058,6 +6282,10 @@
   "HHruY/": {
     "defaultMessage": "Enter a remote Git, OCI, or ZIP location.",
     "description": "Validation error for an invalid skill source location"
+  },
+  "HKbkqV": {
+    "defaultMessage": "Loading datasets",
+    "description": "Accessible name for the datasets list loading placeholder"
   },
   "HLbyGb": {
     "defaultMessage": "Show more",
@@ -6339,6 +6567,10 @@
     "defaultMessage": "Created:",
     "description": "MCP compare metadata created label"
   },
+  "I0tJLX": {
+    "defaultMessage": "No roles for this user in workspace \"{workspace}\".",
+    "description": "Empty state when a user has no roles in the active workspace"
+  },
   "I1mNex": {
     "defaultMessage": "Select the events that will trigger this webhook.",
     "description": "Webhook events field description"
@@ -6503,6 +6735,10 @@
     "defaultMessage": "Dataset record expectations",
     "description": "Aria label for the dataset record expectations JSON editor"
   },
+  "IYiB3k": {
+    "defaultMessage": "Select all roles",
+    "description": "Checkbox that selects every role in the admin table"
+  },
   "IZ95jb": {
     "defaultMessage": "Datasets",
     "description": "Filtering label to filter runs based on datasets used"
@@ -6563,6 +6799,10 @@
     "defaultMessage": "Medium",
     "description": "Medium issue severity label"
   },
+  "IkTQwk": {
+    "defaultMessage": "Enter role name",
+    "description": "Placeholder for the role name field"
+  },
   "IkWwNU": {
     "defaultMessage": "Issue detection started",
     "description": "Notification title shown when an issue detection job is submitted"
@@ -6586,6 +6826,10 @@
   "InNAAD": {
     "defaultMessage": "Name is required",
     "description": "Validation error when no prompt name is provided in the playground save-prompt-version modal"
+  },
+  "IoG6+1": {
+    "defaultMessage": "Enter password",
+    "description": "Placeholder for a password field"
   },
   "IqAVzN": {
     "defaultMessage": "Aliases",
@@ -6614,6 +6858,10 @@
   "Iu4oRn": {
     "defaultMessage": "{totalCount, plural, one {# run} other {# runs}}",
     "description": "Total count of evaluation runs when no filter is applied"
+  },
+  "IyokEu": {
+    "defaultMessage": "Judge",
+    "description": "Tag for a judge attached to the assistant"
   },
   "J+Mfua": {
     "defaultMessage": "Delete",
@@ -6851,6 +7099,10 @@
     "defaultMessage": "Top K",
     "description": "Label for the top-k input on the playground parameters panel"
   },
+  "JgVIpS": {
+    "defaultMessage": "No datasets found",
+    "description": "Accessible name for the empty evaluation datasets illustration"
+  },
   "Jj2kRy": {
     "defaultMessage": "No details for assessment",
     "description": "Evaluation review > assessments > no history"
@@ -6942,6 +7194,10 @@
   "Jzwn+C": {
     "defaultMessage": "MCP Server:",
     "description": "MCP registry endpoint modal server label"
+  },
+  "K+JnyR": {
+    "defaultMessage": "Search",
+    "description": "Placeholder for filtering sort options"
   },
   "K/O0kT": {
     "defaultMessage": "Custom",
@@ -7035,6 +7291,10 @@
     "defaultMessage": "Files",
     "description": "Title of a skill version's files section"
   },
+  "KI0dcQ": {
+    "defaultMessage": "Sort descending",
+    "description": "Button that sorts in descending order"
+  },
   "KIlp8v": {
     "defaultMessage": "No models selected",
     "description": "Label for selector when no models are selected"
@@ -7050,6 +7310,10 @@
   "KKE2/K": {
     "defaultMessage": "Aggregated input/output/total token usage across all spans in the trace",
     "description": "Tooltip description for the Tokens column in the traces table"
+  },
+  "KL4zjW": {
+    "defaultMessage": "Apply changes",
+    "description": "Button that saves the reviewed admin changes"
   },
   "KLTGMn": {
     "defaultMessage": "Full conversation between a user and an assistant",
@@ -7099,6 +7363,10 @@
     "defaultMessage": "Add tag",
     "description": "Button text for adding a tag when no tags exist on a dataset record"
   },
+  "KTfV6Q": {
+    "defaultMessage": "Username",
+    "description": "Label for a username field"
+  },
   "KTl4GE": {
     "defaultMessage": "No assignable reviewers",
     "description": "Review queue: no assignable reviewers available"
@@ -7123,6 +7391,10 @@
     "defaultMessage": "Hide run details",
     "description": "Collapse the evaluation run traces sidebar"
   },
+  "KZL52I": {
+    "defaultMessage": "You started adding a permission to this role but didn't click Add. Continuing will discard it. Go back to either click Add to stage it, or Clear to drop the draft on the spot.",
+    "description": "Body of the dialog that warns an unsaved role permission draft will be discarded"
+  },
   "Ka1jM2": {
     "defaultMessage": "Disabled",
     "description": "Runs charts > line chart > ignore outliers > disabled label"
@@ -7142,6 +7414,14 @@
   "KcGozs": {
     "defaultMessage": "Endpoint:",
     "description": "Endpoint selector label"
+  },
+  "KcKptT": {
+    "defaultMessage": "Review the net changes for <strong>{username}</strong>. Click <strong>Apply changes</strong> to commit them, or <strong>Back</strong> to keep editing.",
+    "description": "Instructions above the summary of pending user access changes"
+  },
+  "KdUdhC": {
+    "defaultMessage": "Assign users",
+    "description": "Section title for assigning users to a role"
   },
   "KdsrPi": {
     "defaultMessage": "Assessments",
@@ -7283,6 +7563,10 @@
     "defaultMessage": "Path within the source",
     "description": "Label for an optional skill source subpath"
   },
+  "L0upkY": {
+    "defaultMessage": "Creating custom Pyfunc models",
+    "description": "Link to documentation about creating custom Pyfunc models"
+  },
   "L12vyN": {
     "defaultMessage": "The following {count, plural, one {endpoint} other {endpoints}} will be deleted:",
     "description": "Gateway > Bulk delete endpoints modal > Description"
@@ -7311,6 +7595,10 @@
     "defaultMessage": "Provider",
     "description": "Dimension toggle option for provider"
   },
+  "L85Z3W": {
+    "defaultMessage": "Dataset actions",
+    "description": "Menu of actions for an evaluation dataset"
+  },
   "L8czct": {
     "defaultMessage": "Latency Comparison",
     "description": "Title for the tool latency comparison chart"
@@ -7330,6 +7618,10 @@
   "LBaK9z": {
     "defaultMessage": "Open dataset",
     "description": "Text for the button that opens the dataset source URL in a new tab"
+  },
+  "LDcx6l": {
+    "defaultMessage": "Version:",
+    "description": "Label for a prompt version number"
   },
   "LED2z5": {
     "defaultMessage": "To disable or enable this display, call {disableFunction} or {enableFunction} and re-run the cell",
@@ -7394,6 +7686,10 @@
   "LOS3vS": {
     "defaultMessage": "Output",
     "description": "Column selector label for the output column"
+  },
+  "LObQoH": {
+    "defaultMessage": "An error occurred while fetching data.",
+    "description": "Generic error shown when assigned users cannot be loaded"
   },
   "LPYSU+": {
     "defaultMessage": "Showing the first {count} matches — refine your search to narrow them.",
@@ -7535,6 +7831,10 @@
     "defaultMessage": "Delete selected",
     "description": "Button that deletes only the selected experiment runs"
   },
+  "M+2MYl": {
+    "defaultMessage": "Global",
+    "description": "Option for a global assistant skills location"
+  },
   "M+83pE": {
     "defaultMessage": "Partial",
     "description": "Usage subtotal with incomplete trace metadata"
@@ -7590,6 +7890,10 @@
   "M6IomB": {
     "defaultMessage": "Detect new issues",
     "description": "Analyze overview action to rerun stale issue detection"
+  },
+  "M6ozLa": {
+    "defaultMessage": "Delete roles",
+    "description": "Title of the dialog that deletes selected roles"
   },
   "M8GzoA": {
     "defaultMessage": "Trace archival location cannot use the proxy-only `mlflow-artifacts:` scheme.",
@@ -7694,6 +7998,10 @@
   "MP+H1B": {
     "defaultMessage": "No webhooks configured. Create one to get started. <link>Learn more about webhooks.</link>",
     "description": "Empty state for webhooks list"
+  },
+  "MQ22Dt": {
+    "defaultMessage": "Breadcrumb",
+    "description": "Accessible name for the evaluation run breadcrumb"
   },
   "MQ4Voz": {
     "defaultMessage": "{count, plural, one {Input} other {Inputs}}",
@@ -7999,6 +8307,10 @@
     "defaultMessage": "Trace activity. Use arrow keys to select a day.",
     "description": "Accessible label for the interactive trace activity chart"
   },
+  "NGrptE": {
+    "defaultMessage": "Failed to load assigned users",
+    "description": "Error title when the users assigned to a role cannot be loaded"
+  },
   "NGsTf/": {
     "defaultMessage": "Synchronizing artifacts for {runsBeingSynchronizedCount} runs...",
     "description": "Experiment page > artifact compare view > prompt lab artifact synchronization > loading state"
@@ -8006,6 +8318,10 @@
   "NHPAjO": {
     "defaultMessage": "Trace display settings",
     "description": "Accessible label for trace display settings button"
+  },
+  "NHffa4": {
+    "defaultMessage": "Select all users",
+    "description": "Checkbox that selects every user in the admin table"
   },
   "NI/ukG": {
     "defaultMessage": "N/A",
@@ -8283,6 +8599,10 @@
     "defaultMessage": "This view's definition couldn't be read and can't be displayed. Edit it with the assistant to rebuild it.",
     "description": "Placeholder shown when a custom view has an invalid or unreadable definition and cannot be rendered"
   },
+  "O7vnok": {
+    "defaultMessage": "Role details",
+    "description": "Section title for role name and description"
+  },
   "O92ET5": {
     "defaultMessage": "Repository:",
     "description": "MCP server version detail repository label"
@@ -8539,6 +8859,10 @@
     "defaultMessage": "Attributes",
     "description": "Label for the attributes section of a span link"
   },
+  "OpdhBI": {
+    "defaultMessage": "Workspace",
+    "description": "Label for a workspace field"
+  },
   "Oqyk1X": {
     "defaultMessage": "Registered at:",
     "description": "Skill version creation timestamp label"
@@ -8606,6 +8930,10 @@
   "P2LLVj": {
     "defaultMessage": "{tokenCount} tokens",
     "description": "Compact token count in the trace details header, abbreviated (e.g. 1.2K)"
+  },
+  "P2cheJ": {
+    "defaultMessage": "No new direct permissions.",
+    "description": "Empty state when no direct permissions will be granted"
   },
   "P31kXd": {
     "defaultMessage": "Cost breakdown",
@@ -8695,6 +9023,10 @@
     "defaultMessage": "Used by ({count})",
     "description": "Gateway > Bindings using key drawer > Title"
   },
+  "PN2y9b": {
+    "defaultMessage": "No roles visible in workspaces you manage.",
+    "description": "Empty state when a workspace manager cannot see roles for a user"
+  },
   "PNfcez": {
     "defaultMessage": "Add row",
     "description": "Experiment page > artifact compare view > add new row button"
@@ -8751,6 +9083,10 @@
     "defaultMessage": "No conversation turns found in this session.",
     "description": "Empty state in the V4 session drawer"
   },
+  "PWXmQP": {
+    "defaultMessage": "Rename to {name}",
+    "description": "Summary line when a role is renamed"
+  },
   "PX5Nlz": {
     "defaultMessage": "Clear selection",
     "description": "Clear model selection"
@@ -8794,6 +9130,10 @@
   "PewjIJ": {
     "defaultMessage": "GenAI apps & agents",
     "description": "Label for experiments focused on generative AI model development"
+  },
+  "PftslT": {
+    "defaultMessage": "No tags",
+    "description": "Accessible name when a skill has no tags"
   },
   "Pg/hTg": {
     "defaultMessage": "Filter by name",
@@ -8907,6 +9247,10 @@
     "defaultMessage": "Transport",
     "description": "Package transport label"
   },
+  "Q+OKZQ": {
+    "defaultMessage": "Execute MLflow CLI (required)",
+    "description": "Assistant permission to run the MLflow command-line tool"
+  },
   "Q/QcTS": {
     "defaultMessage": "Save",
     "description": "Save guardrail changes button"
@@ -9010,6 +9354,10 @@
   "QK/Qyx": {
     "defaultMessage": "Total",
     "description": "Label for total token usage"
+  },
+  "QKpO1j": {
+    "defaultMessage": "Promote to admin (was {previous, select, admin {admin} other {not admin}})",
+    "description": "Summary line when a user is promoted to administrator"
   },
   "QL5BPA": {
     "defaultMessage": "{action} tool {name}",
@@ -9203,6 +9551,10 @@
     "defaultMessage": "Clear filters",
     "description": "Button that clears all applied trace filters from the filter popover"
   },
+  "QyZBP7": {
+    "defaultMessage": "No permissions to remove.",
+    "description": "Empty state when no permissions will be removed"
+  },
   "QybNk9": {
     "defaultMessage": "Next unreviewed",
     "description": "Review focused view: jump to the next pending trace"
@@ -9310,6 +9662,10 @@
   "RJhypK": {
     "defaultMessage": "Metadata:",
     "description": "Label for metadata field in create MCP server version modal"
+  },
+  "RKdsiI": {
+    "defaultMessage": "Edit project code",
+    "description": "Assistant permission to edit project files"
   },
   "RMZa5Q": {
     "defaultMessage": "Scan your traces to surface failure modes, quality regressions, and cost anomalies, then triage and fix them in one place.",
@@ -9643,6 +9999,10 @@
     "defaultMessage": "Search parameters",
     "description": "Run page > Overview > Parameters table > Filter input placeholder"
   },
+  "SLNaAn": {
+    "defaultMessage": "Search",
+    "description": "Placeholder for searching within a model trace"
+  },
   "SLjN1/": {
     "defaultMessage": "Description",
     "description": "Row heading in a table that contains the description of a function parameter."
@@ -9726,6 +10086,10 @@
   "SdwhGR": {
     "defaultMessage": "No maximum",
     "description": "Numeric question: max-value input placeholder when unbounded"
+  },
+  "Sf18jh": {
+    "defaultMessage": "JSON schema",
+    "description": "Response format that follows a JSON schema"
   },
   "Sg3+L8": {
     "defaultMessage": "Versions",
@@ -9895,6 +10259,10 @@
     "defaultMessage": "Assistant: {error}",
     "description": "Inline error prefix shown when the assistant fails to apply a custom view spec"
   },
+  "TE6d7G": {
+    "defaultMessage": "Open header dropdown menu",
+    "description": "Button that opens the page header overflow menu"
+  },
   "TFPBsU": {
     "defaultMessage": "Select",
     "description": "Placeholder for choosing a trace filter operator"
@@ -10030,6 +10398,10 @@
   "Tf8grA": {
     "defaultMessage": "Select traces",
     "description": "Button to select traces"
+  },
+  "Tfbh9S": {
+    "defaultMessage": "Use Edit role to add permissions to this role.",
+    "description": "Empty state hint for adding permissions to a role"
   },
   "TfuAgs": {
     "defaultMessage": "Hide group",
@@ -10174,6 +10546,10 @@
   "U3btBc": {
     "defaultMessage": "Examples:",
     "description": "Text header for examples of mlflow search syntax"
+  },
+  "U42GFC": {
+    "defaultMessage": "Delete users",
+    "description": "Title of the dialog that deletes selected users"
   },
   "U4ox5k": {
     "defaultMessage": "Experiments",
@@ -10399,6 +10775,10 @@
     "defaultMessage": "View scorer {scorerName}",
     "description": "Accessible label for a link that opens the registered scorer behind an evaluation run assessment"
   },
+  "Up6CSQ": {
+    "defaultMessage": "Admin status",
+    "description": "Section title for whether a user is an administrator"
+  },
   "UpVskF": {
     "defaultMessage": "Expectations",
     "description": "Header for the dataset record expectations column"
@@ -10438,6 +10818,10 @@
   "Uue10g": {
     "defaultMessage": "Models",
     "description": "Breadcrumb for models tab of experiments page on the logged model details page"
+  },
+  "UvIjc4": {
+    "defaultMessage": "Sort ascending",
+    "description": "Button that sorts in ascending order"
   },
   "UwpML4": {
     "defaultMessage": "Model registered successfully",
@@ -10515,6 +10899,10 @@
     "defaultMessage": "No chart data available for the currently visible runs. Select other runs or <link>hide empty charts.</link>",
     "description": "Experiment tracking > runs charts > indication displayed when no corresponding data is found to be used in chart-based run comparison"
   },
+  "VBD7lM": {
+    "defaultMessage": "Evaluate",
+    "description": "Button that evaluates a prompt cell"
+  },
   "VBhmhO": {
     "defaultMessage": "Explore MLflow's core features with pre-populated sample data including traces, evaluations, and prompts.",
     "description": "Demo banner description"
@@ -10558,6 +10946,10 @@
   "VHuRTt": {
     "defaultMessage": "Doc",
     "description": "Label for the document preview in a chunk relevance assessment"
+  },
+  "VJ3V//": {
+    "defaultMessage": "More actions",
+    "description": "Button that opens more actions for a prompt"
   },
   "VKdptN": {
     "defaultMessage": "Starting...",
@@ -10711,6 +11103,10 @@
     "defaultMessage": "Search by dataset name",
     "description": "Placeholder for searching datasets when exporting traces"
   },
+  "Vcc46A": {
+    "defaultMessage": "Prompt versions table",
+    "description": "Accessible name for the prompt versions table"
+  },
   "Vcxqhk": {
     "defaultMessage": "No views match your search",
     "description": "Empty state shown in the saved views dropdown when the search matches nothing"
@@ -10806,6 +11202,10 @@
   "VwxvII": {
     "defaultMessage": "forecasting",
     "description": "A short label for experiments focused on time series forecasting"
+  },
+  "VyeENd": {
+    "defaultMessage": "Description",
+    "description": "Label for a description field"
   },
   "W+aLXo": {
     "defaultMessage": "Manage webhooks to receive HTTP notifications when events occur in MLflow.",
@@ -11006,6 +11406,10 @@
   "WZpT6f": {
     "defaultMessage": "Comment",
     "description": "Accessible label for the comment in pairwise trace review"
+  },
+  "Wa8qQQ": {
+    "defaultMessage": "No tags",
+    "description": "Accessible name when an MCP server has no tags"
   },
   "WatQf0": {
     "defaultMessage": "Image unavailable",
@@ -11375,6 +11779,10 @@
     "defaultMessage": "Prompt alias deleted",
     "description": "Webhook event label"
   },
+  "XePy16": {
+    "defaultMessage": "No new user assignments.",
+    "description": "Empty state when no users will be assigned"
+  },
   "XfsPd4": {
     "defaultMessage": "Save prompt",
     "description": "Label for the playground top-bar button that opens the save-prompt-version modal"
@@ -11535,6 +11943,10 @@
     "defaultMessage": "Download artifact",
     "description": "Link to download the artifact of the experiment"
   },
+  "Y9nnEN": {
+    "defaultMessage": "Training",
+    "description": "Run type label for a training run"
+  },
   "YECxws": {
     "defaultMessage": "Compare",
     "description": "Label for the compare experiments action on the experiments list page"
@@ -11631,6 +12043,10 @@
     "defaultMessage": "Create dataset",
     "description": "Primary button text for creating a new evaluation dataset on the V2 list page"
   },
+  "YTJsjI": {
+    "defaultMessage": "Metrics",
+    "description": "Group label for metric options"
+  },
   "YUC+Y4": {
     "defaultMessage": "Save",
     "description": "Confirm button label on the rename-custom-view modal"
@@ -11638,6 +12054,10 @@
   "YV6xFB": {
     "defaultMessage": "Start:",
     "description": "Label for the start time of a span"
+  },
+  "YVy+/g": {
+    "defaultMessage": "No runs found",
+    "description": "Accessible name for the empty evaluation runs illustration"
   },
   "YWi2UH": {
     "defaultMessage": "{count, plural, one {# regressed comparison group} other {# regressed comparison groups}} compared with baseline",
@@ -11683,6 +12103,10 @@
     "defaultMessage": "PASS",
     "description": "Header label for pass/fail assessment type for the pass rate"
   },
+  "Ydv1WO": {
+    "defaultMessage": "No role unassignments.",
+    "description": "Empty state when no roles will be removed"
+  },
   "YdxomH": {
     "defaultMessage": "New version of {name}",
     "description": "Option to save a new version of the loaded prompt in the playground save modal"
@@ -11726,6 +12150,10 @@
   "YlavFP": {
     "defaultMessage": "Add section",
     "description": "Experiment page > compare runs > chart section > add section bar"
+  },
+  "Ymh5m+": {
+    "defaultMessage": "Send message",
+    "description": "Button that sends the assistant chat message"
   },
   "YnHiZ6": {
     "defaultMessage": "Relative Time (hours)",
@@ -11903,6 +12331,10 @@
     "defaultMessage": "just now",
     "description": "Indicates a time duration that just passed"
   },
+  "ZQjY+q": {
+    "defaultMessage": "You started adding a permission to this role but didn't click Add. Continuing to Review changes will discard it. Go back to either click Add to stage it, or Clear to drop the draft on the spot.",
+    "description": "Body of the dialog that warns an unsaved role permission will be discarded"
+  },
   "ZQpc2w": {
     "defaultMessage": "Enter dataset name",
     "description": "Dataset name placeholder"
@@ -11994,6 +12426,10 @@
   "Zj5ugd": {
     "defaultMessage": "Permission",
     "description": "Permissions table column header for the permission level"
+  },
+  "ZjcTpV": {
+    "defaultMessage": "No roles",
+    "description": "Empty state title when a user has no roles"
   },
   "ZjnP+I": {
     "defaultMessage": "Delete",
@@ -12131,6 +12567,10 @@
     "defaultMessage": "Recommended",
     "description": "Experiment issues tab > Schedule modal heading above the suggested timezones"
   },
+  "a9wgeo": {
+    "defaultMessage": "Tool permission request",
+    "description": "Accessible label for the assistant tool permission prompt"
+  },
   "aAAHaS": {
     "defaultMessage": "Context insufficient",
     "description": "Evaluation results > context sufficiency assessment > negative value label. Displayed if retrieved context is insufficient to generate the expected response."
@@ -12214,6 +12654,10 @@
   "aTO9J7": {
     "defaultMessage": "Manage workspace",
     "description": "Tooltip on the gear icon that links to /admin/ws scoped to this workspace"
+  },
+  "aTjG+x": {
+    "defaultMessage": "Delete Budget Policy",
+    "description": "Title of the dialog that deletes a budget policy"
   },
   "aTnlkS": {
     "defaultMessage": "Search for a provider...",
@@ -12327,6 +12771,10 @@
     "defaultMessage": "Up to {max} options.",
     "description": "Categorical options hint"
   },
+  "ap1Vrw": {
+    "defaultMessage": "tag name",
+    "description": "Accessible name for the tag name input"
+  },
   "aqMseN": {
     "defaultMessage": "Manage prompt updates and collaborate across teams.",
     "description": "Home page quick action description for registering prompts"
@@ -12394,6 +12842,10 @@
   "b1smv4": {
     "defaultMessage": "This folder has {count} files. The server accepts up to {max}.",
     "description": "Error when a skill folder has more files than the server accepts"
+  },
+  "b1tvW0": {
+    "defaultMessage": "Group by",
+    "description": "Button that groups table rows"
   },
   "b1yfI9": {
     "defaultMessage": "Run details",
@@ -12466,6 +12918,10 @@
   "bI0J8T": {
     "defaultMessage": "Operator",
     "description": "Label for the operator selector in the traces filter"
+  },
+  "bJIgTl": {
+    "defaultMessage": "Users to unassign",
+    "description": "Heading for users that will be unassigned from a role"
   },
   "bK3O8b": {
     "defaultMessage": "Edit judge",
@@ -12743,6 +13199,10 @@
     "defaultMessage": "YAML",
     "description": "Label for the YAML render mode dropdown item in the model trace explorer inputs/outputs section"
   },
+  "c7KATE": {
+    "defaultMessage": "Filters",
+    "description": "Button that opens trace table filters"
+  },
   "cAKSkQ": {
     "defaultMessage": "Select a cell to display preview",
     "description": "Experiment page > table view > preview sidebar > nothing selected"
@@ -12782,6 +13242,10 @@
   "cEwSR8": {
     "defaultMessage": "Maximum number of language tokens returned from evaluation.",
     "description": "Experiment page > prompt lab > max tokens parameter help text"
+  },
+  "cGAvc2": {
+    "defaultMessage": "Permissions",
+    "description": "Section title for a list of permissions"
   },
   "cHCKza": {
     "defaultMessage": "{minutes}m ago",
@@ -12915,6 +13379,10 @@
     "defaultMessage": "Tools",
     "description": "MCP compare tools heading"
   },
+  "ckKunq": {
+    "defaultMessage": "Review changes",
+    "description": "Button that opens a summary of pending admin changes"
+  },
   "ckRx1h": {
     "defaultMessage": "{column} (descending)",
     "description": "Traces table sort option: sort by a column, newest/largest first"
@@ -12994,6 +13462,10 @@
   "cv/bGM": {
     "defaultMessage": "Trace ID",
     "description": "Column label for trace ID"
+  },
+  "cvKFdt": {
+    "defaultMessage": "You started adding a direct permission but didn't click Add. Continuing will discard it. Go back to either click Add to stage it, or Clear to drop the draft on the spot.",
+    "description": "Body of the dialog that warns an unsaved direct permission draft will be discarded"
   },
   "cvatOm": {
     "defaultMessage": "Account",
@@ -13107,6 +13579,14 @@
     "defaultMessage": "Could not save. Try again.",
     "description": "Inline error shown when logging thumbs feedback fails in a custom trace view"
   },
+  "dAVw7T": {
+    "defaultMessage": "You are a helpful assistant",
+    "description": "Example system prompt shown in the playground role help"
+  },
+  "dAkfI5": {
+    "defaultMessage": "Copy",
+    "description": "Button that copies a tag value"
+  },
   "dDZsLz": {
     "defaultMessage": "Toggle sidebar",
     "description": "Accessible label for the button that collapses or expands the sidebar"
@@ -13210,6 +13690,10 @@
   "dYpolB": {
     "defaultMessage": "Oldest first",
     "description": "Active ascending sort direction for a date in evaluation comparison"
+  },
+  "dcVj8c": {
+    "defaultMessage": "Comment",
+    "description": "Label for the comment on a model stage transition"
   },
   "dd8i7f": {
     "defaultMessage": "Define custom instructions for LLM evaluation",
@@ -13350,6 +13834,10 @@
   "e2AObB": {
     "defaultMessage": "Value",
     "description": "Field label for assessment value in an edit form"
+  },
+  "e2kTAi": {
+    "defaultMessage": "System",
+    "description": "Chat message role: system"
   },
   "e2ls2b": {
     "defaultMessage": "Edit question",
@@ -13687,6 +14175,10 @@
     "defaultMessage": "No images found",
     "description": "Title for the empty state when no images are found in the currently visible runs"
   },
+  "f+NJb+": {
+    "defaultMessage": "Create Role",
+    "description": "Title of the dialog that creates an admin role"
+  },
   "f+SL+E": {
     "defaultMessage": "Add tag",
     "description": "Aria label for adding a skill tag"
@@ -13759,6 +14251,10 @@
     "defaultMessage": "Select view",
     "description": "Tooltip for the trace explorer view selector"
   },
+  "fBKJIx": {
+    "defaultMessage": "Permissions and roles assigned to this user.",
+    "description": "Subtitle on the user detail page"
+  },
   "fCT8Fj": {
     "defaultMessage": "Saved to this experiment. Anyone with access can open this view from the link or the Views list.",
     "description": "Confirmation shown after saving an experiment view, explaining that the link opens the saved view"
@@ -13810,6 +14306,10 @@
   "fMxD0i": {
     "defaultMessage": "Admin",
     "description": "Tag content marking an admin role (single-tenant)"
+  },
+  "fPnYSu": {
+    "defaultMessage": "No user unassignments.",
+    "description": "Empty state when no users will be unassigned"
   },
   "fR2kUe": {
     "defaultMessage": "{count, plural, one {# experiment run will be restored.} other {# experiment runs will be restored.}}",
@@ -14022,6 +14522,10 @@
   "g1HlIL": {
     "defaultMessage": "View in Unity Catalog",
     "description": "Overflow-menu item linking to the V2 evaluation dataset's table page in Unity Catalog"
+  },
+  "g2aBIz": {
+    "defaultMessage": "Edit section",
+    "description": "Button that edits a runs chart section"
   },
   "g2tInh": {
     "defaultMessage": "Source type: {typeLabel}",
@@ -14539,6 +15043,10 @@
     "defaultMessage": "Events",
     "description": "Webhook events field label"
   },
+  "hMH2oe": {
+    "defaultMessage": "No permissions",
+    "description": "Empty state title when a role has no permissions"
+  },
   "hN4qL/": {
     "defaultMessage": "Create workspace",
     "description": "Home page workspaces empty state CTA"
@@ -14647,6 +15155,10 @@
     "defaultMessage": "Settings",
     "description": "Label for the playground top-bar button that opens model parameters"
   },
+  "hhDUPS": {
+    "defaultMessage": "Custom",
+    "description": "Placeholder for a custom judge name"
+  },
   "hhFoVr": {
     "defaultMessage": "Value",
     "description": "Label for the value input in the traces filter"
@@ -14662,6 +15174,10 @@
   "hjAgZ8": {
     "defaultMessage": "Unified OpenAI compatible API for model invocations. Set the endpoint name as the model parameter.",
     "description": "OpenAI compatible API description"
+  },
+  "hkF2fI": {
+    "defaultMessage": "Close",
+    "description": "Button that closes the assistant panel"
   },
   "hkXDZn": {
     "defaultMessage": "MLflow allows you associate traces with users and chat sessions. This is useful for analyzing multi-turn conversations, enabling you to inspect what happened at each step. Copy the code snippet below to generate a sample trace, or visit the documentation for a more in-depth example.",
@@ -14843,9 +15359,17 @@
     "defaultMessage": "Params",
     "description": "Experiment page > group by runs control > params section label"
   },
+  "iAd4sv": {
+    "defaultMessage": "Clear description",
+    "description": "Summary line when a role description is cleared"
+  },
   "iC2Owx": {
     "defaultMessage": "Stop sequences: {stopSequences}",
     "description": "Experiment page > artifact compare view > run column header prompt metadata > stop sequences parameter"
+  },
+  "iCXQQS": {
+    "defaultMessage": "MLflow Tracing UI",
+    "description": "Screenshot of the MLflow tracing user interface"
   },
   "iCdWsS": {
     "defaultMessage": "Adheres to guidelines",
@@ -14867,9 +15391,17 @@
     "defaultMessage": "Judges",
     "description": "Section header for judge selection in the run evaluation modal"
   },
+  "iFVQm1": {
+    "defaultMessage": "Resource Type",
+    "description": "Label for the resource type of a permission"
+  },
   "iJRv1X": {
     "defaultMessage": "Access endpoint",
     "description": "Header for the access endpoint column in the MCP servers table"
+  },
+  "iKfzWg": {
+    "defaultMessage": "Role assignment",
+    "description": "Section title for assigning roles to a user"
   },
   "iLEEpo": {
     "defaultMessage": "Assign reviewers who should answer this queue's questions. They'll find it under “Feedback requested”.",
@@ -14978,6 +15510,10 @@
   "iXb99e": {
     "defaultMessage": "Box Plot",
     "description": "Tab pane title for box plot on the compare runs page"
+  },
+  "iYHPPB": {
+    "defaultMessage": "Discard unsaved role permission?",
+    "description": "Title of the dialog that warns an unsaved role permission will be discarded"
   },
   "iYmFCZ": {
     "defaultMessage": "compare to",
@@ -15219,6 +15755,10 @@
     "defaultMessage": "Add dataset records",
     "description": "Title for the V2 dataset records empty state"
   },
+  "j7Zuh8": {
+    "defaultMessage": "Next slide",
+    "description": "Button that shows the next assistant welcome slide"
+  },
   "j7ZyVq": {
     "defaultMessage": "On",
     "description": "Label when a chart axis log scale is enabled"
@@ -15379,6 +15919,10 @@
     "defaultMessage": "Exit shared view",
     "description": "Menu item that stops previewing the currently-applied shared view and restores the user's own view"
   },
+  "jhUOo0": {
+    "defaultMessage": "No direct permissions to revoke.",
+    "description": "Empty state when no direct permissions will be revoked"
+  },
   "jhgu6C": {
     "defaultMessage": "A unique identifier for the session or conversation for grouping traces",
     "description": "Tooltip description for the Session column in the traces table"
@@ -15398,6 +15942,10 @@
   "jiIft9": {
     "defaultMessage": "Settings",
     "description": "Sidebar link for settings page"
+  },
+  "jismZq": {
+    "defaultMessage": "Model",
+    "description": "Tag for a model attached to the assistant"
   },
   "jjidVr": {
     "defaultMessage": "{numValue}/{numEvals} for run \"{runName}\"",
@@ -15635,6 +16183,10 @@
     "defaultMessage": "Rationale",
     "description": "Label for the rationale section of an assessment hover card"
   },
+  "kL2ao0": {
+    "defaultMessage": "No change to name.",
+    "description": "Empty state when a role name is unchanged"
+  },
   "kLnuhe": {
     "defaultMessage": "Custom views are built by the assistant, which isn't available here.",
     "description": "Empty state description shown when the custom view assistant is not available"
@@ -15731,9 +16283,17 @@
     "defaultMessage": "Click a cell to preview data",
     "description": "Run page > artifact view > logged table view > preview box > CTA"
   },
+  "klAHSN": {
+    "defaultMessage": "This user has not been assigned to any roles.",
+    "description": "Empty state when an administrator sees a user with no roles"
+  },
   "klERxj": {
     "defaultMessage": "1. Configure experiment and tracking URI",
     "description": "Section title for configuring experiment and tracking URI before logging traces"
+  },
+  "kldsss": {
+    "defaultMessage": "No new permissions.",
+    "description": "Empty state when no permissions will be added"
   },
   "km086Q": {
     "defaultMessage": "Description",
@@ -15758,6 +16318,14 @@
   "ko0/Vb": {
     "defaultMessage": "Review",
     "description": "Action that opens pairwise review for the compared traces"
+  },
+  "kpRohO": {
+    "defaultMessage": "Prompt:",
+    "description": "Label for the prompt content field"
+  },
+  "kq1P7f": {
+    "defaultMessage": "Roles",
+    "description": "Label for a list of roles"
   },
   "kqXT2V": {
     "defaultMessage": "Description",
@@ -15959,6 +16527,10 @@
     "defaultMessage": "Hide charts with no data",
     "description": "Experiment page > control bar > label for a checkbox toggle button that hides chart cards with no corresponding data"
   },
+  "lacUkg": {
+    "defaultMessage": "Resource type",
+    "description": "Label for the resource type of a permission"
+  },
   "lb7TOJ": {
     "defaultMessage": "{count, plural, one {Restore Experiment Run} other {Restore Experiment Runs}}",
     "description": "Title of the modal for restoring deleted experiment runs"
@@ -16155,6 +16727,10 @@
     "defaultMessage": "Last modified",
     "description": "Last modified column header"
   },
+  "mClJDH": {
+    "defaultMessage": "Type",
+    "description": "Label for the line chart series type"
+  },
   "mDb6cp": {
     "defaultMessage": "{action} remote {url}",
     "description": "Aria label for expanding/collapsing a remote row"
@@ -16250,6 +16826,10 @@
   "mRshzt": {
     "defaultMessage": "Models",
     "description": "Run page > Overview > Metrics table > Models column header"
+  },
+  "mU1aiv": {
+    "defaultMessage": "Name:",
+    "description": "Label for the prompt name field"
   },
   "mW3Ql9": {
     "defaultMessage": "Clear selection",
@@ -16587,6 +17167,10 @@
     "defaultMessage": "Error when fetching related runs data: {error}",
     "description": "Error message displayed when logged model details page couldn't fetch related runs data"
   },
+  "nNpRoR": {
+    "defaultMessage": "Back",
+    "description": "Button that returns to the previous step"
+  },
   "nPHUYN": {
     "defaultMessage": "https://example.com/webhook",
     "description": "Webhook URL placeholder"
@@ -16622,6 +17206,10 @@
   "nSbbT5": {
     "defaultMessage": "Submit",
     "description": "Review focused view: submit answers and mark the trace complete"
+  },
+  "nUzCGN": {
+    "defaultMessage": "Custom location",
+    "description": "Option for a custom assistant skills path"
   },
   "nVfMhT": {
     "defaultMessage": "Failed to load this version.",
@@ -16666,6 +17254,10 @@
   "naivho": {
     "defaultMessage": "of",
     "description": "Connector between list and element type"
+  },
+  "ncReyb": {
+    "defaultMessage": "Direct permissions to grant",
+    "description": "Heading for direct permissions that will be granted"
   },
   "nddV+2": {
     "defaultMessage": "Show less",
@@ -16919,6 +17511,10 @@
     "defaultMessage": "MCP",
     "description": "MCP Registry breadcrumb link"
   },
+  "oQ6tzG": {
+    "defaultMessage": "No experiment selected. You can configure project mappings later in Settings.",
+    "description": "Note shown when assistant project mappings have no selected experiment"
+  },
   "oQO1tC": {
     "defaultMessage": "Enter workspace name",
     "description": "Input placeholder for workspace name in create workspace modal"
@@ -17023,9 +17619,17 @@
     "defaultMessage": "Model",
     "description": "Section title for model configuration"
   },
+  "omlyIb": {
+    "defaultMessage": "Columns",
+    "description": "Button that chooses visible table columns"
+  },
   "onvTfg": {
     "defaultMessage": "Show exceptions",
     "description": "Trace span filter option"
+  },
+  "oofOoV": {
+    "defaultMessage": "Clear stored switcher creds and the auth cookie, then reload. Use to recover from a stuck Basic Auth state.",
+    "description": "Tooltip for the button that clears the development user switcher credentials"
   },
   "opUoF8": {
     "defaultMessage": "Retrieval relevance",
@@ -17046,6 +17650,10 @@
   "orW9zb": {
     "defaultMessage": "No input or output recorded for this trace.",
     "description": "Review focused view: trace panel empty state when there's no input/output"
+  },
+  "osNNaN": {
+    "defaultMessage": "Trace",
+    "description": "Tag for a trace attached to the assistant"
   },
   "ot/GV+": {
     "defaultMessage": "Copy setup command",
@@ -17074,6 +17682,10 @@
   "owr9l2": {
     "defaultMessage": "No group by columns selected",
     "description": "Experiment page > artifact compare view > empty state for no group by columns selected > title"
+  },
+  "oxr9Av": {
+    "defaultMessage": "Session",
+    "description": "Tag for a session attached to the assistant"
   },
   "oxy7iI": {
     "defaultMessage": "Display metric types",
@@ -17199,6 +17811,10 @@
     "defaultMessage": "Show all parent spans",
     "description": "Trace span filter option"
   },
+  "pGJ0Vg": {
+    "defaultMessage": "Step",
+    "description": "Label for the image chart step selector"
+  },
   "pGmDzQ": {
     "defaultMessage": "This skill may have been deleted or the URL may be incorrect.",
     "description": "Description when a Skill cannot be loaded"
@@ -17242,6 +17858,10 @@
   "pPo8Le": {
     "defaultMessage": "Preview",
     "description": "Review question preview panel header"
+  },
+  "pSym0n": {
+    "defaultMessage": "Preview icon.",
+    "description": "Accessible name for the artifact preview illustration"
   },
   "pT8+E7": {
     "defaultMessage": "Delete budget policy",
@@ -17410,6 +18030,10 @@
   "q1okqz": {
     "defaultMessage": "Registry URL",
     "description": "Package registry URL label"
+  },
+  "q5SuWy": {
+    "defaultMessage": "Review the net changes. Click <strong>Apply changes</strong> to commit them, or <strong>Back</strong> to keep editing.",
+    "description": "Instructions above the summary of pending role changes"
   },
   "q7c+LG": {
     "defaultMessage": "None",
@@ -17659,9 +18283,21 @@
     "defaultMessage": "Operator",
     "description": "Experiment issues tab > Schedule modal label for the trace filter operator"
   },
+  "qplugX": {
+    "defaultMessage": "Images",
+    "description": "Label for the image metric selector"
+  },
+  "qqxnrp": {
+    "defaultMessage": "Permissions to remove",
+    "description": "Heading for permissions that will be removed from a role"
+  },
   "qr7dhT": {
     "defaultMessage": "None",
     "description": "Label for experiments with no automatically inferred experiment type"
+  },
+  "qrrSUj": {
+    "defaultMessage": "Select \"group by\" columns",
+    "description": "Accessible name for the evaluation artifact group-by column picker"
   },
   "qskex0": {
     "defaultMessage": "Conversation completeness",
@@ -17911,6 +18547,10 @@
     "defaultMessage": "No assessment values to chart for the selected runs.",
     "description": "Empty state inside the eval-runs chart when selected assessments have no values"
   },
+  "rUQOzj": {
+    "defaultMessage": "Roles to unassign",
+    "description": "Heading for roles that will be removed from a user"
+  },
   "rWMlUb": {
     "defaultMessage": "For {run}, the {aggregate} value for {column} is {value}.",
     "description": "Summary of a comparison run aggregate value"
@@ -18155,6 +18795,10 @@
     "defaultMessage": "Draft",
     "description": "Skill version status: draft"
   },
+  "sHHrOC": {
+    "defaultMessage": "Chart type",
+    "description": "Label for the chart type selector"
+  },
   "sHvLH2": {
     "defaultMessage": "Browse all providers →",
     "description": "Gateway > Endpoints > Compact quick start browse all providers link"
@@ -18395,6 +19039,10 @@
     "defaultMessage": "Last updated by",
     "description": "Column selector label for the last-updated-by column"
   },
+  "t1C0ny": {
+    "defaultMessage": "Revoke admin",
+    "description": "Summary line when administrator status is revoked"
+  },
   "t1M50H": {
     "defaultMessage": "Field",
     "description": "Label for the field selector in the eval-runs filter"
@@ -18470,6 +19118,10 @@
   "tHrp+A": {
     "defaultMessage": "Value",
     "description": "Key-value tag editor modal > Value input label (required)"
+  },
+  "tKR4PI": {
+    "defaultMessage": "Role assignments",
+    "description": "Section title for roles assigned to a user"
   },
   "tLJ0LB": {
     "defaultMessage": "One-line setup",
@@ -18570,6 +19222,10 @@
   "tiQptW": {
     "defaultMessage": "Learn more",
     "description": "Link to the documentation page for GenAI evaluation"
+  },
+  "tjU42R": {
+    "defaultMessage": "Next span",
+    "description": "Button that selects the next span in the trace graph"
   },
   "tkAOSa": {
     "defaultMessage": "Custom expression",
@@ -18739,6 +19395,10 @@
     "defaultMessage": "Tags",
     "description": "Header for the traces table tags column"
   },
+  "uLQmpv": {
+    "defaultMessage": "Previous span",
+    "description": "Button that selects the previous span in the trace graph"
+  },
   "uNSwbc": {
     "defaultMessage": "Error",
     "description": "Traces table assessment cell label shown when the assessment failed to compute"
@@ -18766,6 +19426,10 @@
   "uSj3Ta": {
     "defaultMessage": "Breadcrumb",
     "description": "Aria label for the V2 evaluation datasets breadcrumb navigation landmark"
+  },
+  "uUM600": {
+    "defaultMessage": "Minimum log level",
+    "description": "Accessible name for the minimum span log level filter"
   },
   "uVhhMt": {
     "defaultMessage": "Create skill version",
@@ -18883,6 +19547,10 @@
     "defaultMessage": "Cancel",
     "description": "Add new key-value tag modal > Cancel button text"
   },
+  "usFBkb": {
+    "defaultMessage": "No users assigned",
+    "description": "Empty state title when a role has no assigned users"
+  },
   "usKsDd": {
     "defaultMessage": "Prompt alias created",
     "description": "Webhook event label"
@@ -18910,6 +19578,10 @@
   "uwRi62": {
     "defaultMessage": "Restore",
     "description": "Confirm button for restoring deleted experiment runs"
+  },
+  "uyB0OX": {
+    "defaultMessage": "Settings",
+    "description": "Button that opens assistant settings"
   },
   "uyD/XK": {
     "defaultMessage": "Edit comparison filter: {label}",
@@ -18950,6 +19622,10 @@
   "v/njcq": {
     "defaultMessage": "Comparing",
     "description": "Comparing"
+  },
+  "v27c2R": {
+    "defaultMessage": "User details",
+    "description": "Section title for a new user's name and password"
   },
   "v43Dpk": {
     "defaultMessage": "Deleted {count, plural, one {# record} other {# records}}",
@@ -19111,6 +19787,10 @@
     "defaultMessage": "Platform Admin",
     "description": "Admin page title shown when the URL has no ?workspace=… (cross-workspace platform-admin view)"
   },
+  "vaz0x9": {
+    "defaultMessage": "Delete {count, plural, one {# user} other {# users}}? This action cannot be undone.",
+    "description": "Confirmation that selected users will be deleted"
+  },
   "vbRrqF": {
     "defaultMessage": "Add question",
     "description": "Add review question modal title"
@@ -19263,6 +19943,10 @@
     "defaultMessage": "Error",
     "description": "Title for error fallback component in experiment evaluation runs UI"
   },
+  "wBEWh2": {
+    "defaultMessage": "To make this a workspace manager role, add a permission with resource type <strong>workspace</strong>, resource pattern <strong>{pattern}</strong>, and permission <strong>MANAGE</strong> in the next section.",
+    "description": "Hint for creating a workspace manager role. workspace and MANAGE are permission identifiers."
+  },
   "wBFfWW": {
     "defaultMessage": "Register",
     "description": "Register button text to register the model"
@@ -19390,6 +20074,10 @@
   "wSIkSJ": {
     "defaultMessage": "Select trace {traceId}",
     "description": "Aria label for the per-row select checkbox in the traces table"
+  },
+  "wSUpdZ": {
+    "defaultMessage": "Failed to load roles for this workspace.",
+    "description": "Error shown when the role list for a workspace cannot be loaded"
   },
   "wT28RL": {
     "defaultMessage": "Owner",
@@ -19630,6 +20318,10 @@
   "x90XmL": {
     "defaultMessage": "The model must call at least one tool.",
     "description": "Hint shown under the tool choice selector when Required is selected"
+  },
+  "x97ZUB": {
+    "defaultMessage": "Users to assign",
+    "description": "Heading for users that will be assigned to a role"
   },
   "xA0JCB": {
     "defaultMessage": "Dismiss trace loading error",
@@ -19883,6 +20575,10 @@
     "defaultMessage": "Cancel",
     "description": "Button text for canceling a judge run"
   },
+  "xrZXkR": {
+    "defaultMessage": "Create User",
+    "description": "Title of the dialog that creates an admin user"
+  },
   "xsZPQg": {
     "defaultMessage": "Clear",
     "description": "Experiment issues tab > Clear all filters button"
@@ -19967,6 +20663,10 @@
     "defaultMessage": "Datasets",
     "description": "Breadcrumb label for the V2 evaluation datasets list page"
   },
+  "yC51Pz": {
+    "defaultMessage": "No users available.",
+    "description": "Empty state when there are no users to assign"
+  },
   "yC7fi8": {
     "defaultMessage": "High → low",
     "description": "Active descending sort direction for a scorer in evaluation comparison"
@@ -19986,6 +20686,10 @@
   "yFl8nB": {
     "defaultMessage": "This model will be deprecated on {date}",
     "description": "Deprecation warning in modal footer"
+  },
+  "yHW+sM": {
+    "defaultMessage": "Assistant",
+    "description": "Chat message role: assistant"
   },
   "yHbOpe": {
     "defaultMessage": "Original logged model: {originalName}",
@@ -20103,6 +20807,10 @@
     "defaultMessage": "No schema available",
     "description": "Heading shown when an experiment run dataset has no schema"
   },
+  "yibDek": {
+    "defaultMessage": "Permissions to add",
+    "description": "Heading for permissions that will be added to a role"
+  },
   "yjerKR": {
     "defaultMessage": "<link>Version {versionNumber}</link>",
     "description": "Link to model version in the model version table"
@@ -20134,6 +20842,10 @@
   "yoD1c7": {
     "defaultMessage": "Usage Tracking",
     "description": "Section title for usage tracking configuration"
+  },
+  "ypNJQS": {
+    "defaultMessage": "This user is an admin",
+    "description": "Switch label for granting administrator status"
   },
   "yqauYf": {
     "defaultMessage": "Search saved views",
@@ -20511,9 +21223,17 @@
     "defaultMessage": "No data available for the selected time range",
     "description": "Message shown when there is no data to display in the chart"
   },
+  "zxIUKa": {
+    "defaultMessage": "Text",
+    "description": "Response format that returns plain text"
+  },
   "zxfWCx": {
     "defaultMessage": "Add/Edit Prompt Version Metadata",
     "description": "Title for a modal that allows the user to add or edit metadata tags on prompt versions."
+  },
+  "zy1uho": {
+    "defaultMessage": "Commit message (optional):",
+    "description": "Label for the optional prompt commit message"
   },
   "zyPq2R": {
     "defaultMessage": "An error occurred while attempting to delete traces. Please refresh the page and try again.",

@@ -41,7 +41,10 @@ export const ModelsNextUIToggleSwitch = () => {
             description="Model registry > Switcher for the new model registry UI containing aliases > disable confirmation modal title"
           />
         }
-        okText="Disable"
+        okText={intl.formatMessage({
+          defaultMessage: 'Disable',
+          description: 'Button that disables the new model registry UI',
+        })}
         onCancel={() => {
           setConfirmDisableModalVisible(false);
         }}

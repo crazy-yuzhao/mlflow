@@ -30,7 +30,7 @@ import {
 } from './ExperimentEvaluationRunsTable.constants';
 import { invalidateMlflowSearchTracesCache } from '@databricks/web-shared/genai-traces-table';
 import { useQueryClient } from '@databricks/web-shared/query-client';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import {
   useSelectedRunUuid,
   SELECTED_RUN_UUID_QUERY_PARAM,
@@ -109,6 +109,7 @@ const getLearnMoreLink = () => {
 const ExperimentEvaluationRunsPageImpl = ({ baseline }: { baseline?: EvalRunsBaselineState }) => {
   const { experimentId } = useParams();
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const [tableWidth, setTableWidth] = useState(432);
   const [dragging, setDragging] = useState(false);
   const [runListHidden, setRunListHidden] = useState(false);
@@ -732,7 +733,14 @@ const ExperimentEvaluationRunsPageImpl = ({ baseline }: { baseline?: EvalRunsBas
             />
           </Typography.Paragraph>
         </div>
-        <img css={{ maxWidth: '100%', maxHeight: 160 }} src={evalRunsEmptyImg} alt="No runs found" />
+        <img
+          css={{ maxWidth: '100%', maxHeight: 160 }}
+          src={evalRunsEmptyImg}
+          alt={intl.formatMessage({
+            defaultMessage: 'No runs found',
+            description: 'Accessible name for the empty evaluation runs illustration',
+          })}
+        />
         <div css={{ width: '100%', marginTop: theme.spacing.lg }}>
           <EvalRunsEmptyStateCard experimentId={experimentId} />
         </div>

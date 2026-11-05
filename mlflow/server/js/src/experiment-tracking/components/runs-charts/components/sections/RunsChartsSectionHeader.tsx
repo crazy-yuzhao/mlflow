@@ -13,7 +13,7 @@ import type { ChartSectionConfig } from '../../../../types';
 import { RunsChartsAddChartMenu } from '../RunsChartsAddChartMenu';
 import type { RunsChartType } from '../../runs-charts.types';
 import { useEffect, useRef, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useDragAndDropElement } from '@mlflow/mlflow/src/common/hooks/useDragAndDropElement';
 import { CheckIcon } from '@databricks/design-system';
 import { METRIC_CHART_SECTION_HEADER_SIZE } from '../../../MetricChartsAccordion';
@@ -54,6 +54,7 @@ export const RunsChartsSectionHeader = ({
   supportedChartTypes,
 }: RunsChartsSectionHeaderProps) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   // Change name locally for better performance
   const [tmpSectionName, setTmpSectionName] = useState(section.name);
   // State to check if element is being dragged
@@ -260,7 +261,10 @@ export const RunsChartsSectionHeader = ({
               <Button
                 componentId="codegen_mlflow_app_src_experiment-tracking_components_runs-compare_sections_runscomparesectionheader.tsx_246"
                 onClick={onEdit}
-                aria-label="Icon label"
+                aria-label={intl.formatMessage({
+                  defaultMessage: 'Edit section',
+                  description: 'Button that edits a runs chart section',
+                })}
                 icon={<PencilIcon />}
               />
             </div>
@@ -353,7 +357,12 @@ export const RunsChartsSectionHeader = ({
                 visible={isDeleteSectionModalOpen}
                 onOk={deleteModalConfirm}
                 onCancel={deleteModalCancel}
-                title="Delete section"
+                title={
+                  <FormattedMessage
+                    defaultMessage="Delete section"
+                    description="Menu item that deletes a runs chart section"
+                  />
+                }
               >
                 <FormattedMessage
                   defaultMessage="Deleting the section will permanently remove it and the charts it contains. This cannot be undone."

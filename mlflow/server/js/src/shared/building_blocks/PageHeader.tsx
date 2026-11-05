@@ -31,6 +31,7 @@ type OverflowMenuProps = {
 };
 
 export function OverflowMenu({ menu }: OverflowMenuProps) {
+  const intl = useIntl();
   const overflowMenu = (
     <Menu>
       {/* @ts-expect-error TS(2532): Object is possibly 'undefined'. */}
@@ -50,7 +51,10 @@ export function OverflowMenu({ menu }: OverflowMenuProps) {
         componentId="codegen_mlflow_app_src_shared_building_blocks_pageheader.tsx_54"
         icon={<OverflowIcon />}
         data-testid="overflow-menu-trigger"
-        aria-label="Open header dropdown menu"
+        aria-label={intl.formatMessage({
+          defaultMessage: 'Open header dropdown menu',
+          description: 'Button that opens the page header overflow menu',
+        })}
       />
     </Dropdown>
   ) : null;

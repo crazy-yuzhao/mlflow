@@ -251,10 +251,20 @@ mlflow.models.predict(
             />
             <ul>
               <li>
-                <a href={PyfuncDocUrl}>API reference for the mlflow.pyfunc module</a>
+                <a href={PyfuncDocUrl}>
+                  <FormattedMessage
+                    defaultMessage="API reference for the mlflow.pyfunc module"
+                    description="Link to the mlflow.pyfunc API reference"
+                  />
+                </a>
               </li>
               <li>
-                <a href={CustomPyfuncModelsDocUrl}>Creating custom Pyfunc models</a>
+                <a href={CustomPyfuncModelsDocUrl}>
+                  <FormattedMessage
+                    defaultMessage="Creating custom Pyfunc models"
+                    description="Link to documentation about creating custom Pyfunc models"
+                  />
+                </a>
               </li>
             </ul>
           </div>

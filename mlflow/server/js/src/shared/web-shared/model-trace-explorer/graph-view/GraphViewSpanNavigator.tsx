@@ -1,4 +1,5 @@
 import { Button, ChevronLeftIcon, ChevronRightIcon, Typography, useDesignSystemTheme } from '@databricks/design-system';
+import { useIntl } from 'react-intl';
 import { FormattedMessage } from '@databricks/i18n';
 
 import type { ModelTraceSpanNode } from '../ModelTrace.types';
@@ -23,6 +24,7 @@ export const GraphViewSpanNavigator = ({
   onNavigateNext,
 }: GraphViewSpanNavigatorProps) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
 
   const currentSpanDuration = currentSpan ? spanTimeFormatter(currentSpan.end - currentSpan.start) : null;
 
@@ -50,7 +52,10 @@ export const GraphViewSpanNavigator = ({
             size="small"
             onClick={onNavigatePrev}
             disabled={currentSpanIndex <= 0}
-            aria-label="Previous span"
+            aria-label={intl.formatMessage({
+              defaultMessage: 'Previous span',
+              description: 'Button that selects the previous span in the trace graph',
+            })}
           />
           <Typography.Text size="sm">
             {currentSpanIndex + 1} / {totalSpans}
@@ -61,7 +66,10 @@ export const GraphViewSpanNavigator = ({
             size="small"
             onClick={onNavigateNext}
             disabled={currentSpanIndex >= totalSpans - 1}
-            aria-label="Next span"
+            aria-label={intl.formatMessage({
+              defaultMessage: 'Next span',
+              description: 'Button that selects the next span in the trace graph',
+            })}
           />
           <Typography.Text size="sm" bold>
             {selectedWorkflowNode.displayName}

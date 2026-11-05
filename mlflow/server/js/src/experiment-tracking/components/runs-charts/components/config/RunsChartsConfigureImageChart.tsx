@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import type { RunsChartsCardConfig, RunsChartsImageCardConfig } from '../../runs-charts.types';
-import { useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { RunsChartsConfigureField } from './RunsChartsConfigure.common';
 import {
   DialogCombobox,
@@ -92,7 +92,10 @@ export const RunsChartsConfigureImageChart = ({
         <DialogCombobox
           componentId="codegen_mlflow_app_src_experiment-tracking_components_runs-charts_components_config_runschartsconfigureimagechart.tsx_84"
           value={state.imageKeys}
-          label="Images"
+          label={formatMessage({
+            defaultMessage: 'Images',
+            description: 'Label for the image metric selector',
+          })}
           multiSelect
         >
           <DialogComboboxTrigger onClear={handleClear} minWidth={IMAGE_CONFIG_WIDTH} />
@@ -112,7 +115,9 @@ export const RunsChartsConfigureImageChart = ({
           </DialogComboboxContent>
         </DialogCombobox>
       </RunsChartsConfigureField>
-      <RunsChartsConfigureField title="Step">
+      <RunsChartsConfigureField
+        title={<FormattedMessage defaultMessage="Step" description="Label for the image chart step selector" />}
+      >
         <LineSmoothSlider
           max={maxMark}
           min={minMark}

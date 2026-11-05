@@ -410,7 +410,10 @@ export const RunsChartsConfigureLineChart = ({
       <Typography.Title level={4} color="secondary">
         X-axis
       </Typography.Title>
-      <RunsChartsConfigureField title="Type" compact>
+      <RunsChartsConfigureField
+        title={<FormattedMessage defaultMessage="Type" description="Label for the line chart series type" />}
+        compact
+      >
         {usingChartExpressions ? (
           <SimpleSelect
             componentId="codegen_mlflow_app_src_experiment-tracking_components_runs-charts_components_config_runschartsconfigurelinechart.tsx_436"
@@ -487,7 +490,12 @@ export const RunsChartsConfigureLineChart = ({
               </Tooltip>
             </SimpleSelectOption>
             {metricKeyList.length > 0 && (
-              <SimpleSelectOptionGroup label="Metrics">
+              <SimpleSelectOptionGroup
+                label={intl.formatMessage({
+                  defaultMessage: 'Metrics',
+                  description: 'Group label for metric options',
+                })}
+              >
                 {metricKeyList.map((metric) => (
                   <SimpleSelectOption
                     key={metric}

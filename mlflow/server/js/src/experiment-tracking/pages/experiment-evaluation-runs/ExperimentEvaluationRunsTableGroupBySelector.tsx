@@ -12,7 +12,7 @@ import {
   RunGroupingMode,
 } from '../../components/experiment-page/utils/experimentPage.row-types';
 import type { RunEntity } from '../../types';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import type { RunsGroupByConfig } from '../../components/experiment-page/utils/experimentPage.group-row-utils';
 import { isGroupedBy } from '../../components/experiment-page/utils/experimentPage.group-row-utils';
 import { isUserFacingTag } from '@mlflow/mlflow/src/common/utils/TagUtils';
@@ -27,6 +27,7 @@ export const ExperimentEvaluationRunsTableGroupBySelector = ({
   setGroupByConfig: (groupBy: RunsGroupByConfig | null) => void;
   runs: RunEntity[];
 }) => {
+  const intl = useIntl();
   const hasDatasets = runs.some((run) => (run.inputs?.datasetInputs?.length ?? 0) > 0);
   const { uniqueParams, uniqueTags } = useMemo(() => {
     const uniqueParams = new Set<string>();
@@ -72,7 +73,11 @@ export const ExperimentEvaluationRunsTableGroupBySelector = ({
   };
 
   return (
-    <DialogCombobox componentId="mlflow.eval-runs.table-column-selector" label="Group by" multiSelect>
+    <DialogCombobox
+      componentId="mlflow.eval-runs.table-column-selector"
+      label={intl.formatMessage({ defaultMessage: 'Group by', description: 'Button that groups table rows' })}
+      multiSelect
+    >
       <DialogComboboxTrigger />
       <DialogComboboxContent>
         <DialogComboboxOptionList>

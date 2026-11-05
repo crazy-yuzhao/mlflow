@@ -222,7 +222,14 @@ export const ExperimentEvaluationRunsTableControls = ({
         </Tooltip>
       </div>
       <div css={{ display: 'flex', gap: theme.spacing.sm }}>
-        <DialogCombobox componentId="mlflow.eval-runs.table-column-selector" label="Columns" multiSelect>
+        <DialogCombobox
+          componentId="mlflow.eval-runs.table-column-selector"
+          label={intl.formatMessage({
+            defaultMessage: 'Columns',
+            description: 'Button that chooses visible table columns',
+          })}
+          multiSelect
+        >
           <DialogComboboxTrigger />
           <DialogComboboxContent>
             <DialogComboboxOptionList>

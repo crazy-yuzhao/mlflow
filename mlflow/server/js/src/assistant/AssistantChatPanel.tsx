@@ -653,7 +653,10 @@ const ChatPanelContent = ({ onOpenSettings }: { onOpenSettings: () => void }) =>
           <AssistantContextTags />
           <textarea
             ref={textareaRef}
-            placeholder="Ask a question..."
+            placeholder={intl.formatMessage({
+              defaultMessage: 'Ask a question...',
+              description: 'Placeholder for the assistant chat input',
+            })}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -762,7 +765,10 @@ const ChatPanelContent = ({ onOpenSettings }: { onOpenSettings: () => void }) =>
               onClick={isStreaming ? cancelSession : handleSend}
               disabled={!isStreaming && !inputValue.trim()}
               icon={isStreaming ? <StopIcon /> : <SendIcon />}
-              aria-label="Send message"
+              aria-label={intl.formatMessage({
+                defaultMessage: 'Send message',
+                description: 'Button that sends the assistant chat message',
+              })}
             />
           </div>
         </div>
@@ -776,6 +782,7 @@ const ChatPanelContent = ({ onOpenSettings }: { onOpenSettings: () => void }) =>
  */
 const SetupLoadingState = () => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
 
   return (
     <div
@@ -789,7 +796,9 @@ const SetupLoadingState = () => {
       }}
     >
       <Spinner size="default" />
-      <Typography.Text color="secondary">Loading...</Typography.Text>
+      <Typography.Text color="secondary">
+        {intl.formatMessage({ defaultMessage: 'Loading...', description: 'Text shown while the assistant is loading' })}
+      </Typography.Text>
     </div>
   );
 };
@@ -1027,7 +1036,10 @@ export const AssistantChatPanel = () => {
                   size="small"
                   icon={<RefreshIcon />}
                   onClick={handleReset}
-                  aria-label="New Chat"
+                  aria-label={intl.formatMessage({
+                    defaultMessage: 'New Chat',
+                    description: 'Button that starts a new assistant chat',
+                  })}
                 />
               </Tooltip>
               <Tooltip
@@ -1052,7 +1064,10 @@ export const AssistantChatPanel = () => {
                   size="small"
                   icon={<GearIcon />}
                   onClick={handleOpenSettings}
-                  aria-label="Settings"
+                  aria-label={intl.formatMessage({
+                    defaultMessage: 'Settings',
+                    description: 'Button that opens assistant settings',
+                  })}
                   disabled={!canUseAssistant}
                 />
               </Tooltip>
@@ -1064,7 +1079,10 @@ export const AssistantChatPanel = () => {
               size="small"
               icon={<CloseIcon />}
               onClick={handleClose}
-              aria-label="Close"
+              aria-label={intl.formatMessage({
+                defaultMessage: 'Close',
+                description: 'Button that closes the assistant panel',
+              })}
             />
           </Tooltip>
         </div>

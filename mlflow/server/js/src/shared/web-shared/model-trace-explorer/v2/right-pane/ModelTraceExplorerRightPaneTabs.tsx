@@ -230,7 +230,7 @@ function ModelTraceExplorerRightPaneTabsImpl({
               {renderLineCounts(attributeLineCounts)}
             </>
           ) : (
-            'Attributes'
+            <FormattedMessage defaultMessage="Attributes" description="Label for the span attributes tab." />
           )}
         </Tabs.Trigger>
         {hasEvents && (
@@ -242,13 +242,19 @@ function ModelTraceExplorerRightPaneTabsImpl({
                 {hasException && <ModelTraceExplorerBadge count={exceptionCount} />}
               </>
             ) : (
-              <>Events {hasException && <ModelTraceExplorerBadge count={exceptionCount} />}</>
+              <>
+                <FormattedMessage defaultMessage="Events" description="Label for the span events tab." />{' '}
+                {hasException && <ModelTraceExplorerBadge count={exceptionCount} />}
+              </>
             )}
           </Tabs.Trigger>
         )}
         {hasLinks && (
           <Tabs.Trigger value="links">
-            Links <ModelTraceExplorerBadge count={linkCount} variant="neutral" />
+            <>
+              <FormattedMessage defaultMessage="Links" description="Label for the span links tab." />{' '}
+              <ModelTraceExplorerBadge count={linkCount} variant="neutral" />
+            </>
           </Tabs.Trigger>
         )}
         {showReadOnlyAssessments && (

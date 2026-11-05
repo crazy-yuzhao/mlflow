@@ -216,7 +216,11 @@ export const RunViewDetailsMetadataBox = ({
                 />
               </Typography.Text>
             }
-            value={<Typography.Text withoutMargins>Training</Typography.Text>}
+            value={
+              <Typography.Text withoutMargins>
+                <FormattedMessage defaultMessage="Training" description="Run type label for a training run" />
+              </Typography.Text>
+            }
           />
           <PairsContentSection
             title={

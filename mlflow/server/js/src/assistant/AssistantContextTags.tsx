@@ -18,6 +18,8 @@ import {
   useDesignSystemTheme,
 } from '@databricks/design-system';
 
+import { useIntl } from 'react-intl';
+
 import { useAssistantPageContext } from './AssistantPageContext';
 
 const MAX_VISIBLE_ITEMS = 3;
@@ -70,6 +72,7 @@ function ContextTagGroup({ ids, color, label, componentId, Icon }: ContextTagGro
  */
 export function AssistantContextTags(): React.ReactElement | null {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const context = useAssistantPageContext();
 
   // Traces
@@ -133,49 +136,67 @@ export function AssistantContextTags(): React.ReactElement | null {
       <ContextTagGroup
         ids={traceIds}
         color="indigo"
-        label="Trace"
+        label={intl.formatMessage({
+          defaultMessage: 'Trace',
+          description: 'Tag for a trace attached to the assistant',
+        })}
         componentId="mlflow.assistant.chat_panel.context.trace"
         Icon={ForkHorizontalIcon}
       />
       <ContextTagGroup
         ids={runIds}
         color="turquoise"
-        label="Run"
+        label={intl.formatMessage({ defaultMessage: 'Run', description: 'Tag for a run attached to the assistant' })}
         componentId="mlflow.assistant.chat_panel.context.run"
         Icon={PlayIcon}
       />
       <ContextTagGroup
         ids={sessionIds}
         color="purple"
-        label="Session"
+        label={intl.formatMessage({
+          defaultMessage: 'Session',
+          description: 'Tag for a session attached to the assistant',
+        })}
         componentId="mlflow.assistant.chat_panel.context.session"
         Icon={SpeechBubbleIcon}
       />
       <ContextTagGroup
         ids={datasetIds}
         color="brown"
-        label="Dataset"
+        label={intl.formatMessage({
+          defaultMessage: 'Dataset',
+          description: 'Tag for a dataset attached to the assistant',
+        })}
         componentId="mlflow.assistant.chat_panel.context.dataset"
         Icon={DatabaseIcon}
       />
       <ContextTagGroup
         ids={promptIds}
         color="teal"
-        label="Prompt"
+        label={intl.formatMessage({
+          defaultMessage: 'Prompt',
+          description: 'Tag for a prompt attached to the assistant',
+        })}
         componentId="mlflow.assistant.chat_panel.context.prompt"
         Icon={TextBoxIcon}
       />
       <ContextTagGroup
         ids={modelIds}
         color="lemon"
-        label="Model"
+        label={intl.formatMessage({
+          defaultMessage: 'Model',
+          description: 'Tag for a model attached to the assistant',
+        })}
         componentId="mlflow.assistant.chat_panel.context.model"
         Icon={ModelsIcon}
       />
       <ContextTagGroup
         ids={scorerIds}
         color="pink"
-        label="Judge"
+        label={intl.formatMessage({
+          defaultMessage: 'Judge',
+          description: 'Tag for a judge attached to the assistant',
+        })}
         componentId="mlflow.assistant.chat_panel.context.scorer"
         Icon={SparkleDoubleIcon}
       />

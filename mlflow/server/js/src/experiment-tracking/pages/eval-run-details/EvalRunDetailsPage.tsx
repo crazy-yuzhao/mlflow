@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import {
   Breadcrumb,
   DangerIcon,
@@ -96,6 +96,7 @@ export const getEvalRunScores = (metrics: readonly { key?: string | null; value?
 
 const EvalRunDetailsPageContent = ({ experimentId, runUuid }: { experimentId: string; runUuid: string }) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const { enabled: revampEnabled } = useExperimentPageRevampContext();
 
   const { isLoading, isNotFound, loadError, status, runName, experiment, runMetrics, runTags, isFinished } =
@@ -210,7 +211,12 @@ const EvalRunDetailsPageContent = ({ experimentId, runUuid }: { experimentId: st
       }}
     >
       {!revampEnabled && (
-        <nav aria-label="Breadcrumb">
+        <nav
+          aria-label={intl.formatMessage({
+            defaultMessage: 'Breadcrumb',
+            description: 'Accessible name for the evaluation run breadcrumb',
+          })}
+        >
           <Breadcrumb includeTrailingCaret>
             <Breadcrumb.Item>
               <Link

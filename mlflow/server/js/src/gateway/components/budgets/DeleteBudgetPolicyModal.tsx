@@ -1,3 +1,4 @@
+import { useIntl } from 'react-intl';
 import { DeleteConfirmationModal } from '../common';
 import { useDeleteBudgetPolicy } from '../../hooks/useDeleteBudgetPolicy';
 import { formatBudgetPolicySummary } from './budgetFormatUtils';
@@ -11,6 +12,7 @@ interface DeleteBudgetPolicyModalProps {
 }
 
 export const DeleteBudgetPolicyModal = ({ open, policy, onClose, onSuccess }: DeleteBudgetPolicyModalProps) => {
+  const intl = useIntl();
   const { mutateAsync: deleteBudgetPolicy } = useDeleteBudgetPolicy();
 
   const handleConfirm = async () => {
@@ -26,7 +28,10 @@ export const DeleteBudgetPolicyModal = ({ open, policy, onClose, onSuccess }: De
       open={open}
       onClose={onClose}
       onConfirm={handleConfirm}
-      title="Delete Budget Policy"
+      title={intl.formatMessage({
+        defaultMessage: 'Delete Budget Policy',
+        description: 'Title of the dialog that deletes a budget policy',
+      })}
       itemName={formatBudgetPolicySummary(policy)}
       itemType="budget policy"
       componentId="mlflow.gateway.delete-budget-policy-modal"

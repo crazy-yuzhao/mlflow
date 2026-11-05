@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import {
   Alert,
   Button,
@@ -43,6 +44,7 @@ export interface CreateRoleModalProps {
  */
 export const CreateRoleModal = ({ open, onClose }: CreateRoleModalProps) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const createRole = useCreateRole();
   const { workspacesEnabled } = useWorkspacesEnabled();
   const { workspaces } = useWorkspaces(workspacesEnabled);
@@ -169,7 +171,9 @@ export const CreateRoleModal = ({ open, onClose }: CreateRoleModalProps) => {
   return (
     <Modal
       componentId="admin.create_role_modal"
-      title="Create Role"
+      title={
+        <FormattedMessage defaultMessage="Create Role" description="Title of the dialog that creates an admin role" />
+      }
       visible={open}
       onCancel={onClose}
       size="wide"
@@ -209,22 +213,33 @@ export const CreateRoleModal = ({ open, onClose }: CreateRoleModalProps) => {
           }}
         />
       )}
-      <LongFormSection title="Role details">
+      <LongFormSection
+        title={
+          <FormattedMessage defaultMessage="Role details" description="Section title for role name and description" />
+        }
+      >
         <div css={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.md }}>
           <div>
-            <FieldLabel>Name</FieldLabel>
+            <FieldLabel>
+              <FormattedMessage defaultMessage="Name" description="Label for a name field" />
+            </FieldLabel>
             <Input
               componentId="admin.create_role_modal.name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Enter role name"
+              placeholder={intl.formatMessage({
+                defaultMessage: 'Enter role name',
+                description: 'Placeholder for the role name field',
+              })}
               autoFocus
               disabled={submitting || createdRoleId !== null}
             />
           </div>
           {workspacesEnabled && (
             <div>
-              <FieldLabel>Workspace</FieldLabel>
+              <FieldLabel>
+                <FormattedMessage defaultMessage="Workspace" description="Label for a workspace field" />
+              </FieldLabel>
               <SimpleSelect
                 id="admin-create-role-modal-workspace"
                 componentId="admin.create_role_modal.workspace"
@@ -241,23 +256,37 @@ export const CreateRoleModal = ({ open, onClose }: CreateRoleModalProps) => {
             </div>
           )}
           <div>
-            <FieldLabel>Description</FieldLabel>
+            <FieldLabel>
+              <FormattedMessage defaultMessage="Description" description="Label for a description field" />
+            </FieldLabel>
             <Input
               componentId="admin.create_role_modal.description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Enter description (optional)"
+              placeholder={intl.formatMessage({
+                defaultMessage: 'Enter description (optional)',
+                description: 'Placeholder for an optional description field',
+              })}
               disabled={submitting || createdRoleId !== null}
             />
           </div>
           <Typography.Paragraph css={{ color: theme.colors.textSecondary, marginTop: theme.spacing.sm }}>
-            To make this a workspace manager role, add a permission with resource type <strong>workspace</strong>,
-            resource pattern <strong>{ALL_RESOURCE_PATTERN_LABEL}</strong>, and permission <strong>MANAGE</strong> in
-            the next section.
+            <FormattedMessage
+              defaultMessage="To make this a workspace manager role, add a permission with resource type <strong>workspace</strong>, resource pattern <strong>{pattern}</strong>, and permission <strong>MANAGE</strong> in the next section."
+              description="Hint for creating a workspace manager role. workspace and MANAGE are permission identifiers."
+              values={{
+                pattern: ALL_RESOURCE_PATTERN_LABEL,
+                strong: (chunks) => <strong>{chunks}</strong>,
+              }}
+            />
           </Typography.Paragraph>
         </div>
       </LongFormSection>
-      <LongFormSection title="Permissions" collapsible defaultCollapsed>
+      <LongFormSection
+        title={<FormattedMessage defaultMessage="Permissions" description="Section title for a list of permissions" />}
+        collapsible
+        defaultCollapsed
+      >
         <Typography.Text color="secondary" css={{ display: 'block', marginBottom: theme.spacing.sm }}>
           Add one or more permissions to this role. You can add more later from the role detail page.
         </Typography.Text>
@@ -273,7 +302,14 @@ export const CreateRoleModal = ({ open, onClose }: CreateRoleModalProps) => {
           onUnsavedDraftChange={setHasUnsavedDraft}
         />
       </LongFormSection>
-      <LongFormSection title="Assign users" hideDivider collapsible defaultCollapsed>
+      <LongFormSection
+        title={
+          <FormattedMessage defaultMessage="Assign users" description="Section title for assigning users to a role" />
+        }
+        hideDivider
+        collapsible
+        defaultCollapsed
+      >
         <Typography.Text color="secondary" css={{ display: 'block', marginBottom: theme.spacing.sm }}>
           Assign one or more users to this role. You can assign more later from the role detail page.
         </Typography.Text>
@@ -291,11 +327,24 @@ export const CreateRoleModal = ({ open, onClose }: CreateRoleModalProps) => {
           click through. */}
       <ConfirmationModal
         componentId="admin.create_role_modal.discard_unsaved_draft"
-        title="Discard unsaved role permission?"
+        title={intl.formatMessage({
+          defaultMessage: 'Discard unsaved role permission?',
+          description: 'Title of the dialog that warns an unsaved role permission will be discarded',
+        })}
         visible={showDiscardConfirm}
-        message="You started adding a permission to this role but didn't click Add. Continuing will discard it. Go back to either click Add to stage it, or Clear to drop the draft on the spot."
-        okText="Continue"
-        cancelText="Back"
+        message={intl.formatMessage({
+          defaultMessage:
+            "You started adding a permission to this role but didn't click Add. Continuing will discard it. Go back to either click Add to stage it, or Clear to drop the draft on the spot.",
+          description: 'Body of the dialog that warns an unsaved role permission draft will be discarded',
+        })}
+        okText={intl.formatMessage({
+          defaultMessage: 'Continue',
+          description: 'Button that continues to the next step',
+        })}
+        cancelText={intl.formatMessage({
+          defaultMessage: 'Back',
+          description: 'Button that returns to the previous step',
+        })}
         // ``danger=false`` — the OK verb is neutral, destructive intent is
         // in the title's question.
         danger={false}

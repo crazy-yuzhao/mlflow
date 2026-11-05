@@ -49,7 +49,14 @@ export const ApiKeysColumnsButton = ({ visibleColumns, onColumnsChange }: ApiKey
   };
 
   return (
-    <DialogCombobox componentId="mlflow.gateway.api-keys.columns-dropdown" label="Columns" multiSelect>
+    <DialogCombobox
+      componentId="mlflow.gateway.api-keys.columns-dropdown"
+      label={intl.formatMessage({
+        defaultMessage: 'Columns',
+        description: 'Button that chooses visible table columns',
+      })}
+      multiSelect
+    >
       <DialogComboboxCustomButtonTriggerWrapper>
         <Button
           componentId="mlflow.gateway.api-keys.columns-button"

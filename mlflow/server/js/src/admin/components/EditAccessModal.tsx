@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import {
   Alert,
   Button,
@@ -68,6 +69,7 @@ interface AccessDiff {
  */
 export const EditAccessModal = ({ open, onClose, username }: EditAccessModalProps) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const queryClient = useQueryClient();
   const grantPermission = useGrantUserPermission();
   const revokePermission = useRevokeUserPermission();
@@ -374,7 +376,10 @@ export const EditAccessModal = ({ open, onClose, username }: EditAccessModalProp
               }}
               disabled={!hasAnyChange || !stateLoaded || Boolean(rolesError)}
             >
-              Review changes
+              <FormattedMessage
+                defaultMessage="Review changes"
+                description="Button that opens a summary of pending admin changes"
+              />
             </Button>
           </div>
         ) : (
@@ -386,7 +391,7 @@ export const EditAccessModal = ({ open, onClose, username }: EditAccessModalProp
               onClick={() => setStep('edit')}
               disabled={submitting}
             >
-              Back
+              <FormattedMessage defaultMessage="Back" description="Button that returns to the previous step" />
             </Button>
             <Button
               componentId="admin.edit_access_modal.confirm"
@@ -394,7 +399,10 @@ export const EditAccessModal = ({ open, onClose, username }: EditAccessModalProp
               onClick={handleConfirm}
               loading={submitting}
             >
-              Apply changes
+              <FormattedMessage
+                defaultMessage="Apply changes"
+                description="Button that saves the reviewed admin changes"
+              />
             </Button>
           </div>
         )
@@ -448,19 +456,36 @@ export const EditAccessModal = ({ open, onClose, username }: EditAccessModalProp
             />
           ) : (
             <>
-              <LongFormSection title="Role assignments">
+              <LongFormSection
+                title={
+                  <FormattedMessage
+                    defaultMessage="Role assignments"
+                    description="Section title for roles assigned to a user"
+                  />
+                }
+              >
                 <Typography.Text color="secondary" css={{ display: 'block', marginBottom: theme.spacing.sm }}>
                   Pick the roles <strong>{username}</strong> should have. Removing a role unassigns it on submit.
                 </Typography.Text>
                 <RoleAssignmentForm value={roleValue} onChange={setRoleValue} disabled={submitting} />
               </LongFormSection>
-              <LongFormSection title="Direct permissions" hideDivider={!isCurrentUserAdmin}>
+              <LongFormSection
+                title={
+                  <FormattedMessage
+                    defaultMessage="Direct permissions"
+                    description="Section title for permissions granted directly to a user"
+                  />
+                }
+                hideDivider={!isCurrentUserAdmin}
+              >
                 <Typography.Text color="secondary" css={{ display: 'block', marginBottom: theme.spacing.sm }}>
                   Current direct permissions are pre-filled. Remove a row to revoke; use the form below to grant more.
                 </Typography.Text>
                 {showWorkspaceSelector && (
                   <div css={{ marginBottom: theme.spacing.md }}>
-                    <FieldLabel>Workspace</FieldLabel>
+                    <FieldLabel>
+                      <FormattedMessage defaultMessage="Workspace" description="Label for a workspace field" />
+                    </FieldLabel>
                     <SimpleSelect
                       id="admin-edit-access-modal-grant-workspace"
                       componentId="admin.edit_access_modal.grant_workspace"
@@ -501,15 +526,29 @@ export const EditAccessModal = ({ open, onClose, username }: EditAccessModalProp
                 />
               </LongFormSection>
               {isCurrentUserAdmin && (
-                <LongFormSection title="Admin status" hideDivider>
+                <LongFormSection
+                  title={
+                    <FormattedMessage
+                      defaultMessage="Admin status"
+                      description="Section title for whether a user is an administrator"
+                    />
+                  }
+                  hideDivider
+                >
                   <Typography.Text color="secondary" css={{ display: 'block', marginBottom: theme.spacing.sm }}>
-                    Admins can manage all users, roles, and workspaces.
+                    <FormattedMessage
+                      defaultMessage="Admins can manage all users, roles, and workspaces."
+                      description="Help text for the admin status switch"
+                    />
                   </Typography.Text>
                   <Switch
                     componentId="admin.edit_access_modal.is_admin"
                     checked={isAdmin}
                     onChange={setIsAdmin}
-                    label="This user is an admin"
+                    label={intl.formatMessage({
+                      defaultMessage: 'This user is an admin',
+                      description: 'Switch label for granting administrator status',
+                    })}
                     disabled={submitting}
                   />
                 </LongFormSection>
@@ -533,11 +572,24 @@ export const EditAccessModal = ({ open, onClose, username }: EditAccessModalProp
           enabled so the admin can always click through. */}
       <ConfirmationModal
         componentId="admin.edit_access_modal.discard_unsaved_draft"
-        title="Discard unsaved direct permission?"
+        title={intl.formatMessage({
+          defaultMessage: 'Discard unsaved direct permission?',
+          description: 'Title of the dialog that warns an unsaved direct permission will be discarded',
+        })}
         visible={showDiscardConfirm}
-        message="You started adding a direct permission but didn't click Add. Continuing to Review changes will discard it. Go back to either click Add to stage it, or Clear to drop the draft on the spot."
-        okText="Continue"
-        cancelText="Back"
+        message={intl.formatMessage({
+          defaultMessage:
+            "You started adding a direct permission but didn't click Add. Continuing to Review changes will discard it. Go back to either click Add to stage it, or Clear to drop the draft on the spot.",
+          description: 'Body of the dialog that warns an unsaved direct permission will be discarded',
+        })}
+        okText={intl.formatMessage({
+          defaultMessage: 'Continue',
+          description: 'Button that continues to the next step',
+        })}
+        cancelText={intl.formatMessage({
+          defaultMessage: 'Back',
+          description: 'Button that returns to the previous step',
+        })}
         // ``danger=false`` because the OK verb is neutral ("Continue") — the
         // destructive intent is in the title question, not the button.
         danger={false}
@@ -571,40 +623,117 @@ const ReviewSummary = ({
   return (
     <div css={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.md }}>
       <Typography.Text color="secondary">
-        Review the net changes for <strong>{username}</strong>. Click <strong>Apply changes</strong> to commit them, or{' '}
-        <strong>Back</strong> to keep editing.
+        <FormattedMessage
+          defaultMessage="Review the net changes for <strong>{username}</strong>. Click <strong>Apply changes</strong> to commit them, or <strong>Back</strong> to keep editing."
+          description="Instructions above the summary of pending user access changes"
+          values={{ username, strong: (chunks) => <strong>{chunks}</strong> }}
+        />
       </Typography.Text>
 
       <DiffGroup
-        title="Roles to assign"
+        title={
+          <FormattedMessage
+            defaultMessage="Roles to assign"
+            description="Heading for roles that will be assigned to a user"
+          />
+        }
         items={diff.rolesToAssign.map(renderRoleId)}
-        emptyLabel="No new role assignments."
+        emptyLabel={
+          <FormattedMessage
+            defaultMessage="No new role assignments."
+            description="Empty state when no roles will be assigned"
+          />
+        }
         addColor
       />
       <DiffGroup
-        title="Roles to unassign"
+        title={
+          <FormattedMessage
+            defaultMessage="Roles to unassign"
+            description="Heading for roles that will be removed from a user"
+          />
+        }
         items={diff.rolesToUnassign.map(renderRoleId)}
-        emptyLabel="No role unassignments."
+        emptyLabel={
+          <FormattedMessage
+            defaultMessage="No role unassignments."
+            description="Empty state when no roles will be removed"
+          />
+        }
       />
       <DiffGroup
-        title="Direct permissions to grant"
+        title={
+          <FormattedMessage
+            defaultMessage="Direct permissions to grant"
+            description="Heading for direct permissions that will be granted"
+          />
+        }
         items={diff.directToGrant.map(renderDirect)}
-        emptyLabel="No new direct permissions."
+        emptyLabel={
+          <FormattedMessage
+            defaultMessage="No new direct permissions."
+            description="Empty state when no direct permissions will be granted"
+          />
+        }
         addColor
       />
       <DiffGroup
-        title="Direct permissions to revoke"
+        title={
+          <FormattedMessage
+            defaultMessage="Direct permissions to revoke"
+            description="Heading for direct permissions that will be revoked"
+          />
+        }
         items={diff.directToRevoke.map(renderDirect)}
-        emptyLabel="No direct permissions to revoke."
+        emptyLabel={
+          <FormattedMessage
+            defaultMessage="No direct permissions to revoke."
+            description="Empty state when no direct permissions will be revoked"
+          />
+        }
       />
       {diff.adminChange ? (
         <DiffGroup
-          title="Admin status"
-          items={[isAdmin ? `Promote to admin (was ${currentIsAdmin ? 'admin' : 'not admin'})` : 'Revoke admin']}
+          title={
+            <FormattedMessage
+              defaultMessage="Admin status"
+              description="Heading for a change to administrator status"
+            />
+          }
+          items={[
+            isAdmin ? (
+              <FormattedMessage
+                key="promote"
+                defaultMessage="Promote to admin (was {previous, select, admin {admin} other {not admin}})"
+                description="Summary line when a user is promoted to administrator"
+                values={{ previous: currentIsAdmin ? 'admin' : 'other' }}
+              />
+            ) : (
+              <FormattedMessage
+                key="revoke"
+                defaultMessage="Revoke admin"
+                description="Summary line when administrator status is revoked"
+              />
+            ),
+          ]}
           addColor={isAdmin}
         />
       ) : (
-        <DiffGroup title="Admin status" items={[]} emptyLabel="No change to admin status." />
+        <DiffGroup
+          title={
+            <FormattedMessage
+              defaultMessage="Admin status"
+              description="Heading for a change to administrator status"
+            />
+          }
+          items={[]}
+          emptyLabel={
+            <FormattedMessage
+              defaultMessage="No change to admin status."
+              description="Empty state when administrator status is unchanged"
+            />
+          }
+        />
       )}
     </div>
   );
@@ -616,9 +745,9 @@ const DiffGroup = ({
   emptyLabel,
   addColor,
 }: {
-  title: string;
-  items: string[];
-  emptyLabel?: string;
+  title: React.ReactNode;
+  items: React.ReactNode[];
+  emptyLabel?: React.ReactNode;
   addColor?: boolean;
 }) => {
   const { theme } = useDesignSystemTheme();
@@ -633,9 +762,9 @@ const DiffGroup = ({
         </Typography.Text>
       ) : (
         <div css={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.xs }}>
-          {items.map((s) => (
+          {items.map((s, index) => (
             <Tag
-              key={s}
+              key={index}
               componentId="admin.edit_access_modal.diff_tag"
               color={addColor ? 'lime' : 'lemon'}
               css={{ alignSelf: 'flex-start' }}

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import {
   DialogCombobox,
   DialogComboboxContent,
@@ -29,6 +30,7 @@ export interface RoleUsersSectionProps {
  */
 export const RoleUsersSection = ({ value, onChange, disabled, workspace }: RoleUsersSectionProps) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const [search, setSearch] = useState('');
   const { data: usersData, isLoading } = useUsersQuery(workspace);
   const users = useMemo(() => usersData?.users ?? [], [usersData]);
@@ -66,18 +68,33 @@ export const RoleUsersSection = ({ value, onChange, disabled, workspace }: RoleU
 
   return (
     <div>
-      <FieldLabel>Users</FieldLabel>
+      <FieldLabel>
+        <FormattedMessage defaultMessage="Users" description="Label for a list of users" />
+      </FieldLabel>
       {isLoading ? (
         <div css={{ padding: theme.spacing.sm }}>
           <Spinner size="small" />
         </div>
       ) : users.length === 0 ? (
-        <Typography.Text color="secondary">No users available.</Typography.Text>
+        <Typography.Text color="secondary">
+          <FormattedMessage
+            defaultMessage="No users available."
+            description="Empty state when there are no users to assign"
+          />
+        </Typography.Text>
       ) : (
-        <DialogCombobox componentId="admin.role_users.users" label="Users" multiSelect value={triggerValue}>
+        <DialogCombobox
+          componentId="admin.role_users.users"
+          label={intl.formatMessage({ defaultMessage: 'Users', description: 'Label for a list of users' })}
+          multiSelect
+          value={triggerValue}
+        >
           <DialogComboboxTrigger
             withInlineLabel={false}
-            placeholder="Select one or more users"
+            placeholder={intl.formatMessage({
+              defaultMessage: 'Select one or more users',
+              description: 'Placeholder for choosing users to assign',
+            })}
             onClear={() => onChange([])}
             width="100%"
             disabled={disabled}

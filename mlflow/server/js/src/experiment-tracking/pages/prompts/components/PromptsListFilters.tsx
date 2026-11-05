@@ -1,4 +1,5 @@
 import { TableFilterInput, TableFilterLayout } from '@databricks/design-system';
+import { useIntl } from 'react-intl';
 import { ModelSearchInputHelpTooltip } from '../../../../model-registry/components/model-list/ModelListFilters';
 
 export const PromptsListFilters = ({
@@ -10,10 +11,14 @@ export const PromptsListFilters = ({
   onSearchFilterChange: (searchFilter: string) => void;
   componentId: string;
 }) => {
+  const intl = useIntl();
   return (
     <TableFilterLayout>
       <TableFilterInput
-        placeholder="Search prompts by name"
+        placeholder={intl.formatMessage({
+          defaultMessage: 'Search prompts by name',
+          description: 'Placeholder for filtering prompts by name',
+        })}
         componentId={componentId}
         value={searchFilter}
         onChange={(e) => onSearchFilterChange(e.target.value)}

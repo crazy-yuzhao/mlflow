@@ -63,7 +63,13 @@ export const ModelConfigForm = () => {
           />
         </Typography.Title>
         <Popover.Root componentId="mlflow.prompts.model_config.help">
-          <Popover.Trigger aria-label="Model configuration help" css={{ border: 0, background: 'none', padding: 0 }}>
+          <Popover.Trigger
+            aria-label={intl.formatMessage({
+              defaultMessage: 'Model configuration help',
+              description: 'Button that explains the prompt model configuration',
+            })}
+            css={{ border: 0, background: 'none', padding: 0 }}
+          >
             <InfoSmallIcon />
           </Popover.Trigger>
           <Popover.Content align="start">

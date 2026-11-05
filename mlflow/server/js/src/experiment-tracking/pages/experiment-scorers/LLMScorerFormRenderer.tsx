@@ -187,6 +187,7 @@ interface NameSectionProps {
 }
 
 const NameSection: React.FC<NameSectionProps> = ({ mode, control, onUserSelect }) => {
+  const intl = useIntl();
   const stopPropagationClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
@@ -213,7 +214,10 @@ const NameSection: React.FC<NameSectionProps> = ({ mode, control, onUserSelect }
             componentId="mlflow.experiment-scorers.name-input"
             id="mlflow-experiment-scorers-name"
             disabled={mode !== SCORER_FORM_MODE.CREATE}
-            placeholder="Custom"
+            placeholder={intl.formatMessage({
+              defaultMessage: 'Custom',
+              description: 'Placeholder for a custom judge name',
+            })}
             css={{ cursor: mode === SCORER_FORM_MODE.CREATE ? 'text' : 'auto' }}
             onClick={stopPropagationClick}
             onBlur={(event) => {
