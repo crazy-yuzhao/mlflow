@@ -1,0 +1,30 @@
+[
+  {
+    "inputs": {"question": "What is MLflow?"},
+    "served_response": "MLflow is an open-source platform for the machine learning lifecycle.",
+    "expectations": {
+      "expected_response": "MLflow is an open-source platform for the machine learning lifecycle."
+    }
+  },
+  {
+    "inputs": {"question": "Which database stores tracking metadata?"},
+    "served_response": "PostgreSQL stores experiments, runs, and metrics.",
+    "expectations": {
+      "expected_response": "PostgreSQL stores experiments, runs, and metrics."
+    }
+  },
+  {
+    "inputs": {"question": "Where are run artifacts stored?"},
+    "served_response": "Run artifacts are stored in the S3-compatible RustFS bucket.",
+    "expectations": {
+      "expected_response": "Run artifacts are stored in the S3-compatible RustFS bucket."
+    }
+  },
+  {
+    "inputs": {"question": "Who can create a workspace?"},
+    "served_response": "Any anonymous visitor.",
+    "expectations": {
+      "expected_response": "An authenticated admin creates a workspace and grants RBAC roles."
+    }
+  }
+]

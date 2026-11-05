@@ -1,0 +1,5 @@
+question,served_response,expected_response
+What is MLflow?,MLflow is an open-source platform for the machine learning lifecycle.,MLflow is an open-source platform for the machine learning lifecycle.
+"Which database stores tracking metadata?","PostgreSQL stores experiments, runs, and metrics.","PostgreSQL stores experiments, runs, and metrics."
+Where are run artifacts stored?,Run artifacts are stored in the S3-compatible RustFS bucket.,Run artifacts are stored in the S3-compatible RustFS bucket.
+Who can create a workspace?,Any anonymous visitor.,An authenticated admin creates a workspace and grants RBAC roles.

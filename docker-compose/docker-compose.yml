@@ -1,6 +1,8 @@
 volumes:
   pgdata:
   storage-data:
+  # SQLite basic-auth database (users, roles). Sits next to pgdata.
+  authdata:
 
 services:
   postgres:
@@ -80,6 +82,8 @@ services:
         condition: service_healthy
       create-bucket:
         condition: service_completed_successfully
+    volumes:
+      - authdata:/mlflow/auth
     environment:
       # Backend store URI built from vars
       MLFLOW_BACKEND_STORE_URI: ${MLFLOW_BACKEND_STORE_URI}
@@ -95,17 +99,75 @@ services:
       # Server host/port
       MLFLOW_HOST: ${MLFLOW_HOST}
       MLFLOW_PORT: ${MLFLOW_PORT}
+      MLFLOW_WORKERS: ${MLFLOW_WORKERS:-1}
+
+      # Basic auth. MLFLOW_WORKSPACE is client-only and must stay unset here.
+      MLFLOW_FLASK_SERVER_SECRET_KEY: ${MLFLOW_FLASK_SERVER_SECRET_KEY}
+      MLFLOW_AUTH_ADMIN_USERNAME: ${MLFLOW_AUTH_ADMIN_USERNAME}
+      MLFLOW_AUTH_ADMIN_PASSWORD: ${MLFLOW_AUTH_ADMIN_PASSWORD}
+      MLFLOW_AUTH_CONFIG_PATH: ${MLFLOW_AUTH_CONFIG_PATH}
+      MLFLOW_AUTH_DATABASE_URI: ${MLFLOW_AUTH_DATABASE_URI}
+      MLFLOW_AUTH_DEFAULT_PERMISSION: ${MLFLOW_AUTH_DEFAULT_PERMISSION}
+      MLFLOW_AUTH_GRANT_DEFAULT_WORKSPACE_ACCESS: ${MLFLOW_AUTH_GRANT_DEFAULT_WORKSPACE_ACCESS}
+      MLFLOW_ENABLE_WORKSPACES: "true"
     command:
       - /bin/bash
       - -c
       - |
-        pip install --no-cache-dir "psycopg[binary]" psycopg2-binary boto3
-        mlflow server \
+        set -euo pipefail
+        # `mlflow[auth]` extra is Flask-WTF (see pyproject.toml). Install that
+        # package directly so pip does not replace the image's MLflow build.
+        pip install --no-cache-dir "psycopg[binary]" psycopg2-binary boto3 'Flask-WTF<2'
+        python - <<'PY'
+        import os
+        from pathlib import Path
+
+        def required(name: str) -> str:
+            value = os.environ.get(name, "").strip()
+            if not value:
+                raise SystemExit(f"{name} is required. Set it in docker-compose/.env")
+            return value
+
+        password = required("MLFLOW_AUTH_ADMIN_PASSWORD")
+        if len(password) < 12:
+            raise SystemExit(
+                "MLFLOW_AUTH_ADMIN_PASSWORD must be at least 12 characters. "
+                "Replace the placeholder in .env before starting the stack."
+            )
+        required("MLFLOW_FLASK_SERVER_SECRET_KEY")
+        username = os.environ.get("MLFLOW_AUTH_ADMIN_USERNAME", "admin").strip() or "admin"
+        database_uri = required("MLFLOW_AUTH_DATABASE_URI")
+        default_permission = os.environ.get("MLFLOW_AUTH_DEFAULT_PERMISSION", "READ").strip() or "READ"
+        grant = (
+            os.environ.get("MLFLOW_AUTH_GRANT_DEFAULT_WORKSPACE_ACCESS", "false").strip() or "false"
+        )
+        path = Path(os.environ.get("MLFLOW_AUTH_CONFIG_PATH", "/mlflow/auth/basic_auth.ini"))
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            "\n".join(
+                [
+                    "[mlflow]",
+                    f"default_permission = {default_permission}",
+                    f"database_uri = {database_uri}",
+                    f"admin_username = {username}",
+                    "authorization_function = mlflow.server.auth:authenticate_request_basic_auth",
+                    f"grant_default_workspace_access = {grant}",
+                    "",
+                ]
+            )
+        )
+        path.chmod(0o600)
+        print(f"Wrote auth config {path} (database {database_uri})")
+        PY
+        exec mlflow server \
           --backend-store-uri "${MLFLOW_BACKEND_STORE_URI}" \
           --artifacts-destination "${MLFLOW_ARTIFACTS_DESTINATION}" \
           --serve-artifacts \
           --host "${MLFLOW_HOST}" \
-          --port "${MLFLOW_PORT}"
+          --port "${MLFLOW_PORT}" \
+          --workers "${MLFLOW_WORKERS}" \
+          --app-name basic-auth \
+          --enable-workspaces
     ports:
       - "${MLFLOW_PORT}:${MLFLOW_PORT}"
     healthcheck:
@@ -119,6 +181,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 30
+      start_period: 90s
 
 networks:
   default:

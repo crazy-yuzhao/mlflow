@@ -1,0 +1,4 @@
+# Used when the script runs outside this checkout. From the repository root,
+# `uv run python docker-compose/eval/run_eval.py` uses the local MLflow tree instead.
+# The auth extra is Flask-WTF, required by `mlflow.server.get_app_client("basic-auth")`.
+mlflow[auth]>=3.13
