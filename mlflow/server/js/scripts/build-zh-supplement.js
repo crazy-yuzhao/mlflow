@@ -3,47 +3,85 @@
  *
  * The synced catalog in src/lang/zh-CN.json does not cover every current
  * English string. This script fills the gaps:
- *   1. Exact English `defaultMessage` entries in zh-cn-overrides.js
+ *   1. Exact English `defaultMessage` entries in zh-cn-overrides.js and zh-cn-extra-*.json
  *   2. Otherwise, a Chinese string already used for that same English text
  *
  * Add a new translation by putting the exact English defaultMessage in
- * zh-cn-overrides.js, then run `yarn i18n:zh`.
+ * zh-cn-overrides.js or a zh-cn-extra-*.json file, then run `yarn i18n:zh`.
  */
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { parse } = require('@formatjs/icu-messageformat-parser');
 
 const ROOT = path.join(__dirname, '..');
 const EN_PATH = path.join(ROOT, 'src/lang/default/en.json');
 const ZH_PATH = path.join(ROOT, 'src/lang/zh-CN.json');
 const OUT_PATH = path.join(ROOT, 'src/lang/zh-CN.supplement.json');
-const overrides = require('./zh-cn-overrides');
+const overrides = {
+  ...require('./zh-cn-overrides'),
+  ...Object.assign(
+    {},
+    ...fs
+      .readdirSync(__dirname)
+      .filter((name) => /^zh-cn-extra-\d+\.json$/.test(name))
+      .sort()
+      .map((name) => JSON.parse(fs.readFileSync(path.join(__dirname, name), 'utf8'))),
+  ),
+};
 
 function messageId(defaultMessage, description) {
   const content = description ? `${defaultMessage}#${description}` : defaultMessage;
   return crypto.createHash('sha512').update(content).digest('base64').slice(0, 6);
 }
 
-function placeholders(value) {
-  return [...value.matchAll(/\{([a-zA-Z_][a-zA-Z0-9_]*)/g)].map((match) => match[1]).sort();
-}
-
-function tags(value) {
-  return [...value.matchAll(/<\/?([A-Za-z][A-Za-z0-9]*)/g)].map((match) => match[1]).sort();
+function messageSkeleton(value) {
+  let ast;
+  try {
+    ast = parse(value);
+  } catch (error) {
+    throw new Error(`Invalid ICU message ${JSON.stringify(value)}: ${error.message}`);
+  }
+  const variables = [];
+  const tags = [];
+  const structures = [];
+  const walk = (nodes) => {
+    for (const node of nodes) {
+      // 1 argument, 2 number, 3 date, 4 time, 5 select, 6 plural
+      if (node.type >= 1 && node.type <= 6 && typeof node.value === 'string') {
+        variables.push(node.value);
+      }
+      if (node.type === 5 || node.type === 6) {
+        structures.push(`${node.value}:${Object.keys(node.options).sort().join('|')}`);
+        for (const option of Object.values(node.options)) {
+          walk(option.value);
+        }
+      }
+      if (node.type === 8) {
+        tags.push(node.value);
+        walk(node.children);
+      }
+    }
+  };
+  walk(ast);
+  return {
+    variables: variables.sort().join(','),
+    tags: tags.sort().join(','),
+    structures: structures.sort().join(','),
+  };
 }
 
 function assertPlaceholders(english, chinese) {
-  const englishPlaceholders = placeholders(english).join(',');
-  const chinesePlaceholders = placeholders(chinese).join(',');
-  if (englishPlaceholders !== chinesePlaceholders) {
+  const source = messageSkeleton(english);
+  const translation = messageSkeleton(chinese);
+  if (
+    source.variables !== translation.variables ||
+    source.tags !== translation.tags ||
+    source.structures !== translation.structures
+  ) {
     throw new Error(
-      `Placeholder mismatch for ${JSON.stringify(english)}: ${englishPlaceholders} vs ${chinesePlaceholders}`,
+      `ICU mismatch for ${JSON.stringify(english)}\n  en ${JSON.stringify(source)}\n  zh ${JSON.stringify(translation)}`,
     );
-  }
-  const englishTags = tags(english).join(',');
-  const chineseTags = tags(chinese).join(',');
-  if (englishTags !== chineseTags) {
-    throw new Error(`Tag mismatch for ${JSON.stringify(english)}: ${englishTags} vs ${chineseTags}`);
   }
 }
 
@@ -107,9 +145,13 @@ function main() {
     const fromExplicitOverride = usedOverrides.has(english);
     if (fromExplicitOverride) {
       assertPlaceholders(english, chinese);
-    } else if (placeholders(english).join(',') !== placeholders(chinese).join(',') || tags(english).join(',') !== tags(chinese).join(',')) {
-      // Skip a reused translation that does not keep the same placeholders.
-      continue;
+    } else {
+      try {
+        assertPlaceholders(english, chinese);
+      } catch (error) {
+        // Skip a reused translation whose ICU skeleton does not match.
+        continue;
+      }
     }
     messages[id] = chinese;
   }
