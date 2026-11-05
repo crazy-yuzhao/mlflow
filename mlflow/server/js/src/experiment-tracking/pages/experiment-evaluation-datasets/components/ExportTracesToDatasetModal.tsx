@@ -177,7 +177,10 @@ export const ExportTracesToDatasetModal = ({
         <div css={{ display: 'flex', gap: theme.spacing.sm, alignItems: 'center', marginBottom: theme.spacing.sm }}>
           <Input
             allowClear
-            placeholder="Search by dataset name"
+            placeholder={intl.formatMessage({
+              defaultMessage: 'Search by dataset name',
+              description: 'Placeholder for searching datasets when exporting traces',
+            })}
             value={internalSearchFilter}
             onChange={(e) => {
               setInternalSearchFilter(e.target.value);

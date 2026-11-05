@@ -15,7 +15,7 @@ import type { RunDatasetWithTags } from '../../../../types';
 import { DatasetSourceTypes } from '../../../../types';
 import { useEffect, useMemo, useState } from 'react';
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 export interface DatasetsCellRendererProps {
   datasetWithTags: RunDatasetWithTags;
@@ -23,6 +23,7 @@ export interface DatasetsCellRendererProps {
 
 export const ExperimentViewDatasetSchema = ({ datasetWithTags }: DatasetsCellRendererProps): JSX.Element => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const { dataset } = datasetWithTags;
   const [filter, setFilter] = useState('');
 
@@ -44,7 +45,16 @@ export const ExperimentViewDatasetSchema = ({ datasetWithTags }: DatasetsCellRen
             alignContent: 'center',
           }}
         >
-          <Header title={<div css={{ color: theme.colors.grey600 }}>No schema available</div>} />
+          <Header
+            title={
+              <div css={{ color: theme.colors.grey600 }}>
+                <FormattedMessage
+                  defaultMessage="No schema available"
+                  description="Heading shown when an experiment run dataset has no schema"
+                />
+              </div>
+            }
+          />
         </div>
       </div>
     );
@@ -71,7 +81,10 @@ export const ExperimentViewDatasetSchema = ({ datasetWithTags }: DatasetsCellRen
             <TableFilterInput
               componentId="codegen_mlflow_app_src_experiment-tracking_components_experiment-page_components_runs_experimentviewdatasetschema.tsx_92"
               value={filter}
-              placeholder="Search fields"
+              placeholder={intl.formatMessage({
+                defaultMessage: 'Search fields',
+                description: 'Placeholder for filtering fields in an experiment run dataset schema',
+              })}
               onChange={(e) => setFilter(e.target.value)}
               onClear={() => {
                 setFilter('');
@@ -104,7 +117,16 @@ export const ExperimentViewDatasetSchema = ({ datasetWithTags }: DatasetsCellRen
             }}
           >
             <TableIcon css={{ fontSize: '56px', color: theme.colors.grey600 }} />
-            <Header title={<div css={{ color: theme.colors.grey600 }}>Array Datasource</div>} />
+            <Header
+              title={
+                <div css={{ color: theme.colors.grey600 }}>
+                  <FormattedMessage
+                    defaultMessage="Array Datasource"
+                    description="Heading shown when an experiment run dataset schema is an array"
+                  />
+                </div>
+              }
+            />
             {/* @ts-expect-error Type 'string' is not assignable to type '"primary" | "secondary" | "info" | "error" | "success" | "warning" | undefined' */}
             <Typography.Text color={theme.colors.grey600} css={{ textAlign: 'center' }}>
               <FormattedMessage
@@ -120,7 +142,16 @@ export const ExperimentViewDatasetSchema = ({ datasetWithTags }: DatasetsCellRen
       return (
         <div css={{ marginLeft: theme.spacing.lg, marginTop: theme.spacing.md, width: '100%' }}>
           <div css={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
-            <Header title={<div css={{ color: theme.colors.grey600 }}>Unrecognized Schema Format</div>} />
+            <Header
+              title={
+                <div css={{ color: theme.colors.grey600 }}>
+                  <FormattedMessage
+                    defaultMessage="Unrecognized Schema Format"
+                    description="Heading shown when an experiment run dataset schema format is not recognized"
+                  />
+                </div>
+              }
+            />
             {/* @ts-expect-error Type 'string' is not assignable to type '"primary" | "secondary" | "info" | "error" | "success" | "warning" | undefined' */}
             <Typography.Text color={theme.colors.grey600}>
               <FormattedMessage
@@ -137,7 +168,16 @@ export const ExperimentViewDatasetSchema = ({ datasetWithTags }: DatasetsCellRen
     return (
       <div css={{ marginLeft: theme.spacing.lg, marginTop: theme.spacing.md, width: '100%' }}>
         <div css={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
-          <Header title={<div css={{ color: theme.colors.grey600 }}>No schema available</div>} />
+          <Header
+            title={
+              <div css={{ color: theme.colors.grey600 }}>
+                <FormattedMessage
+                  defaultMessage="No schema available"
+                  description="Heading shown when an experiment run dataset has no schema"
+                />
+              </div>
+            }
+          />
         </div>
       </div>
     );

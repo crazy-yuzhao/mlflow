@@ -13,8 +13,8 @@ import { ErrorWrapper } from '../../../common/utils/ErrorWrapper';
 import { ErrorCodes } from '../../../common/constants';
 
 type Props = {
-  okText?: string;
-  cancelText?: string;
+  okText?: React.ReactNode;
+  cancelText?: React.ReactNode;
   isOpen?: boolean;
   onClose: (...args: any[]) => any;
   onCancel?: () => void;

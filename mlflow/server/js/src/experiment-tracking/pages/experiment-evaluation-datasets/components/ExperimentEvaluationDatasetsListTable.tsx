@@ -213,7 +213,14 @@ export const ExperimentEvaluationDatasetsListTable = ({
   });
 
   if (error) {
-    return <div>Error loading datasets</div>;
+    return (
+      <div>
+        {intl.formatMessage({
+          defaultMessage: 'Error loading datasets',
+          description: 'Message shown when the evaluation datasets list fails to load',
+        })}
+      </div>
+    );
   }
 
   return (
@@ -221,7 +228,10 @@ export const ExperimentEvaluationDatasetsListTable = ({
       <div css={{ display: 'flex', gap: theme.spacing.sm, alignItems: 'center', marginBottom: theme.spacing.sm }}>
         <Input
           allowClear
-          placeholder="Search by dataset name"
+          placeholder={intl.formatMessage({
+            defaultMessage: 'Search by dataset name',
+            description: 'Placeholder for searching evaluation datasets by name',
+          })}
           value={internalSearchFilter}
           onChange={(e) => {
             setInternalSearchFilter(e.target.value);

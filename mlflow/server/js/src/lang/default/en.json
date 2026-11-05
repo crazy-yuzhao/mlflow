@@ -811,6 +811,10 @@
     "defaultMessage": "Total Cost",
     "description": "Subtitle for the cost breakdown chart total"
   },
+  "0jZ8Rt": {
+    "defaultMessage": "Off",
+    "description": "Label when a chart axis log scale is disabled"
+  },
   "0ja5l/": {
     "defaultMessage": "No tags found.",
     "description": "Text for no tags found in editable form table in MLflow"
@@ -1018,6 +1022,10 @@
   "1Tct1p": {
     "defaultMessage": "Key",
     "description": "Placeholder for a filter key input"
+  },
+  "1U0eYm": {
+    "defaultMessage": "Select column",
+    "description": "Placeholder for choosing a trace filter column"
   },
   "1Ujhc3": {
     "defaultMessage": "True",
@@ -1270,6 +1278,10 @@
   "2K8tsp": {
     "defaultMessage": "10",
     "description": "Label for 10 first runs visible in run count selector within runs compare configuration modal"
+  },
+  "2KvJ9X": {
+    "defaultMessage": "Search",
+    "description": "Placeholder for filtering group-by options on the experiment runs page"
   },
   "2N2M5a": {
     "defaultMessage": "Response",
@@ -1659,6 +1671,10 @@
     "defaultMessage": "This tab displays all the traces logged to this logged model. MLflow supports automatic tracing for many popular generative AI frameworks. Follow the steps below to log your first trace. For more information about MLflow Tracing, visit the <a>MLflow documentation</a>.",
     "description": "Message that explains the function of the 'Traces' tab in logged model page. This message is followed by a tutorial explaining how to get started with MLflow Tracing."
   },
+  "3XHCuw": {
+    "defaultMessage": "Use workspace settings",
+    "description": "Line chart option that uses the workspace line-smoothing setting"
+  },
   "3YddwH": {
     "defaultMessage": "Traffic split percentages must total 100%",
     "description": "Tooltip shown when save button is disabled due to invalid traffic split total"
@@ -2039,6 +2055,10 @@
     "defaultMessage": "Copy code",
     "description": "Aria label for copying a code block in a rendered skill markdown file"
   },
+  "4fWBb1": {
+    "defaultMessage": "Model",
+    "description": "Label for selecting a registered model"
+  },
   "4g2H7S": {
     "defaultMessage": "Prompt content is required",
     "description": "A validation state for the chat prompt content in the prompt creation modal"
@@ -2203,6 +2223,10 @@
     "defaultMessage": "Key name cannot be changed. Create a new key if a different name is needed.",
     "description": "Tooltip explaining why key name field is disabled in drawer edit"
   },
+  "5LZpSW": {
+    "defaultMessage": "Min",
+    "description": "Placeholder for a chart axis minimum"
+  },
   "5LxBxh": {
     "defaultMessage": "Show {count} more",
     "description": "Show more tools button"
@@ -2330,6 +2354,10 @@
   "5iPi6b": {
     "defaultMessage": "No permissions",
     "description": "Empty-state title for the permissions table"
+  },
+  "5iQBfe": {
+    "defaultMessage": "True",
+    "description": "Boolean assessment value: true"
   },
   "5jXYY4": {
     "defaultMessage": "Detailed assessments",
@@ -2630,6 +2658,10 @@
   "6dK+y+": {
     "defaultMessage": "Comparison is limited to {limit, number} traces per run. Sessions may have missing turns, and matches and summaries may be incomplete.",
     "description": "Loaded session summaries may be partial when the trace cap is reached"
+  },
+  "6dpsZy": {
+    "defaultMessage": "Value",
+    "description": "Accessible label for a trace filter value"
   },
   "6ejdmD": {
     "defaultMessage": "Requests",
@@ -3231,6 +3263,10 @@
     "defaultMessage": "No matching users",
     "description": "Review queue: no users match the owner search"
   },
+  "8O9hte": {
+    "defaultMessage": "Deleted experiments are restorable for 30 days, after which they are purged along with their associated runs, including metrics, params, tags, and artifacts.",
+    "description": "GDPR notice in the delete experiment modal"
+  },
   "8Oqhz5": {
     "defaultMessage": "Copy failed — clipboard unavailable.",
     "description": "Error toast shown when copying a saved experiment view share link fails"
@@ -3394,6 +3430,10 @@
   "8xji5J": {
     "defaultMessage": "X-axis:",
     "description": "Label text for X-axis in box plot comparison in MLflow"
+  },
+  "8xwe5X": {
+    "defaultMessage": "Search fields",
+    "description": "Placeholder for filtering fields in an experiment run dataset schema"
   },
   "8xzQsr": {
     "defaultMessage": "Train models",
@@ -3630,6 +3670,10 @@
   "9ZavTe": {
     "defaultMessage": "4. Monitor",
     "description": "Monitor step"
+  },
+  "9a3TFJ": {
+    "defaultMessage": "Operator",
+    "description": "Accessible label for the trace filter operator"
   },
   "9cTaBs": {
     "defaultMessage": "Fail",
@@ -4167,6 +4211,10 @@
     "defaultMessage": "{isTraces, select, true {Trace} other {Session}} {index} of {total}",
     "description": "Index of the current trace and total number of traces"
   },
+  "BDPROm": {
+    "defaultMessage": "Page loading...",
+    "description": "Accessible label for the full-page loading spinner"
+  },
   "BDmDMg": {
     "defaultMessage": "Your saved view was overridden.",
     "description": "Experiment page > shared view > confirmation toast after overriding the user's saved view with a shared view"
@@ -4246,6 +4294,10 @@
   "BU8Jni": {
     "defaultMessage": "Response",
     "description": "Column label for response"
+  },
+  "BUCxHX": {
+    "defaultMessage": "Please input a name for the new model.",
+    "description": "Validation message when a new registered model has no name"
   },
   "BUJfbQ": {
     "defaultMessage": "Inputs",
@@ -4723,9 +4775,17 @@
     "defaultMessage": "Line chart",
     "description": "Experiment tracking > runs charts > add chart menu > line chart"
   },
+  "D+R4dK": {
+    "defaultMessage": "Resource not found.",
+    "description": "Message shown when a requested page or resource does not exist"
+  },
   "D+UN8o": {
     "defaultMessage": "No metric charts",
     "description": "Experiment page > compare runs > no metric charts"
+  },
+  "D0Rtqd": {
+    "defaultMessage": "Select version",
+    "description": "Placeholder for choosing a version in a trace filter"
   },
   "D0jMS6": {
     "defaultMessage": "Register model",
@@ -5019,6 +5079,10 @@
     "defaultMessage": "Overwrite \"{name}\"",
     "description": "Menu item that overwrites the active saved view with the current, edited state"
   },
+  "E1sGqM": {
+    "defaultMessage": "Numeric value",
+    "description": "Placeholder for a numeric trace filter value"
+  },
   "E34Apf": {
     "defaultMessage": "Dataset source type",
     "description": "Eval run detail: the evaluated dataset's source type (e.g. code, local, delta_table)"
@@ -5139,6 +5203,10 @@
     "defaultMessage": "Not a number ({metricKey})",
     "description": "Label indicating \"not-a-number\" used as a hover text in a plot UI element"
   },
+  "ESY+Db": {
+    "defaultMessage": "Model Name",
+    "description": "Label for the new registered model name field"
+  },
   "ESmLOR": {
     "defaultMessage": "Using regular expression quick filter. The following query will be used: {filterSample}",
     "description": "Experiment page > control bar > search filter > a label displayed when user has entered a simple query that will be automatically transformed into RLIKE SQL query before being sent to the API"
@@ -5194,6 +5262,10 @@
   "EiFPFP": {
     "defaultMessage": "Custom Guardrail",
     "description": "Custom guardrail type name"
+  },
+  "EiNk5v": {
+    "defaultMessage": "Search inputs and expectations",
+    "description": "Placeholder for searching evaluation dataset records by inputs or expectations"
   },
   "EjPmMR": {
     "defaultMessage": "Workspace Manager",
@@ -5439,6 +5511,10 @@
     "defaultMessage": "Loading reviewers…",
     "description": "Review queue: reviewers roster loading"
   },
+  "FdBlX2": {
+    "defaultMessage": "Unrecognized Schema Format",
+    "description": "Heading shown when an experiment run dataset schema format is not recognized"
+  },
   "FdDWTo": {
     "defaultMessage": "Clear All",
     "description": "String for the clear button to clear any selected parameters and metrics"
@@ -5594,6 +5670,10 @@
   "G4x6G7": {
     "defaultMessage": "Finetuning",
     "description": "Label for experiments focused on model finetuning"
+  },
+  "G5hhEq": {
+    "defaultMessage": "Select source",
+    "description": "Placeholder for choosing a trace source filter"
   },
   "G5mMJI": {
     "defaultMessage": "Difference view",
@@ -5867,6 +5947,10 @@
     "defaultMessage": "Scanning your traces for issues. This can take a while.",
     "description": "Experiment issues tab > In-progress issue detection state description"
   },
+  "Gtv1O5": {
+    "defaultMessage": "Reject requests",
+    "description": "Budget action that rejects requests when the budget is exceeded"
+  },
   "Gxl8pl": {
     "defaultMessage": "Version",
     "description": "Label for the version picker on the playground prompt-registry modal"
@@ -6034,6 +6118,10 @@
   "HVeBoh": {
     "defaultMessage": "Admin",
     "description": "Roles table column header for the admin marker (single-tenant)"
+  },
+  "HWa9pL": {
+    "defaultMessage": "Select",
+    "description": "Placeholder for choosing a trace filter value"
   },
   "HWj7Lk": {
     "defaultMessage": "3. Eval / Test",
@@ -6579,6 +6667,10 @@
     "defaultMessage": "No roles",
     "description": "Empty-state title for the roles table on the account page"
   },
+  "J7aaY2": {
+    "defaultMessage": "Something went wrong",
+    "description": "App error boundary heading shown when the UI crashes"
+  },
   "J7x8/9": {
     "defaultMessage": "Provider",
     "description": "Filter section label for provider"
@@ -6850,6 +6942,10 @@
   "Jzwn+C": {
     "defaultMessage": "MCP Server:",
     "description": "MCP registry endpoint modal server label"
+  },
+  "K/O0kT": {
+    "defaultMessage": "Custom",
+    "description": "Line chart option for a custom smoothing value"
   },
   "K0BdF9": {
     "defaultMessage": "Save",
@@ -7203,6 +7299,10 @@
     "defaultMessage": "Failed to create assessment. Error: {error}",
     "description": "Error message when creating an assessment fails"
   },
+  "L5JD17": {
+    "defaultMessage": "Sort descending",
+    "description": "Button that sorts experiment runs in descending order"
+  },
   "L5OVKv": {
     "defaultMessage": "Transport type",
     "description": "Remote transport type label"
@@ -7383,6 +7483,10 @@
     "defaultMessage": "Mark as reviewed",
     "description": "Evaluation review > assessments > mark as reviewed button"
   },
+  "Lu4EPb": {
+    "defaultMessage": "Key",
+    "description": "Placeholder for a trace tag filter key"
+  },
   "LuBGo1": {
     "defaultMessage": "Help me create an evaluation",
     "description": "Overview prompt placeholder"
@@ -7422,6 +7526,14 @@
   "LxYgXq": {
     "defaultMessage": "{count, plural, one {# question} other {# questions}}",
     "description": "Review queue header: number of questions the queue asks"
+  },
+  "LxzBfb": {
+    "defaultMessage": "If this error persists, please report an issue <link>here</link>.",
+    "description": "App error boundary text that links to the support page"
+  },
+  "LywCnl": {
+    "defaultMessage": "Delete selected",
+    "description": "Button that deletes only the selected experiment runs"
   },
   "M+83pE": {
     "defaultMessage": "Partial",
@@ -7639,6 +7751,10 @@
     "defaultMessage": "Enter display name",
     "description": "Placeholder for server display name input"
   },
+  "MZ6a7E": {
+    "defaultMessage": "Experiment \"{experimentName}\" (Experiment ID: {experimentId}) will be deleted.",
+    "description": "Confirmation text in the delete experiment modal"
+  },
   "MZCW9F": {
     "defaultMessage": "Labeling schemas",
     "description": "Label for the labeling schemas tab in the MLflow experiment navbar"
@@ -7658,6 +7774,10 @@
   "Mc6Dhy": {
     "defaultMessage": "5",
     "description": "Label for 5 first runs visible in run count selector within runs compare configuration modal"
+  },
+  "McSCvF": {
+    "defaultMessage": "Create Experiment",
+    "description": "Title of the modal for creating an experiment"
   },
   "Me7aWD": {
     "defaultMessage": "Total tokens",
@@ -7762,6 +7882,10 @@
   "MylJBR": {
     "defaultMessage": "Custom category",
     "description": "Issue detection settings modal > Custom category field label"
+  },
+  "MzCfT7": {
+    "defaultMessage": "Select name",
+    "description": "Placeholder for choosing a trace filter name"
   },
   "N/Svk+": {
     "defaultMessage": "Guidelines",
@@ -8647,6 +8771,10 @@
     "defaultMessage": "Track every version of your model to understand how quality changes over time. {learnMoreLink}",
     "description": "Empty state description displayed when no models are logged in the machine learning logged models list page"
   },
+  "PbklL4": {
+    "defaultMessage": "Something went wrong with this section. If this error persists, please report an issue <link>here</link>.",
+    "description": "Section error boundary text that links to the support page"
+  },
   "PcVvLL": {
     "defaultMessage": "Spans",
     "description": "Header for the spans column within the MLflow trace UI"
@@ -8843,6 +8971,10 @@
     "defaultMessage": "Y-axis:",
     "description": "Label where the users can choose the metric of the experiment run to be plotted on the Y-axis"
   },
+  "QCBklP": {
+    "defaultMessage": "Input a model name",
+    "description": "Placeholder for the new registered model name"
+  },
   "QD6iZA": {
     "defaultMessage": "No parameters match the search filter",
     "description": "Run page > Overview > Parameters table > No results after filtering"
@@ -8882,6 +9014,10 @@
   "QL5BPA": {
     "defaultMessage": "{action} tool {name}",
     "description": "Aria label for expanding/collapsing a tool row"
+  },
+  "QLB0jX": {
+    "defaultMessage": "Disabled",
+    "description": "Label when a chart axis log scale cannot be changed"
   },
   "QLRaAz": {
     "defaultMessage": "Select all rows on this page",
@@ -9707,6 +9843,10 @@
     "defaultMessage": "Used by",
     "description": "Used by column header"
   },
+  "T3KSfE": {
+    "defaultMessage": "Dismiss",
+    "description": "Button that hides the home page demo banner"
+  },
   "T3RjOb": {
     "defaultMessage": "Go to the run",
     "description": "Tooltip for the run name cell in the evaluation runs table, opening the run page in a new tab"
@@ -9754,6 +9894,10 @@
   "TCq8db": {
     "defaultMessage": "Assistant: {error}",
     "description": "Inline error prefix shown when the assistant fails to apply a custom view spec"
+  },
+  "TFPBsU": {
+    "defaultMessage": "Select",
+    "description": "Placeholder for choosing a trace filter operator"
   },
   "TFWXO/": {
     "defaultMessage": "Hide raw server.json",
@@ -10259,6 +10403,10 @@
     "defaultMessage": "Expectations",
     "description": "Header for the dataset record expectations column"
   },
+  "UqAVDB": {
+    "defaultMessage": "X-axis scale",
+    "description": "Label for the line chart X-axis scale controls"
+  },
   "UqGOOx": {
     "defaultMessage": "No API keys created",
     "description": "Empty state title for API keys list"
@@ -10383,6 +10531,10 @@
     "defaultMessage": "Failed to update the review queue: {error}",
     "description": "Add to review queue: error toast when adding or removing traces fails"
   },
+  "VE/933": {
+    "defaultMessage": "Create New Model",
+    "description": "Dropdown option that starts creating a new registered model"
+  },
   "VETJ8j": {
     "defaultMessage": "Server-Sent Events (SSE)",
     "description": "MCP registry SSE transport option"
@@ -10475,6 +10627,10 @@
     "defaultMessage": "Automatic evaluation is not available for judges that use expectations.",
     "description": "Hint text explaining why automatic evaluation is disabled for judges with expectations"
   },
+  "VTPUL2": {
+    "defaultMessage": "Create",
+    "description": "Confirm button for creating an experiment"
+  },
   "VTQzhu": {
     "defaultMessage": "Up to {max} of files.",
     "description": "Hint for the server's size limit of an uploaded skill folder"
@@ -10550,6 +10706,10 @@
   "VcNdOq": {
     "defaultMessage": "No description",
     "description": "Run page > Overview > Description section > Empty value placeholder"
+  },
+  "VcWrAO": {
+    "defaultMessage": "Search by dataset name",
+    "description": "Placeholder for searching datasets when exporting traces"
   },
   "Vcxqhk": {
     "defaultMessage": "No views match your search",
@@ -10947,6 +11107,10 @@
     "defaultMessage": "Max {max} options",
     "description": "Categorical options: placeholder when the option limit is reached"
   },
+  "WrBLIl": {
+    "defaultMessage": "Daily",
+    "description": "Budget policy reset period of one day"
+  },
   "Ws58cc": {
     "defaultMessage": "Groundedness",
     "description": "Evaluation results > known type of evaluation result assessment > groundedness assessment. Used to indicate if the result is grounded in context of LLMs evaluation. Label displayed if user provided custom value, e.g. \"Groundedness: moderately grounded\""
@@ -11007,6 +11171,10 @@
     "defaultMessage": "No traces match this filter.",
     "description": "Review queue table: empty state when the active status filter matches no traces"
   },
+  "X/EHSt": {
+    "defaultMessage": "{count, plural, one {Delete Experiment Run} other {Delete Experiment Runs}}",
+    "description": "Title of the modal for deleting experiment runs"
+  },
   "X/TTxm": {
     "defaultMessage": "Previous trace",
     "description": "Review focused view: previous-trace button"
@@ -11050,6 +11218,10 @@
   "X6P8tX": {
     "defaultMessage": "No models found",
     "description": "Empty state title displayed when all models are filtered out in the logged models list page"
+  },
+  "X6mADd": {
+    "defaultMessage": "Select a model",
+    "description": "Placeholder for the registered model dropdown"
   },
   "X7HKpv": {
     "defaultMessage": "Custom LLM-as-a-judge ({llmCount})",
@@ -11194,6 +11366,10 @@
   "XcWJxW": {
     "defaultMessage": "Retrieval Sufficiency",
     "description": "LLM template option"
+  },
+  "Xd8P3u": {
+    "defaultMessage": "Time in milliseconds",
+    "description": "Placeholder for a trace duration filter value"
   },
   "Xe+MXn": {
     "defaultMessage": "Prompt alias deleted",
@@ -11642,6 +11818,10 @@
   "Z6kodo": {
     "defaultMessage": "Move down",
     "description": "Experiment page > compare runs tab > chart header > move down option"
+  },
+  "Z6ohEW": {
+    "defaultMessage": "Enter tag value",
+    "description": "Placeholder for the tag value field in the evaluation dataset tag modal"
   },
   "Z7NXJF": {
     "defaultMessage": "If it has stopped making progress, cancel to start a new detection.",
@@ -12247,6 +12427,10 @@
     "defaultMessage": "Copy register command",
     "description": "Aria label for copying the skill registration API example"
   },
+  "b7xTvR": {
+    "defaultMessage": "Weekly",
+    "description": "Budget policy reset period of one week"
+  },
   "b9zfzK": {
     "defaultMessage": "Edit the request body below and click Send request to call the endpoint.",
     "description": "Try it description in starter code modal"
@@ -12371,6 +12555,10 @@
     "defaultMessage": "A demo experiment to quickly explore MLflow's core features with sample pre-generated data. You can clean up demo resources from Settings.",
     "description": "Tooltip explaining the demo experiment in the experiments list"
   },
+  "bbffwW": {
+    "defaultMessage": "Y-axis scale",
+    "description": "Label for the line chart Y-axis scale controls"
+  },
   "bcFuUb": {
     "defaultMessage": "Are you sure you want to remove {count, plural, one {this guardrail} other {these # guardrails}}?",
     "description": "Bulk remove guardrails confirmation message"
@@ -12394,6 +12582,10 @@
   "bgk51B": {
     "defaultMessage": "Give every tool a function name",
     "description": "Submit blocker detail shown when a playground tool is missing its function name"
+  },
+  "bi1AQc": {
+    "defaultMessage": "Change aggregation function",
+    "description": "Button that opens the aggregation function menu for grouped experiment runs"
   },
   "bi26D5": {
     "defaultMessage": "Run ID:",
@@ -12458,6 +12650,10 @@
   "bnKdtY": {
     "defaultMessage": "Budgets",
     "description": "Sidebar link for gateway budgets"
+  },
+  "bnVA1j": {
+    "defaultMessage": "Max",
+    "description": "Placeholder for a chart axis maximum"
   },
   "bqn2bk": {
     "defaultMessage": "Outputs",
@@ -12699,6 +12895,10 @@
     "defaultMessage": "Usage",
     "description": "Sidebar link for gateway usage"
   },
+  "cZ9Y71": {
+    "defaultMessage": "Select run",
+    "description": "Placeholder for choosing a run in a trace filter"
+  },
   "cb9LLM": {
     "defaultMessage": "Last updated",
     "description": "Header for the dataset record last-updated column"
@@ -12726,6 +12926,10 @@
   "clS31z": {
     "defaultMessage": "View legacy charts",
     "description": "Evaluation-runs menu option opening the legacy charts view"
+  },
+  "cla5VT": {
+    "defaultMessage": "Cancel",
+    "description": "Button that closes the delete runs modal"
   },
   "cmYzGP": {
     "defaultMessage": "Dismiss",
@@ -12847,6 +13051,10 @@
     "defaultMessage": "This view could not be applied. Try again in a moment.",
     "description": "Traces page > shared view > error toast when overriding before the view could be decoded"
   },
+  "d5m9lI": {
+    "defaultMessage": "Key",
+    "description": "Accessible label for the trace filter key field"
+  },
   "d6Mx+/": {
     "defaultMessage": "Current password is required",
     "description": "Validation error when the current-password field is empty"
@@ -12918,6 +13126,10 @@
   "dHAuWp": {
     "defaultMessage": "You need to provide a prompt template",
     "description": "Experiment page > new run modal > invalid state - no prompt template provided"
+  },
+  "dHeMnH": {
+    "defaultMessage": "Monthly",
+    "description": "Budget policy reset period of one month"
   },
   "dJaboT": {
     "defaultMessage": "Fetching traces failed",
@@ -13070,6 +13282,10 @@
   "dqfOjO": {
     "defaultMessage": "You cannot select rows when comparing runs",
     "description": "Tooltip message for the select button when comparing runs"
+  },
+  "dqmXLO": {
+    "defaultMessage": "The following experiments will be deleted:",
+    "description": "Intro text in the bulk delete experiments modal"
   },
   "dsPent": {
     "defaultMessage": "Headers ({count})",
@@ -13479,6 +13695,10 @@
     "defaultMessage": "Tag",
     "description": "Trace filter field: arbitrary tag key"
   },
+  "f+j0Fc": {
+    "defaultMessage": "Deleted runs are restorable for 30 days, after which they are purged along with associated metrics, params, tags, and artifacts.",
+    "description": "GDPR notice in the delete runs modal"
+  },
   "f/3uBA": {
     "defaultMessage": "Select an endpoint to use for this judge.",
     "description": "Hint text for endpoint selection"
@@ -13590,6 +13810,10 @@
   "fMxD0i": {
     "defaultMessage": "Admin",
     "description": "Tag content marking an admin role (single-tenant)"
+  },
+  "fR2kUe": {
+    "defaultMessage": "{count, plural, one {# experiment run will be restored.} other {# experiment runs will be restored.}}",
+    "description": "Body of the modal for restoring deleted experiment runs"
   },
   "fRJE/2": {
     "defaultMessage": "Load a saved prompt to replace the current playground messages, and apply any settings stored with it.",
@@ -14151,6 +14375,10 @@
     "defaultMessage": "State",
     "description": "Traces table state column name"
   },
+  "gw++K2": {
+    "defaultMessage": "{count, plural, one {Selected # experiment run.} other {Selected # experiment runs.}}",
+    "description": "Summary of how many experiment runs are selected for deletion"
+  },
   "gxkVQo": {
     "defaultMessage": "Estimated cost",
     "description": "Trace comparison metric label"
@@ -14483,6 +14711,10 @@
     "defaultMessage": "To use other providers, create an AI Gateway endpoint and select it.",
     "description": "Hint explaining how to use other providers via Gateway"
   },
+  "hsPawm": {
+    "defaultMessage": "Array Datasource",
+    "description": "Heading shown when an experiment run dataset schema is an array"
+  },
   "ht/qId": {
     "defaultMessage": "See more",
     "description": "Button that expands the span link attributes to show all of them"
@@ -14514,6 +14746,10 @@
   "hxMEqi": {
     "defaultMessage": "The model version will be copied to {selectedModel} as a new version.",
     "description": "Model registry > OSS Promote model modal > copy explanatory text"
+  },
+  "hxr5hC": {
+    "defaultMessage": "Sort ascending",
+    "description": "Button that sorts experiment runs in ascending order"
   },
   "hyHL1n": {
     "defaultMessage": "No metrics match the search filter",
@@ -14871,6 +15107,10 @@
     "defaultMessage": "Running the judge from the UI is only supported with {supportedProvider} endpoints, but the current model uses the {currentProvider} provider",
     "description": "Tooltip message when model provider is not supported. supportedProvider is the required provider type, currentProvider is what the model currently uses."
   },
+  "itWZCG": {
+    "defaultMessage": "Delete",
+    "description": "Confirm button for deleting an experiment"
+  },
   "itlAT2": {
     "defaultMessage": "This experiment has reached the maximum of {max} saved views. Delete a view before saving a new one.",
     "description": "Error toast shown when saving a traces view once the experiment is at the saved-view cap"
@@ -14978,6 +15218,10 @@
   "j7QQfS": {
     "defaultMessage": "Add dataset records",
     "description": "Title for the V2 dataset records empty state"
+  },
+  "j7ZyVq": {
+    "defaultMessage": "On",
+    "description": "Label when a chart axis log scale is enabled"
   },
   "j7cj5r": {
     "defaultMessage": "Please log at least one table artifact containing evaluation data. <link>Learn more</link>.",
@@ -15715,6 +15959,10 @@
     "defaultMessage": "Hide charts with no data",
     "description": "Experiment page > control bar > label for a checkbox toggle button that hides chart cards with no corresponding data"
   },
+  "lb7TOJ": {
+    "defaultMessage": "{count, plural, one {Restore Experiment Run} other {Restore Experiment Runs}}",
+    "description": "Title of the modal for restoring deleted experiment runs"
+  },
   "lbKQH6": {
     "defaultMessage": "Trace name",
     "description": "Header for the traces table trace-name column"
@@ -15762,6 +16010,10 @@
   "llVQ2r": {
     "defaultMessage": "Outputs ({numOutputs})",
     "description": "Input section header for schema table in model version page"
+  },
+  "llj3jI": {
+    "defaultMessage": "Delete selected and children",
+    "description": "Button that deletes the selected experiment runs and their child runs"
   },
   "lnESqw": {
     "defaultMessage": "Run name",
@@ -16115,9 +16367,17 @@
     "defaultMessage": "Provider",
     "description": "Provider selector label"
   },
+  "mo7S+b": {
+    "defaultMessage": "Alert",
+    "description": "Budget action that sends an alert when the budget is exceeded"
+  },
   "mpHsCg": {
     "defaultMessage": "Size:",
     "description": "Label to display the size of the artifact of the experiment"
+  },
+  "mplULs": {
+    "defaultMessage": "Select prompt",
+    "description": "Placeholder for choosing a prompt in a trace filter"
   },
   "mqDCNl": {
     "defaultMessage": "Unable to parse JSON file. The file should contain an object with 'columns' and 'data' keys.",
@@ -16270,6 +16530,10 @@
   "nDVJ/n": {
     "defaultMessage": "Pass",
     "description": "The label for a passing asseessment above a bar-chart in the summary stats."
+  },
+  "nDygRc": {
+    "defaultMessage": "False",
+    "description": "Boolean assessment value: false"
   },
   "nEnDEu": {
     "defaultMessage": "Cancel",
@@ -16803,6 +17067,10 @@
     "defaultMessage": "AI Judge",
     "description": "Label for AI judge in the tooltip for the assessment in the evaluation metrics."
   },
+  "ovufhb": {
+    "defaultMessage": "The selected run has {childRunCount, plural, one {# child run} other {# child runs}}. Delete this run alone or all {totalRunsWithChildren}?",
+    "description": "Prompt asking whether to delete a run by itself or with its child runs"
+  },
   "owr9l2": {
     "defaultMessage": "No group by columns selected",
     "description": "Experiment page > artifact compare view > empty state for no group by columns selected > title"
@@ -16894,6 +17162,10 @@
   "pCaE4I": {
     "defaultMessage": "Sessions",
     "description": "Label for the scorer evaluation scope selection"
+  },
+  "pD+F7z": {
+    "defaultMessage": "Error loading datasets",
+    "description": "Message shown when the evaluation datasets list fails to load"
   },
   "pDCDkJ": {
     "defaultMessage": "Showing {visibleCount} out of {totalCount} {groupName}. Select columns to view more.",
@@ -17262,6 +17534,10 @@
   "qP6omA": {
     "defaultMessage": "Probability distribution",
     "description": "Heading for a decision answer probability distribution"
+  },
+  "qQBbPk": {
+    "defaultMessage": "Delete Experiment \"{experimentName}\"",
+    "description": "Title of the modal for deleting one experiment"
   },
   "qQazgD": {
     "defaultMessage": "Type",
@@ -17715,6 +17991,10 @@
     "defaultMessage": "Tags",
     "description": "Run page > Overview > Run tags section label"
   },
+  "rsRj3K": {
+    "defaultMessage": "Search columns",
+    "description": "Placeholder for filtering columns in the experiment runs column selector"
+  },
   "rsWoSh": {
     "defaultMessage": "Cancel",
     "description": "Issue detection settings modal > Cancel custom category button"
@@ -17802,6 +18082,10 @@
   "s6gWQs": {
     "defaultMessage": "Copy repository import command",
     "description": "Aria label for copying the skill repository import command"
+  },
+  "s6o8j8": {
+    "defaultMessage": "Select workspace",
+    "description": "Placeholder for the workspace selector"
   },
   "s8a93+": {
     "defaultMessage": "Traces",
@@ -17935,6 +18219,10 @@
     "defaultMessage": "False",
     "description": "False outcome in a decision Noul answer"
   },
+  "sRgbTC": {
+    "defaultMessage": "Log scale",
+    "description": "Switch that uses a logarithmic scale for a chart axis"
+  },
   "sS3GBl": {
     "defaultMessage": "Trace LLM applications for debugging and monitoring.",
     "description": "Home page quick action description for logging traces"
@@ -17991,6 +18279,10 @@
     "defaultMessage": "LLM scorer feedback",
     "description": "Label for the button to add LLM scorer feedback to the trace"
   },
+  "sezGJ+": {
+    "defaultMessage": "Name",
+    "description": "Placeholder for a trace filter name"
+  },
   "sfFKw2": {
     "defaultMessage": "User-defined key-value pairs",
     "description": "Tooltip description for the Tags column in the traces table"
@@ -18026,6 +18318,14 @@
   "smtq2M": {
     "defaultMessage": "Automatically log traces for OpenAI API calls by calling the {code} function. For example:",
     "description": "Description of how to log traces for the OpenAI package using MLflow autologging. This message is followed by a code example."
+  },
+  "soJysw": {
+    "defaultMessage": "Please select a model or create a new one.",
+    "description": "Validation message when no registered model is selected"
+  },
+  "sopyyz": {
+    "defaultMessage": "Models",
+    "description": "Group label for existing registered models"
   },
   "sptgX6": {
     "defaultMessage": "Model",
@@ -18114,6 +18414,10 @@
   "t7XeYe": {
     "defaultMessage": "Cancel",
     "description": "Cancel-button text for the V2 evaluation dataset delete modal"
+  },
+  "t8vfr5": {
+    "defaultMessage": "Enter tag key",
+    "description": "Placeholder for the tag key field in the evaluation dataset tag modal"
   },
   "tBHYWH": {
     "defaultMessage": "Action",
@@ -18338,6 +18642,10 @@
   "tzA/LZ": {
     "defaultMessage": "Name",
     "description": "Header for the name column in the registered prompts table"
+  },
+  "u/ACYO": {
+    "defaultMessage": "Search",
+    "description": "Placeholder for filtering sort options on the experiment runs page"
   },
   "u0JbBm": {
     "defaultMessage": "Model: {baselineModelName} → {candidateModelName}",
@@ -18598,6 +18906,10 @@
   "uw/A3k": {
     "defaultMessage": "Undo",
     "description": "Traces page > shared view > undo button on the override confirmation toast"
+  },
+  "uwRi62": {
+    "defaultMessage": "Restore",
+    "description": "Confirm button for restoring deleted experiment runs"
   },
   "uyD/XK": {
     "defaultMessage": "Edit comparison filter: {label}",
@@ -19291,6 +19603,10 @@
     "defaultMessage": "{count} total tokens",
     "description": "Tooltip for a session turn token count"
   },
+  "x3Jkye": {
+    "defaultMessage": "Value",
+    "description": "Placeholder for a trace filter value"
+  },
   "x5IuGA": {
     "defaultMessage": "Loaded {name} v{version}",
     "description": "Success toast shown on the playground after loading a prompt version that did not include stored settings"
@@ -19783,6 +20099,10 @@
     "defaultMessage": "Columns ({active}/{total})",
     "description": "Tooltip for the eval-runs columns button showing active vs total column counts"
   },
+  "yhyf60": {
+    "defaultMessage": "No schema available",
+    "description": "Heading shown when an experiment run dataset has no schema"
+  },
   "yjerKR": {
     "defaultMessage": "<link>Version {versionNumber}</link>",
     "description": "Link to model version in the model version table"
@@ -19866,6 +20186,10 @@
   "z+0t/R": {
     "defaultMessage": "You need to define at least one input variable",
     "description": "Experiment page > new run modal > invalid state - no input variables defined"
+  },
+  "z+B10z": {
+    "defaultMessage": "Copy to model",
+    "description": "Label for copying a model into another registered model"
   },
   "z/CjX4": {
     "defaultMessage": "View stack trace",
@@ -19982,6 +20306,10 @@
   "zK6IRq": {
     "defaultMessage": "Delete dataset",
     "description": "Title for the V2 evaluation dataset delete confirmation modal"
+  },
+  "zK8pY5": {
+    "defaultMessage": "Search by dataset name",
+    "description": "Placeholder for searching evaluation datasets by name"
   },
   "zLTdCZ": {
     "defaultMessage": "Reviewed",

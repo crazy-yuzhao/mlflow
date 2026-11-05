@@ -9,7 +9,7 @@ import {
   CloseSmallIcon,
   Input,
 } from '@databricks/design-system';
-import { FormattedMessage } from '@databricks/i18n';
+import { FormattedMessage, useIntl } from '@databricks/i18n';
 
 import { TableFilterItemTypeahead } from './TableFilterItemTypeahead';
 import { TableFilterItemValueInput } from './TableFilterItemValueInput';
@@ -170,6 +170,7 @@ export const TableFilterItem = ({
 }) => {
   const { column, operator, key } = tableFilter;
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
 
   const availableFilterableInfoColumns = useMemo(() => getFilterableInfoColumns(usesV4APIs), [usesV4APIs]);
 
@@ -260,7 +261,10 @@ export const TableFilterItem = ({
                 onChange({ column: value, operator: defaultOperator, value: '' }, index);
               }
             }}
-            placeholder="Select column"
+            placeholder={intl.formatMessage({
+              defaultMessage: 'Select column',
+              description: 'Placeholder for choosing a trace filter column',
+            })}
             width={180}
             canSearchCustomValue={false}
           />
@@ -296,7 +300,10 @@ export const TableFilterItem = ({
                   index,
                 );
               }}
-              placeholder="Select name"
+              placeholder={intl.formatMessage({
+                defaultMessage: 'Select name',
+                description: 'Placeholder for choosing a trace filter name',
+              })}
               width={200}
               canSearchCustomValue={false}
             />
@@ -333,7 +340,10 @@ export const TableFilterItem = ({
                   index,
                 );
               }}
-              placeholder="Select name"
+              placeholder={intl.formatMessage({
+                defaultMessage: 'Select name',
+                description: 'Placeholder for choosing a trace filter name',
+              })}
               width={200}
               canSearchCustomValue={false}
             />
@@ -353,12 +363,25 @@ export const TableFilterItem = ({
               />
             </FormUI.Label>
             <Input
-              aria-label="Key"
+              aria-label={intl.formatMessage({
+                defaultMessage: 'Key',
+                description: 'Accessible label for the trace filter key field',
+              })}
               componentId="mlflow.evaluations_review.table_ui.filter_key"
               id={'filter-key-' + index}
               type="text"
               css={{ width: 200 }}
-              placeholder={column === TracesTableColumnGroup.TAG ? 'Key' : 'Name'}
+              placeholder={
+                column === TracesTableColumnGroup.TAG
+                  ? intl.formatMessage({
+                      defaultMessage: 'Key',
+                      description: 'Placeholder for a trace tag filter key',
+                    })
+                  : intl.formatMessage({
+                      defaultMessage: 'Name',
+                      description: 'Placeholder for a trace filter name',
+                    })
+              }
               value={key}
               onChange={(e) => {
                 onChange({ ...tableFilter, key: e.target.value }, index);
@@ -383,10 +406,16 @@ export const TableFilterItem = ({
               column !== '' && getAvailableOperators(column, key, usesV4APIs, assessmentInfos).length === 1;
             return (
               <SimpleSelect
-                aria-label="Operator"
+                aria-label={intl.formatMessage({
+                  defaultMessage: 'Operator',
+                  description: 'Accessible label for the trace filter operator',
+                })}
                 componentId="mlflow.evaluations_review.table_ui.filter_operator"
                 id={'filter-operator-' + index}
-                placeholder="Select"
+                placeholder={intl.formatMessage({
+                  defaultMessage: 'Select',
+                  description: 'Placeholder for choosing a trace filter operator',
+                })}
                 width={120}
                 contentProps={{
                   // Set the z-index to be higher than the Popover

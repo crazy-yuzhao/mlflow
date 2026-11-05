@@ -10,6 +10,7 @@ import { deleteRunApi } from '../../actions';
 import { connect } from 'react-redux';
 import Utils from '../../../common/utils/Utils';
 import { Button, Modal } from '@databricks/design-system';
+import { FormattedMessage } from 'react-intl';
 import { EXPERIMENT_PARENT_ID_TAG } from '../experiment-page/utils/experimentPage.common-utils';
 
 interface State {
@@ -122,7 +123,10 @@ export class DeleteRunModalImpl extends Component<Props, State> {
         loading={isDeletingSelected}
         type="primary"
       >
-        Delete selected
+        <FormattedMessage
+          defaultMessage="Delete selected"
+          description="Button that deletes only the selected experiment runs"
+        />
       </Button>
     );
 
@@ -135,13 +139,16 @@ export class DeleteRunModalImpl extends Component<Props, State> {
         disabled={isDeletingSelected}
         loading={isDeletingWithChildren}
       >
-        Delete selected and children
+        <FormattedMessage
+          defaultMessage="Delete selected and children"
+          description="Button that deletes the selected experiment runs and their child runs"
+        />
       </Button>
     ) : null;
 
     const footerButtons = [
       <Button componentId="cancel" key="cancel" onClick={this.onRequestClose} disabled={Boolean(deletingMode)}>
-        Cancel
+        <FormattedMessage defaultMessage="Cancel" description="Button that closes the delete runs modal" />
       </Button>,
       deleteSelectedButton,
       ...(deleteSelectedAndChildrenButton ? [deleteSelectedAndChildrenButton] : []),
@@ -151,7 +158,13 @@ export class DeleteRunModalImpl extends Component<Props, State> {
       <Modal
         componentId="delete-run-modal"
         data-testid="delete-run-modal"
-        title={`Delete Experiment ${Utils.pluralize('Run', number)}`}
+        title={
+          <FormattedMessage
+            defaultMessage="{count, plural, one {Delete Experiment Run} other {Delete Experiment Runs}}"
+            description="Title of the modal for deleting experiment runs"
+            values={{ count: number }}
+          />
+        }
         visible={this.props.isOpen}
         onCancel={this.onRequestClose}
         footer={footerButtons}
@@ -159,20 +172,29 @@ export class DeleteRunModalImpl extends Component<Props, State> {
         <div className="modal-explanatory-text">
           <p>
             <b>
-              Selected {number} experiment {Utils.pluralize('run', number)}.
+              <FormattedMessage
+                defaultMessage="{count, plural, one {Selected # experiment run.} other {Selected # experiment runs.}}"
+                description="Summary of how many experiment runs are selected for deletion"
+                values={{ count: number }}
+              />
             </b>
           </p>
           {hasChildRuns ? (
             <p>
-              The selected run has {childRunCount} child {Utils.pluralize('run', childRunCount)}. Delete this run alone
-              or all {totalRunsWithChildren}?
+              <FormattedMessage
+                defaultMessage="The selected run has {childRunCount, plural, one {# child run} other {# child runs}}. Delete this run alone or all {totalRunsWithChildren}?"
+                description="Prompt asking whether to delete a run by itself or with its child runs"
+                values={{ childRunCount, totalRunsWithChildren }}
+              />
             </p>
           ) : null}
           {/* @ts-expect-error TS(4111): Property 'MLFLOW_SHOW_GDPR_PURGING_MESSAGES' comes from a... Remove this comment to see the full error message */}
           {process.env.MLFLOW_SHOW_GDPR_PURGING_MESSAGES === 'true' ? (
             <p>
-              Deleted runs are restorable for 30 days, after which they are purged along with associated metrics,
-              params, tags, and artifacts.
+              <FormattedMessage
+                defaultMessage="Deleted runs are restorable for 30 days, after which they are purged along with associated metrics, params, tags, and artifacts."
+                description="GDPR notice in the delete runs modal"
+              />
             </p>
           ) : (
             ''

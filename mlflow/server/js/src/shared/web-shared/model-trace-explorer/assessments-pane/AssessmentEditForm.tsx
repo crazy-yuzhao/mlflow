@@ -238,8 +238,12 @@ export const AssessmentEditForm = ({
             setValueError(null);
           }}
         >
-          <SegmentedControlButton value>True</SegmentedControlButton>
-          <SegmentedControlButton value={false}>False</SegmentedControlButton>
+          <SegmentedControlButton value>
+            <FormattedMessage defaultMessage="True" description="Boolean assessment value: true" />
+          </SegmentedControlButton>
+          <SegmentedControlButton value={false}>
+            <FormattedMessage defaultMessage="False" description="Boolean assessment value: false" />
+          </SegmentedControlButton>
         </SegmentedControlGroup>
       )}
       {dataType === 'number' && (

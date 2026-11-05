@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import Utils from '../../utils/Utils';
 
 type Props = {
@@ -37,14 +38,19 @@ export class SectionErrorBoundary extends React.Component<Props, State> {
               className="fa fa-exclamation-triangle mlflow-icon-fail"
               css={classNames.wrapper}
             />
-            <span> Something went wrong with this section. </span>
-            <span>If this error persists, please report an issue </span>
-            {/* Reported during ESLint upgrade */}
-            {/* eslint-disable-next-line react/jsx-no-target-blank */}
-            <a href={Utils.getSupportPageUrl()} target="_blank">
-              here
-            </a>
-            .{this.renderErrorMessage(error)}
+            <FormattedMessage
+              defaultMessage="Something went wrong with this section. If this error persists, please report an issue <link>here</link>."
+              description="Section error boundary text that links to the support page"
+              values={{
+                link: (chunks) => (
+                  // eslint-disable-next-line react/jsx-no-target-blank
+                  <a href={Utils.getSupportPageUrl()} target="_blank">
+                    {chunks}
+                  </a>
+                ),
+              }}
+            />
+            {this.renderErrorMessage(error)}
           </p>
         </div>
       );

@@ -1,3 +1,4 @@
+import { useIntl } from 'react-intl';
 import spinner from '../static/mlflow-spinner.png';
 import type { Interpolation, Theme } from '@emotion/react';
 import { keyframes } from '@emotion/react';
@@ -7,9 +8,16 @@ type Props = {
 };
 
 export function Spinner({ showImmediately }: Props) {
+  const intl = useIntl();
   return (
     <div css={(theme) => styles.spinner(theme, showImmediately)}>
-      <img alt="Page loading..." src={spinner} />
+      <img
+        alt={intl.formatMessage({
+          defaultMessage: 'Page loading...',
+          description: 'Accessible label for the full-page loading spinner',
+        })}
+        src={spinner}
+      />
     </div>
   );
 }

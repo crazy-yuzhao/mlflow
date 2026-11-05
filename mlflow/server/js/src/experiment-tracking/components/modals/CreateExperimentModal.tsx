@@ -18,6 +18,7 @@ import { getExperimentNameValidator } from '../../../common/forms/validations';
 import { createExperimentApi } from '../../actions';
 import { getExperiments } from '../../reducers/Reducers';
 import { withRouterNext } from '../../../common/utils/withRouterNext';
+import { FormattedMessage } from 'react-intl';
 
 type CreateExperimentModalImplProps = {
   isOpen?: boolean;
@@ -80,8 +81,13 @@ export class CreateExperimentModalImpl extends Component<
     const { experimentName } = this.state;
     return (
       <GenericInputModal
-        title="Create Experiment"
-        okText="Create"
+        title={
+          <FormattedMessage
+            defaultMessage="Create Experiment"
+            description="Title of the modal for creating an experiment"
+          />
+        }
+        okText={<FormattedMessage defaultMessage="Create" description="Confirm button for creating an experiment" />}
         isOpen={isOpen}
         handleSubmit={this.handleCreateExperiment}
         onClose={this.handleClose}

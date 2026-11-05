@@ -8,6 +8,7 @@
 import { describe, beforeEach, jest, test, expect } from '@jest/globals';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
+import { IntlProvider } from 'react-intl';
 import { RegisterModelForm, CREATE_NEW_MODEL_OPTION_VALUE } from './RegisterModelForm';
 import { mockRegisteredModelDetailed } from '../test-utils';
 
@@ -52,7 +53,7 @@ describe('RegisterModelForm', () => {
     wrapper = shallow(<RegisterModelForm {...props} />);
     instance = wrapper.instance();
     instance.setState({ selectedModel: CREATE_NEW_MODEL_OPTION_VALUE });
-    expect(wrapper.find('[label="Model Name"]').length).toBe(1);
+    expect(wrapper.find('[name="modelName"]').length).toBe(1);
   });
 
   test('should search registered model when user types model name', () => {
@@ -65,7 +66,11 @@ describe('RegisterModelForm', () => {
       modelByName,
       onSearchRegisteredModels,
     };
-    wrapper = mount(<RegisterModelForm {...props} />);
+    wrapper = mount(
+      <IntlProvider locale="en">
+        <RegisterModelForm {...props} />
+      </IntlProvider>,
+    );
     wrapper.find('input#selectedModel').simulate('change', { target: { value: 'Model B' } });
     expect(onSearchRegisteredModels.mock.calls.length).toBe(1);
   });

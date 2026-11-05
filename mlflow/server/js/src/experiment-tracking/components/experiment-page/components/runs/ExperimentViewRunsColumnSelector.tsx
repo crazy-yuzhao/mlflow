@@ -10,7 +10,7 @@ import {
 } from '@databricks/design-system';
 import { Theme } from '@emotion/react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useMediaQuery } from '@databricks/web-shared/hooks';
 import Utils from '../../../../../common/utils/Utils';
 import { ATTRIBUTE_COLUMN_LABELS, COLUMN_TYPES } from '../../../../constants';
@@ -126,6 +126,7 @@ export const ExperimentViewRunsColumnSelector = React.memo(
     const experimentIds = useExperimentIds();
     const [filter, setFilter] = useState('');
     const { theme } = useDesignSystemTheme();
+    const intl = useIntl();
     // Matches design-system `theme.responsive.mediaQueries.xs` (max-width: 575.98px).
     const isXsViewport = useMediaQuery('(max-width: 575.98px)');
 
@@ -390,7 +391,10 @@ export const ExperimentViewRunsColumnSelector = React.memo(
             componentId="codegen_mlflow_app_src_experiment-tracking_components_experiment-page_components_runs_experimentviewrunscolumnselector.tsx_300"
             value={filter}
             prefix={<SearchIcon />}
-            placeholder="Search columns"
+            placeholder={intl.formatMessage({
+              defaultMessage: 'Search columns',
+              description: 'Placeholder for filtering columns in the experiment runs column selector',
+            })}
             allowClear
             ref={searchInputRef}
             onChange={(e) => {

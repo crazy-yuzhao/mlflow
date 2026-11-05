@@ -7,11 +7,24 @@
 
 import React from 'react';
 import { LegacyForm, Input, LegacySelect } from '@databricks/design-system';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import './RegisterModelForm.css';
 
 const { Option, OptGroup } = LegacySelect;
+
+const ModelNameInput = () => {
+  const intl = useIntl();
+  return (
+    <Input
+      componentId="codegen_mlflow_app_src_model-registry_components_registermodelform.tsx_132"
+      placeholder={intl.formatMessage({
+        defaultMessage: 'Input a model name',
+        description: 'Placeholder for the new registered model name',
+      })}
+    />
+  );
+};
 
 const CREATE_NEW_MODEL_LABEL = 'Create New Model';
 // Include 'CREATE_NEW_MODEL_LABEL' as part of the value for filtering to work properly. Also added
@@ -95,40 +108,86 @@ export class RegisterModelForm extends React.Component<Props, State> {
       <LegacyForm ref={innerRef} layout="vertical" className="mlflow-register-model-form">
         {/* "+ Create new model" OR "Select existing model" */}
         <LegacyForm.Item
-          label={isCopy ? <b>Copy to model</b> : 'Model'}
+          label={
+            isCopy ? (
+              <b>
+                <FormattedMessage
+                  defaultMessage="Copy to model"
+                  description="Label for copying a model into another registered model"
+                />
+              </b>
+            ) : (
+              <FormattedMessage defaultMessage="Model" description="Label for selecting a registered model" />
+            )
+          }
           name={SELECTED_MODEL_FIELD}
-          rules={[{ required: true, message: 'Please select a model or create a new one.' }]}
+          rules={[
+            {
+              required: true,
+              message: (
+                <FormattedMessage
+                  defaultMessage="Please select a model or create a new one."
+                  description="Validation message when no registered model is selected"
+                />
+              ),
+            },
+          ]}
         >
           <LegacySelect
             dropdownClassName="mlflow-model-select-dropdown"
             onChange={this.handleModelSelectChange}
-            placeholder="Select a model"
+            placeholder={
+              <FormattedMessage
+                defaultMessage="Select a model"
+                description="Placeholder for the registered model dropdown"
+              />
+            }
             filterOption={this.handleFilterOption}
             onSearch={this.props.onSearchRegisteredModels}
             // @ts-expect-error TS(2769): No overload matches this call.
             showSearch
           >
             <Option value={CREATE_NEW_MODEL_OPTION_VALUE} className="mlflow-create-new-model-option">
-              <i className="fa fa-plus fa-fw" style={{ fontSize: 13 }} /> {CREATE_NEW_MODEL_LABEL}
+              <i className="fa fa-plus fa-fw" style={{ fontSize: 13 }} />{' '}
+              <FormattedMessage
+                defaultMessage="Create New Model"
+                description="Dropdown option that starts creating a new registered model"
+              />
             </Option>
-            <OptGroup label="Models">{Object.values(modelByName).map((model) => this.renderModel(model))}</OptGroup>
+            <OptGroup
+              label={
+                <FormattedMessage defaultMessage="Models" description="Group label for existing registered models" />
+              }
+            >
+              {Object.values(modelByName).map((model) => this.renderModel(model))}
+            </OptGroup>
           </LegacySelect>
         </LegacyForm.Item>
 
         {/* Name the new model when "+ Create new model" is selected */}
         {creatingNewModel ? (
           <LegacyForm.Item
-            label="Model Name"
+            label={
+              <FormattedMessage
+                defaultMessage="Model Name"
+                description="Label for the new registered model name field"
+              />
+            }
             name={MODEL_NAME_FIELD}
             rules={[
-              { required: true, message: 'Please input a name for the new model.' },
+              {
+                required: true,
+                message: (
+                  <FormattedMessage
+                    defaultMessage="Please input a name for the new model."
+                    description="Validation message when a new registered model has no name"
+                  />
+                ),
+              },
               { validator: this.modelNameValidator },
             ]}
           >
-            <Input
-              componentId="codegen_mlflow_app_src_model-registry_components_registermodelform.tsx_132"
-              placeholder="Input a model name"
-            />
+            <ModelNameInput />
           </LegacyForm.Item>
         ) : null}
 

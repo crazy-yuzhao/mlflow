@@ -8,7 +8,7 @@ import {
   ZoomToFitIcon,
   useDesignSystemTheme,
 } from '@databricks/design-system';
-import { FormattedMessage } from '@databricks/i18n';
+import { useIntl } from '@databricks/i18n';
 
 interface GraphViewFloatingToolbarProps {
   isGraphExpanded: boolean;
@@ -26,6 +26,27 @@ export const GraphViewFloatingToolbar = ({
   onZoomOut,
 }: GraphViewFloatingToolbarProps) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
+  const collapseGraphLabel = intl.formatMessage({
+    defaultMessage: 'Collapse graph',
+    description: 'Tooltip for the button that collapses the graph view',
+  });
+  const expandGraphLabel = intl.formatMessage({
+    defaultMessage: 'Expand graph',
+    description: 'Tooltip for the button that expands the graph view',
+  });
+  const fitToViewLabel = intl.formatMessage({
+    defaultMessage: 'Fit to view',
+    description: 'Tooltip for the button that fits the graph to the viewport',
+  });
+  const zoomInLabel = intl.formatMessage({
+    defaultMessage: 'Zoom in',
+    description: 'Tooltip for the button that zooms in on the graph',
+  });
+  const zoomOutLabel = intl.formatMessage({
+    defaultMessage: 'Zoom out',
+    description: 'Tooltip for the button that zooms out of the graph',
+  });
 
   return (
     <div
@@ -41,80 +62,44 @@ export const GraphViewFloatingToolbar = ({
     >
       <Tooltip
         componentId="graph-view-toolbar.expand"
-        content={
-          isGraphExpanded ? (
-            <FormattedMessage
-              defaultMessage="Collapse graph"
-              description="Tooltip for the button that collapses the graph view"
-            />
-          ) : (
-            <FormattedMessage
-              defaultMessage="Expand graph"
-              description="Tooltip for the button that expands the graph view"
-            />
-          )
-        }
+        content={isGraphExpanded ? collapseGraphLabel : expandGraphLabel}
         side="left"
       >
         <Button
           componentId="graph-view-toolbar.expand-button"
           icon={isGraphExpanded ? <FullscreenExitIcon /> : <FullscreenIcon />}
           size="small"
-          aria-label={isGraphExpanded ? 'Collapse graph' : 'Expand graph'}
+          aria-label={isGraphExpanded ? collapseGraphLabel : expandGraphLabel}
           onClick={onToggleGraphExpand}
           css={toolbarButtonStyle(theme)}
         />
       </Tooltip>
-      <Tooltip
-        componentId="graph-view-toolbar.fit-view"
-        content={
-          <FormattedMessage
-            defaultMessage="Fit to view"
-            description="Tooltip for the button that fits the graph to the viewport"
-          />
-        }
-        side="left"
-      >
+      <Tooltip componentId="graph-view-toolbar.fit-view" content={fitToViewLabel} side="left">
         <Button
           componentId="graph-view-toolbar.fit-view-button"
           icon={<ZoomToFitIcon />}
           size="small"
-          aria-label="Fit to view"
+          aria-label={fitToViewLabel}
           onClick={onFitView}
           css={toolbarButtonStyle(theme)}
         />
       </Tooltip>
-      <Tooltip
-        componentId="graph-view-toolbar.zoom-in"
-        content={
-          <FormattedMessage defaultMessage="Zoom in" description="Tooltip for the button that zooms in on the graph" />
-        }
-        side="left"
-      >
+      <Tooltip componentId="graph-view-toolbar.zoom-in" content={zoomInLabel} side="left">
         <Button
           componentId="graph-view-toolbar.zoom-in-button"
           icon={<ZoomInIcon />}
           size="small"
-          aria-label="Zoom in"
+          aria-label={zoomInLabel}
           onClick={onZoomIn}
           css={toolbarButtonStyle(theme)}
         />
       </Tooltip>
-      <Tooltip
-        componentId="graph-view-toolbar.zoom-out"
-        content={
-          <FormattedMessage
-            defaultMessage="Zoom out"
-            description="Tooltip for the button that zooms out of the graph"
-          />
-        }
-        side="left"
-      >
+      <Tooltip componentId="graph-view-toolbar.zoom-out" content={zoomOutLabel} side="left">
         <Button
           componentId="graph-view-toolbar.zoom-out-button"
           icon={<ZoomOutIcon />}
           size="small"
-          aria-label="Zoom out"
+          aria-label={zoomOutLabel}
           onClick={onZoomOut}
           css={toolbarButtonStyle(theme)}
         />

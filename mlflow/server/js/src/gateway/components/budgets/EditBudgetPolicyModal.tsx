@@ -229,9 +229,15 @@ export const EditBudgetPolicyModal = ({ open, policy, onClose, onSuccess }: Edit
             value={formData.duration}
             onChange={({ target }) => handleFormChange({ duration: target.value as DurationPreset })}
           >
-            <SimpleSelectOption value="DAILY">Daily</SimpleSelectOption>
-            <SimpleSelectOption value="WEEKLY">Weekly</SimpleSelectOption>
-            <SimpleSelectOption value="MONTHLY">Monthly</SimpleSelectOption>
+            <SimpleSelectOption value="DAILY">
+              <FormattedMessage defaultMessage="Daily" description="Budget policy reset period of one day" />
+            </SimpleSelectOption>
+            <SimpleSelectOption value="WEEKLY">
+              <FormattedMessage defaultMessage="Weekly" description="Budget policy reset period of one week" />
+            </SimpleSelectOption>
+            <SimpleSelectOption value="MONTHLY">
+              <FormattedMessage defaultMessage="Monthly" description="Budget policy reset period of one month" />
+            </SimpleSelectOption>
           </SimpleSelect>
         </div>
 
@@ -271,8 +277,18 @@ export const EditBudgetPolicyModal = ({ open, policy, onClose, onSuccess }: Edit
             value={formData.budgetAction}
             onChange={({ target }) => handleFormChange({ budgetAction: target.value as BudgetAction })}
           >
-            <SimpleSelectOption value="ALERT">Alert</SimpleSelectOption>
-            <SimpleSelectOption value="REJECT">Reject requests</SimpleSelectOption>
+            <SimpleSelectOption value="ALERT">
+              <FormattedMessage
+                defaultMessage="Alert"
+                description="Budget action that sends an alert when the budget is exceeded"
+              />
+            </SimpleSelectOption>
+            <SimpleSelectOption value="REJECT">
+              <FormattedMessage
+                defaultMessage="Reject requests"
+                description="Budget action that rejects requests when the budget is exceeded"
+              />
+            </SimpleSelectOption>
           </SimpleSelect>
         </div>
       </div>

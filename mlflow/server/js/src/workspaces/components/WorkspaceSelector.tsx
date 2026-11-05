@@ -21,6 +21,7 @@ import {
   validateWorkspaceName,
   WORKSPACE_QUERY_PARAM,
 } from '../utils/WorkspaceUtils';
+import { useIntl } from 'react-intl';
 import { useQueryClient } from '@mlflow/mlflow/src/common/utils/reactQueryHooks';
 import { useLocation, useNavigate, useSearchParams } from '../../common/utils/RoutingUtils';
 import Routes from '../../experiment-tracking/routes';
@@ -28,6 +29,7 @@ import { useWorkspaces } from '../hooks/useWorkspaces';
 
 export const WorkspaceSelector = () => {
   const workspacesEnabled = shouldEnableWorkspaces();
+  const intl = useIntl();
   const [searchValue, setSearchValue] = useState('');
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -174,7 +176,10 @@ export const WorkspaceSelector = () => {
     >
       <DialogComboboxTrigger
         withInlineLabel={false}
-        placeholder="Select workspace"
+        placeholder={intl.formatMessage({
+          defaultMessage: 'Select workspace',
+          description: 'Placeholder for the workspace selector',
+        })}
         renderDisplayedValue={() => currentWorkspace}
         onClear={() => navigate(Routes.rootRoute)}
         width="100%"

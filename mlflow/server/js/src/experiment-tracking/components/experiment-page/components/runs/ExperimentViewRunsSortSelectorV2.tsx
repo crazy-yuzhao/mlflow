@@ -37,6 +37,7 @@ const ExperimentViewRunsSortSelectorV2Body = ({
   onOptionSelected: () => void;
 }) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
 
   const setUrlSearchFacets = useUpdateExperimentPageSearchFacets();
   const updateUIState = useUpdateExperimentViewUIState();
@@ -100,7 +101,10 @@ const ExperimentViewRunsSortSelectorV2Body = ({
           value={filter}
           type="search"
           onChange={(e) => setFilter(e.target.value)}
-          placeholder="Search"
+          placeholder={intl.formatMessage({
+            defaultMessage: 'Search',
+            description: 'Placeholder for filtering sort options on the experiment runs page',
+          })}
           autoFocus
           ref={inputElementRef}
           onKeyDown={(e) => {
@@ -122,7 +126,10 @@ const ExperimentViewRunsSortSelectorV2Body = ({
             icon={<ArrowDownIcon />}
             componentId="mlflow.experiment_page.sort_select_v2.sort_desc"
             onClick={() => setOrder(false)}
-            aria-label="Sort descending"
+            aria-label={intl.formatMessage({
+              defaultMessage: 'Sort descending',
+              description: 'Button that sorts experiment runs in descending order',
+            })}
             data-testid="sort-select-desc"
           />
           <ToggleIconButton
@@ -130,7 +137,10 @@ const ExperimentViewRunsSortSelectorV2Body = ({
             icon={<ArrowUpIcon />}
             componentId="mlflow.experiment_page.sort_select_v2.sort_asc"
             onClick={() => setOrder(true)}
-            aria-label="Sort ascending"
+            aria-label={intl.formatMessage({
+              defaultMessage: 'Sort ascending',
+              description: 'Button that sorts experiment runs in ascending order',
+            })}
             data-testid="sort-select-asc"
           />
         </div>

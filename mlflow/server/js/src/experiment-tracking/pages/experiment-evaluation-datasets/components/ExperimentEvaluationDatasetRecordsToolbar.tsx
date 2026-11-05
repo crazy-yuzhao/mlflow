@@ -9,7 +9,7 @@ import {
   useDesignSystemTheme,
 } from '@databricks/design-system';
 import type { ColumnDef } from '@tanstack/react-table';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import type { EvaluationDataset, EvaluationDatasetRecord } from '../types';
 import { parseJSONSafe } from '@mlflow/mlflow/src/common/utils/TagUtils';
 
@@ -44,6 +44,7 @@ export const ExperimentEvaluationDatasetRecordsToolbar = ({
   setSearchFilter: (searchFilter: string) => void;
 }) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const datasetName = dataset?.name;
   const profile = dataset?.profile;
   const totalRecordsCount = getTotalRecordsCount(profile);
@@ -155,7 +156,10 @@ export const ExperimentEvaluationDatasetRecordsToolbar = ({
         <Input
           componentId="mlflow.eval-datasets.records-toolbar.search-input"
           prefix={<SearchIcon />}
-          placeholder="Search inputs and expectations"
+          placeholder={intl.formatMessage({
+            defaultMessage: 'Search inputs and expectations',
+            description: 'Placeholder for searching evaluation dataset records by inputs or expectations',
+          })}
           value={searchFilter}
           onChange={(e) => setSearchFilter(e.target.value)}
           css={{ maxWidth: '540px', flex: 1 }}

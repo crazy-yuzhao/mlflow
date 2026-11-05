@@ -10,6 +10,7 @@ import { ConfirmModal } from './ConfirmModal';
 import { connect } from 'react-redux';
 import { restoreRunApi } from '../../actions';
 import Utils from '../../../common/utils/Utils';
+import { FormattedMessage } from 'react-intl';
 
 type Props = {
   isOpen: boolean;
@@ -46,9 +47,26 @@ export class RestoreRunModalImpl extends Component<Props> {
         isOpen={this.props.isOpen}
         onClose={this.props.onClose}
         handleSubmit={this.handleSubmit}
-        title={`Restore Experiment ${Utils.pluralize('Run', number)}`}
-        helpText={`${number} experiment ${Utils.pluralize('run', number)} will be restored.`}
-        confirmButtonText="Restore"
+        title={
+          <FormattedMessage
+            defaultMessage="{count, plural, one {Restore Experiment Run} other {Restore Experiment Runs}}"
+            description="Title of the modal for restoring deleted experiment runs"
+            values={{ count: number }}
+          />
+        }
+        helpText={
+          <FormattedMessage
+            defaultMessage="{count, plural, one {# experiment run will be restored.} other {# experiment runs will be restored.}}"
+            description="Body of the modal for restoring deleted experiment runs"
+            values={{ count: number }}
+          />
+        }
+        confirmButtonText={
+          <FormattedMessage
+            defaultMessage="Restore"
+            description="Confirm button for restoring deleted experiment runs"
+          />
+        }
       />
     );
   }

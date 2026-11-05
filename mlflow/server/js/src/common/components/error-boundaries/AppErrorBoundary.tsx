@@ -10,6 +10,7 @@ import './AppErrorBoundary.css';
 import defaultErrorImg from '../../static/default-error.svg';
 import Utils from '../../utils/Utils';
 import { withNotifications } from '@databricks/design-system';
+import { FormattedMessage } from 'react-intl';
 
 type Props = {
   service?: string;
@@ -41,15 +42,26 @@ class AppErrorBoundary extends Component<React.PropsWithChildren<Props>, State> 
         {/* @ts-expect-error TS(4111): Property 'hasError' comes from an index signature,... Remove this comment to see the full error message */}
         {this.state.hasError ? (
           <div>
-            <img className="mlflow-error-image" alt="Error" src={defaultErrorImg} />
-            <h1 className="mlflow-center">Something went wrong</h1>
+            <img className="mlflow-error-image" alt="" src={defaultErrorImg} />
+            <h1 className="mlflow-center">
+              <FormattedMessage
+                defaultMessage="Something went wrong"
+                description="App error boundary heading shown when the UI crashes"
+              />
+            </h1>
             <h4 className="mlflow-center">
-              If this error persists, please report an issue {/* Reported during ESLint upgrade */}
-              {/* eslint-disable-next-line react/jsx-no-target-blank */}
-              <a href={Utils.getSupportPageUrl()} target="_blank">
-                here
-              </a>
-              .
+              <FormattedMessage
+                defaultMessage="If this error persists, please report an issue <link>here</link>."
+                description="App error boundary text that links to the support page"
+                values={{
+                  link: (chunks) => (
+                    // eslint-disable-next-line react/jsx-no-target-blank
+                    <a href={Utils.getSupportPageUrl()} target="_blank">
+                      {chunks}
+                    </a>
+                  ),
+                }}
+              />
             </h4>
           </div>
         ) : (

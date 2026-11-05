@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import type { NavigateFunction } from '../../../common/utils/RoutingUtils';
 import { getUUID } from '../../../common/utils/ActionUtils';
 import { withRouterNext } from '../../../common/utils/withRouterNext';
+import { FormattedMessage } from 'react-intl';
 
 type Props = {
   isOpen: boolean;
@@ -63,26 +64,43 @@ export class DeleteExperimentModalImpl extends Component<Props> {
         isOpen={this.props.isOpen}
         onClose={this.props.onClose}
         handleSubmit={this.handleSubmit}
-        title={`Delete Experiment "${this.props.experimentName}"`}
+        title={
+          <FormattedMessage
+            defaultMessage='Delete Experiment "{experimentName}"'
+            description="Title of the modal for deleting one experiment"
+            values={{ experimentName: this.props.experimentName }}
+          />
+        }
         helpText={
           <div>
             <p>
               <b>
-                Experiment "{this.props.experimentName}" (Experiment ID: {this.props.experimentId}) will be deleted.
+                <FormattedMessage
+                  defaultMessage='Experiment "{experimentName}" (Experiment ID: {experimentId}) will be deleted.'
+                  description="Confirmation text in the delete experiment modal"
+                  values={{
+                    experimentName: this.props.experimentName,
+                    experimentId: this.props.experimentId,
+                  }}
+                />
               </b>
             </p>
             {/* @ts-expect-error TS(4111): Property 'MLFLOW_SHOW_GDPR_PURGING_MESSAGES' comes from a... Remove this comment to see the full error message */}
             {process.env.MLFLOW_SHOW_GDPR_PURGING_MESSAGES === 'true' ? (
               <p>
-                Deleted experiments are restorable for 30 days, after which they are purged along with their associated
-                runs, including metrics, params, tags, and artifacts.
+                <FormattedMessage
+                  defaultMessage="Deleted experiments are restorable for 30 days, after which they are purged along with their associated runs, including metrics, params, tags, and artifacts."
+                  description="GDPR notice in the delete experiment modal"
+                />
               </p>
             ) : (
               ''
             )}
           </div>
         }
-        confirmButtonText="Delete"
+        confirmButtonText={
+          <FormattedMessage defaultMessage="Delete" description="Confirm button for deleting an experiment" />
+        }
       />
     );
   }

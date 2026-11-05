@@ -185,7 +185,10 @@ const GroupBySelectorBody = ({
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
           prefix={<SearchIcon />}
-          placeholder="Search"
+          placeholder={intl.formatMessage({
+            defaultMessage: 'Search',
+            description: 'Placeholder for filtering group-by options on the experiment runs page',
+          })}
           autoFocus
           ref={inputElementRef}
           onKeyDown={(e) => {
@@ -217,7 +220,10 @@ const GroupBySelectorBody = ({
                 componentId="codegen_mlflow_app_src_experiment-tracking_components_experiment-page_components_runs_experimentviewrunsgroupbyselector.tsx_168"
                 icon={<GearIcon />}
                 css={{ minWidth: 32 }}
-                aria-label="Change aggregation function"
+                aria-label={intl.formatMessage({
+                  defaultMessage: 'Change aggregation function',
+                  description: 'Button that opens the aggregation function menu for grouped experiment runs',
+                })}
               />
             </DropdownMenu.Trigger>
           </Tooltip>

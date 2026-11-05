@@ -102,7 +102,10 @@ export const TableFilterItemValueInput = ({
         onChange={(value: string) => {
           onChange({ ...tableFilter, value }, index);
         }}
-        placeholder="Select run"
+        placeholder={intl.formatMessage({
+          defaultMessage: 'Select run',
+          description: 'Placeholder for choosing a run in a trace filter',
+        })}
         width={200}
         canSearchCustomValue={false}
       />
@@ -118,7 +121,10 @@ export const TableFilterItemValueInput = ({
         onChange={(value: string) => {
           onChange({ ...tableFilter, value }, index);
         }}
-        placeholder="Select version"
+        placeholder={intl.formatMessage({
+          defaultMessage: 'Select version',
+          description: 'Placeholder for choosing a version in a trace filter',
+        })}
         width={200}
         canSearchCustomValue={false}
       />
@@ -131,10 +137,16 @@ export const TableFilterItemValueInput = ({
       // Numeric assessments get a number input field
       return (
         <Input
-          aria-label="Value"
+          aria-label={intl.formatMessage({
+            defaultMessage: 'Value',
+            description: 'Accessible label for a trace filter value',
+          })}
           componentId="mlflow.evaluations_review.table_ui.filter_value_numeric"
           id={id}
-          placeholder="Numeric value"
+          placeholder={intl.formatMessage({
+            defaultMessage: 'Numeric value',
+            description: 'Placeholder for a numeric trace filter value',
+          })}
           type="number"
           value={localValue as string}
           onChange={(e) => {
@@ -174,7 +186,10 @@ export const TableFilterItemValueInput = ({
           onChange={(value: string) => {
             onChange({ ...tableFilter, value: serializedStringToAssessmentValueV2(value) }, index);
           }}
-          placeholder="Select"
+          placeholder={intl.formatMessage({
+            defaultMessage: 'Select',
+            description: 'Placeholder for choosing a trace filter value',
+          })}
           width={200}
           canSearchCustomValue={false}
         />
@@ -191,7 +206,10 @@ export const TableFilterItemValueInput = ({
         onChange={(value: string) => {
           onChange({ ...tableFilter, value }, index);
         }}
-        placeholder="Select"
+        placeholder={intl.formatMessage({
+          defaultMessage: 'Select',
+          description: 'Placeholder for choosing a trace filter value',
+        })}
         width={200}
         canSearchCustomValue={false}
       />
@@ -208,7 +226,10 @@ export const TableFilterItemValueInput = ({
         onChange={(value: string) => {
           onChange({ ...tableFilter, value }, index);
         }}
-        placeholder="Select source"
+        placeholder={intl.formatMessage({
+          defaultMessage: 'Select source',
+          description: 'Placeholder for choosing a trace source filter',
+        })}
         width={200}
         canSearchCustomValue={false}
       />
@@ -228,7 +249,10 @@ export const TableFilterItemValueInput = ({
         onChange={(value: string) => {
           onChange({ ...tableFilter, value }, index);
         }}
-        placeholder="Select"
+        placeholder={intl.formatMessage({
+          defaultMessage: 'Select',
+          description: 'Placeholder for choosing a trace filter value',
+        })}
         width={200}
         canSearchCustomValue={false}
       />
@@ -246,7 +270,10 @@ export const TableFilterItemValueInput = ({
         onChange={(value: string) => {
           onChange({ ...tableFilter, value }, index);
         }}
-        placeholder="Select prompt"
+        placeholder={intl.formatMessage({
+          defaultMessage: 'Select prompt',
+          description: 'Placeholder for choosing a prompt in a trace filter',
+        })}
         width={200}
         canSearchCustomValue
       />
@@ -255,10 +282,23 @@ export const TableFilterItemValueInput = ({
 
   return (
     <Input
-      aria-label="Value"
+      aria-label={intl.formatMessage({
+        defaultMessage: 'Value',
+        description: 'Accessible label for a trace filter value',
+      })}
       componentId="mlflow.evaluations_review.table_ui.filter_value"
       id={id}
-      placeholder={tableFilter.column === EXECUTION_DURATION_COLUMN_ID ? 'Time in milliseconds' : 'Value'}
+      placeholder={
+        tableFilter.column === EXECUTION_DURATION_COLUMN_ID
+          ? intl.formatMessage({
+              defaultMessage: 'Time in milliseconds',
+              description: 'Placeholder for a trace duration filter value',
+            })
+          : intl.formatMessage({
+              defaultMessage: 'Value',
+              description: 'Placeholder for a trace filter value',
+            })
+      }
       type={tableFilter.column === EXECUTION_DURATION_COLUMN_ID ? 'number' : 'text'}
       value={localValue as string}
       onChange={(e) => {

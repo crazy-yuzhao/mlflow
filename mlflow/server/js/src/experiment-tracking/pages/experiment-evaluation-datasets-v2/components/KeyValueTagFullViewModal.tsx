@@ -154,7 +154,10 @@ export const KeyValueTagFullViewModal = ({
             <Input
               value={key}
               onChange={(e) => setKey(e.target.value)}
-              placeholder="Enter tag key"
+              placeholder={intl.formatMessage({
+                defaultMessage: 'Enter tag key',
+                description: 'Placeholder for the tag key field in the evaluation dataset tag modal',
+              })}
               componentId="mlflow.eval-datasets.tag-key-input"
               disabled={isLoading || isDeleting}
             />
@@ -173,7 +176,10 @@ export const KeyValueTagFullViewModal = ({
             <Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder="Enter tag value"
+              placeholder={intl.formatMessage({
+                defaultMessage: 'Enter tag value',
+                description: 'Placeholder for the tag value field in the evaluation dataset tag modal',
+              })}
               componentId="mlflow.eval-datasets.tag-value-input"
               disabled={isLoading || isDeleting}
             />

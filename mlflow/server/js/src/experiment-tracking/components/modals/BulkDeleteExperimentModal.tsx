@@ -39,7 +39,12 @@ export const BulkDeleteExperimentModal = ({ isOpen, onClose, experiments, onExpe
       }
       helpText={
         <div>
-          <Typography.Paragraph>The following experiments will be deleted:</Typography.Paragraph>
+          <Typography.Paragraph>
+            <FormattedMessage
+              defaultMessage="The following experiments will be deleted:"
+              description="Intro text in the bulk delete experiments modal"
+            />
+          </Typography.Paragraph>
           <Typography.Paragraph>
             <ul>
               {experiments.map((experiment) => (

@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { Button, Empty, Spinner, BeakerIcon, CloseIcon, useDesignSystemTheme } from '@databricks/design-system';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useNavigate } from '../../common/utils/RoutingUtils';
 import Utils from '../../common/utils/Utils';
 import { fetchAPI, getAjaxUrl } from '../../common/utils/FetchUtils';
@@ -11,6 +11,7 @@ const DEMO_BANNER_DISMISSED_KEY = 'mlflow.demo.banner.dismissed';
 export const DemoBanner = () => {
   const navigate = useNavigate();
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   // eslint-disable-next-line @databricks/no-direct-storage -- OSS only use-case
   const [isDismissed, setIsDismissed] = useState(() => localStorage.getItem(DEMO_BANNER_DISMISSED_KEY) === 'true');
   const [isLoading, setIsLoading] = useState(false);
@@ -53,7 +54,10 @@ export const DemoBanner = () => {
     >
       <button
         onClick={handleDismiss}
-        aria-label="Dismiss"
+        aria-label={intl.formatMessage({
+          defaultMessage: 'Dismiss',
+          description: 'Button that hides the home page demo banner',
+        })}
         css={{
           position: 'absolute',
           top: theme.spacing.sm,

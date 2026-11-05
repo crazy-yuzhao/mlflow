@@ -573,7 +573,15 @@ export const RunsChartsConfigureLineChart = ({
       </RunsChartsConfigureField>
       {state.xAxisKey === RunsChartsLineChartXAxisType.STEP && (
         <>
-          <RunsChartsConfigureField title="X-axis scale" compact>
+          <RunsChartsConfigureField
+            title={
+              <FormattedMessage
+                defaultMessage="X-axis scale"
+                description="Label for the line chart X-axis scale controls"
+              />
+            }
+            compact
+          >
             <div css={{ display: 'flex', gap: theme.spacing.sm }}>
               <div>
                 <Input
@@ -584,7 +592,10 @@ export const RunsChartsConfigureLineChart = ({
                   value={localAxisRange.xMin}
                   onChange={(e) => updateXAxisScaleMin(e.target.value)}
                   max={localAxisRange.xMax}
-                  placeholder="Min"
+                  placeholder={intl.formatMessage({
+                    defaultMessage: 'Min',
+                    description: 'Placeholder for a chart axis minimum',
+                  })}
                 />
                 {invalidMessage(state.xAxisScaleType, localAxisRange.xMin)}
               </div>
@@ -597,7 +608,10 @@ export const RunsChartsConfigureLineChart = ({
                   value={localAxisRange.xMax}
                   onChange={(e) => updateXAxisScaleMax(e.target.value)}
                   min={localAxisRange.xMin}
-                  placeholder="Max"
+                  placeholder={intl.formatMessage({
+                    defaultMessage: 'Max',
+                    description: 'Placeholder for a chart axis maximum',
+                  })}
                 />
                 {invalidMessage(state.xAxisScaleType, localAxisRange.xMax)}
               </div>
@@ -608,9 +622,18 @@ export const RunsChartsConfigureLineChart = ({
               aria-label="x-axis-log"
               checked={state.xAxisScaleType === 'log'}
               onChange={updateXAxisScaleType}
-              label="Log scale"
-              activeLabel="On"
-              inactiveLabel="Off"
+              label={intl.formatMessage({
+                defaultMessage: 'Log scale',
+                description: 'Switch that uses a logarithmic scale for a chart axis',
+              })}
+              activeLabel={intl.formatMessage({
+                defaultMessage: 'On',
+                description: 'Label when a chart axis log scale is enabled',
+              })}
+              inactiveLabel={intl.formatMessage({
+                defaultMessage: 'Off',
+                description: 'Label when a chart axis log scale is disabled',
+              })}
               disabledLabel="Disabled"
             />
           </RunsChartsConfigureField>
@@ -625,7 +648,15 @@ export const RunsChartsConfigureLineChart = ({
         metricKeyList={metricKeyList}
         updateSelectedMetrics={updateSelectedMetrics}
       />
-      <RunsChartsConfigureField title="Y-axis scale" compact>
+      <RunsChartsConfigureField
+        title={
+          <FormattedMessage
+            defaultMessage="Y-axis scale"
+            description="Label for the line chart Y-axis scale controls"
+          />
+        }
+        compact
+      >
         <div css={{ display: 'flex', gap: theme.spacing.sm }}>
           <div>
             <Input
@@ -636,7 +667,10 @@ export const RunsChartsConfigureLineChart = ({
               value={localAxisRange.yMin}
               onChange={(e) => updateYAxisScaleMin(e.target.value)}
               max={localAxisRange.yMax}
-              placeholder="Min"
+              placeholder={intl.formatMessage({
+                defaultMessage: 'Min',
+                description: 'Placeholder for a chart axis minimum',
+              })}
             />
             {invalidMessage(state.scaleType, localAxisRange.yMin)}
           </div>
@@ -649,7 +683,10 @@ export const RunsChartsConfigureLineChart = ({
               value={localAxisRange.yMax}
               onChange={(e) => updateYAxisScaleMax(e.target.value)}
               min={localAxisRange.yMin}
-              placeholder="Max"
+              placeholder={intl.formatMessage({
+                defaultMessage: 'Max',
+                description: 'Placeholder for a chart axis maximum',
+              })}
             />
             {invalidMessage(state.scaleType, localAxisRange.yMax)}
           </div>
@@ -660,10 +697,22 @@ export const RunsChartsConfigureLineChart = ({
           aria-label="y-axis-log"
           checked={state.scaleType === 'log'}
           onChange={updateYAxisType}
-          label="Log scale"
-          activeLabel="On"
-          inactiveLabel="Off"
-          disabledLabel="Disabled"
+          label={intl.formatMessage({
+            defaultMessage: 'Log scale',
+            description: 'Switch that uses a logarithmic scale for a chart axis',
+          })}
+          activeLabel={intl.formatMessage({
+            defaultMessage: 'On',
+            description: 'Label when a chart axis log scale is enabled',
+          })}
+          inactiveLabel={intl.formatMessage({
+            defaultMessage: 'Off',
+            description: 'Label when a chart axis log scale is disabled',
+          })}
+          disabledLabel={intl.formatMessage({
+            defaultMessage: 'Disabled',
+            description: 'Label when a chart axis log scale cannot be changed',
+          })}
         />
         <Spacer size="xs" />
         <div css={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -827,8 +876,15 @@ export const RunsChartsConfigureLineChart = ({
             }));
           }}
         >
-          <Radio value>Use workspace settings</Radio>
-          <Radio value={false}>Custom</Radio>
+          <Radio value>
+            <FormattedMessage
+              defaultMessage="Use workspace settings"
+              description="Line chart option that uses the workspace line-smoothing setting"
+            />
+          </Radio>
+          <Radio value={false}>
+            <FormattedMessage defaultMessage="Custom" description="Line chart option for a custom smoothing value" />
+          </Radio>
         </Radio.Group>
 
         <LineSmoothSlider
