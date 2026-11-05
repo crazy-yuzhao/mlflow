@@ -15,6 +15,7 @@
     "prettier:check": "prettier . --check --ignore-unknown",
     "i18n:check": "yarn i18n --lint",
     "i18n": "node scripts/extract-i18n.js",
+    "i18n:zh": "node scripts/build-zh-supplement.js",
     "knip": "knip --reporter markdown --preprocessor ./knip-preprocessor.ts",
     "build": "GENERATE_SOURCEMAP=false craco --max_old_space_size=8192 build",
     "prettier": "prettier --ignore-unknown",

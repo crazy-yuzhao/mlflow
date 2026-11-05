@@ -28,7 +28,7 @@ import AdminRoutes from '../../admin/routes';
 import { useCurrentUserIsAdmin, useCurrentUserQuery, useIsBasicAuth } from '../../account/hooks';
 import { performLogout } from '../../account/auth-utils';
 import { GatewayLabel, GatewayNewTag } from './GatewayNewTag';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useWorkflowType, WorkflowType } from '../contexts/WorkflowTypeContext';
 import { shouldEnableWorkflowBasedNavigation, shouldEnableWorkspaces } from '../utils/FeatureUtils';
 import { SERVER_FEATURE_KEYS, useFeatureEnabled } from '../../experiment-tracking/hooks/useServerInfo';
@@ -42,6 +42,7 @@ import { MlflowSidebarExperimentItems } from './MlflowSidebarExperimentItems';
 import { MlflowSidebarGatewayItems } from './MlflowSidebarGatewayItems';
 import { MlflowSidebarSettingsItems } from './MlflowSidebarSettingsItems';
 import { MlflowSidebarWorkflowSwitch } from './MlflowSidebarWorkflowSwitch';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 const isInsideExperiment = (location: Location) =>
   Boolean(matchPath('/experiments/:experimentId/*', location.pathname));
@@ -96,6 +97,7 @@ export function MlflowSidebar({
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const enableWorkflowBasedNavigation = shouldEnableWorkflowBasedNavigation();
   const gatewayEnabled = useFeatureEnabled(SERVER_FEATURE_KEYS.GATEWAY);
   // WorkflowType context is always available, but UI is guarded by feature flag
@@ -310,7 +312,10 @@ export function MlflowSidebar({
         <Button
           componentId="mlflow_header.toggle_sidebar_button"
           onClick={toggleSidebar}
-          aria-label="Toggle sidebar"
+          aria-label={intl.formatMessage({
+            defaultMessage: 'Toggle sidebar',
+            description: 'Accessible label for the button that collapses or expands the sidebar',
+          })}
           icon={showSidebar ? <SidebarCollapseIcon /> : <SidebarExpandIcon />}
         />
       </div>
@@ -369,6 +374,7 @@ export function MlflowSidebar({
             ))}
         </ul>
         <div>
+          <LanguageSwitcher collapsed={!showSidebar} />
           <MlflowSidebarLink
             disableWorkspacePrefix
             css={{ paddingBlock: theme.spacing.sm }}
@@ -423,7 +429,13 @@ export function MlflowSidebar({
                   */}
                   <button
                     type="button"
-                    aria-label={`Account menu for ${username}`}
+                    aria-label={intl.formatMessage(
+                      {
+                        defaultMessage: 'Account menu for {username}',
+                        description: 'Accessible label for the sidebar account menu',
+                      },
+                      { username },
+                    )}
                     css={{
                       ...getSidebarItemStyles(theme, !showSidebar),
                       background: 'transparent',

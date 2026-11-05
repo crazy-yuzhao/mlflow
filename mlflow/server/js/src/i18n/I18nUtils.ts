@@ -9,7 +9,7 @@ import type { IntlShape } from 'react-intl';
 import { createIntlCache, createIntl } from 'react-intl';
 import { DEFAULT_LOCALE, loadMessages } from './loadMessages';
 import { useEffect, useState } from 'react';
-import Utils from '../common/utils/Utils';
+import { LOCALE_STORAGE_KEY } from './supportedLocales';
 
 // eslint-disable-next-line @databricks/no-const-object-record-string -- TODO(FEINF-2058)
 const FALLBACK_LOCALES: Record<string, string> = {
@@ -26,6 +26,44 @@ const FALLBACK_LOCALES: Record<string, string> = {
 const loadedMessages: Record<string, any> = {};
 
 const cache = createIntlCache();
+
+function handleIntlError(error: { code: string }) {
+  // Missing keys render `defaultMessage` (English). Don't flood the console
+  // for the parts of the UI that are not translated yet.
+  if (error.code === 'MISSING_TRANSLATION') {
+    return;
+  }
+  // eslint-disable-next-line no-console
+  console.error(error);
+}
+
+/**
+ * Use the browser language only when the user has not chosen a locale.
+ * Chinese browsers default to zh-CN. Every other language stays on English
+ * so existing English-only sessions are unchanged.
+ */
+export function detectBrowserLocale(): string | null {
+  if (typeof navigator === 'undefined') {
+    return null;
+  }
+  const candidates = navigator.languages && navigator.languages.length > 0 ? navigator.languages : [navigator.language];
+
+  for (const candidate of candidates) {
+    if (!candidate) {
+      continue;
+    }
+    const normalized = candidate.toLowerCase();
+    if (normalized === 'zh' || normalized.startsWith('zh-')) {
+      return 'zh-CN';
+    }
+    // The first language we can actually offer wins. English stops the search
+    // so a later Chinese entry does not override an English preference.
+    if (normalized === 'en' || normalized.startsWith('en-')) {
+      return null;
+    }
+  }
+  return null;
+}
 
 export const I18nUtils = {
   async initI18n() {
@@ -48,7 +86,15 @@ export const I18nUtils = {
    */
   createIntlWithLocale() {
     const params = I18nUtils.getIntlProviderParams();
-    const intl = createIntl({ locale: params.locale, messages: params.messages }, cache);
+    const intl = createIntl(
+      {
+        locale: params.locale,
+        defaultLocale: DEFAULT_LOCALE,
+        messages: params.messages,
+        onError: handleIntlError,
+      },
+      cache,
+    );
 
     return intl;
   },
@@ -59,10 +105,11 @@ export const I18nUtils = {
       const langFromQuery = queryParams.get('l');
       if (langFromQuery) {
         // eslint-disable-next-line @databricks/no-direct-storage -- go/no-direct-storage
-        window.localStorage.setItem('locale', langFromQuery);
+        window.localStorage.setItem(LOCALE_STORAGE_KEY, langFromQuery);
       }
+      // An explicit choice (including English) wins over the browser language.
       // eslint-disable-next-line @databricks/no-direct-storage -- go/no-direct-storage
-      return window.localStorage.getItem('locale') || DEFAULT_LOCALE;
+      return window.localStorage.getItem(LOCALE_STORAGE_KEY) || detectBrowserLocale() || DEFAULT_LOCALE;
     };
     const locale = getLocale();
 
@@ -71,6 +118,24 @@ export const I18nUtils = {
       return DEFAULT_LOCALE;
     }
     return locale;
+  },
+
+  /**
+   * Persist a locale and reload. Reloading is required because message catalogs
+   * are loaded once at startup. A stale `?l=` query is removed so it cannot
+   * override the choice on the next load.
+   */
+  setCurrentLocale(locale: string) {
+    // eslint-disable-next-line @databricks/no-direct-storage -- go/no-direct-storage
+    window.localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+    const url = new URL(window.location.href);
+    url.searchParams.delete('l');
+    const next = url.toString();
+    if (next === window.location.href) {
+      window.location.reload();
+      return;
+    }
+    window.location.assign(next);
   },
 
   /* Gets the locale to fall back on if messages are missing */
@@ -85,8 +150,8 @@ export const I18nUtils = {
       locale === DEFAULT_LOCALE ? undefined : DEFAULT_LOCALE,
       I18nUtils.getFallbackLocale(locale),
       locale,
-    ].filter(Boolean);
-    const results = await Promise.all(locales.map(loadMessages));
+    ].filter((value): value is string => Boolean(value));
+    const results = await Promise.all(locales.map((localeToLoad) => loadMessages(localeToLoad)));
     loadedMessages[locale] = Object.assign({}, ...results);
     return loadedMessages[locale];
   },

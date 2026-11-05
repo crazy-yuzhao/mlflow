@@ -1,5 +1,7 @@
 import { Button, Card, Modal, Spinner, Switch, Typography, useDesignSystemTheme } from '@databricks/design-system';
 import { FormattedMessage, useIntl } from '@databricks/i18n';
+import { I18nUtils } from '../i18n/I18nUtils';
+import { isChineseLocale, isEnglishLocale } from '../i18n/supportedLocales';
 import { useLocalStorage } from '@databricks/web-shared/hooks';
 import { TELEMETRY_ENABLED_STORAGE_KEY, TELEMETRY_ENABLED_STORAGE_VERSION } from '../telemetry/utils';
 import { telemetryClient } from '../telemetry';
@@ -126,6 +128,21 @@ const SettingsPage = () => {
     [isTelemetryToggleDisabled, setIsTelemetryEnabled],
   );
 
+  const isChinese = isChineseLocale(intl.locale);
+  const isEnglish = isEnglishLocale(intl.locale);
+  const selectLocale = useCallback(
+    (locale: 'zh-CN' | 'en') => {
+      if (locale === 'zh-CN' && isChineseLocale(intl.locale)) {
+        return;
+      }
+      if (locale === 'en' && isEnglishLocale(intl.locale)) {
+        return;
+      }
+      I18nUtils.setCurrentLocale(locale);
+    },
+    [intl.locale],
+  );
+
   const handleThemeToggle = useCallback(
     (checked: boolean) => {
       setIsDarkTheme(checked);
@@ -175,14 +192,51 @@ const SettingsPage = () => {
               }
               subtitle={
                 <FormattedMessage
-                  defaultMessage="Appearance, product feedback, telemetry, and workspace demo data."
-                  description="Settings content section subtitle for general preferences including demo data"
+                  defaultMessage="Language, appearance, telemetry, and workspace demo data."
+                  description="Settings content section subtitle for general preferences including language and demo data"
                 />
               }
             />
             <Card componentId="mlflow.settings.general.preferences-card" css={{ padding: 0, overflow: 'hidden' }}>
               <SettingsRow
                 isFirst
+                trailing={
+                  <div css={{ display: 'flex', gap: theme.spacing.sm }}>
+                    <Button
+                      componentId="mlflow.settings.language.zh-CN"
+                      size="small"
+                      type={isChinese ? 'primary' : 'tertiary'}
+                      aria-pressed={isChinese}
+                      onClick={() => selectLocale('zh-CN')}
+                    >
+                      中文
+                    </Button>
+                    <Button
+                      componentId="mlflow.settings.language.en"
+                      size="small"
+                      type={isEnglish ? 'primary' : 'tertiary'}
+                      aria-pressed={isEnglish}
+                      onClick={() => selectLocale('en')}
+                    >
+                      English
+                    </Button>
+                  </div>
+                }
+              >
+                <Typography.Title level={4} withoutMargins>
+                  <FormattedMessage
+                    defaultMessage="Language"
+                    description="Settings row title for the display language"
+                  />
+                </Typography.Title>
+                <Typography.Text>
+                  <FormattedMessage
+                    defaultMessage="Choose Chinese or English. The page reloads to apply the change, and English is used when a phrase has not been translated yet."
+                    description="Settings row description for the display language switcher"
+                  />
+                </Typography.Text>
+              </SettingsRow>
+              <SettingsRow
                 trailing={
                   <Switch
                     componentId="mlflow.settings.theme.toggle-switch"

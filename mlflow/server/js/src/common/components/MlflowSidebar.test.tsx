@@ -1,10 +1,11 @@
 import { describe, jest, test, expect } from '@jest/globals';
 import { act, screen } from '@testing-library/react';
+import { DesignSystemProvider } from '@databricks/design-system';
 import { MlflowSidebar } from './MlflowSidebar';
 import { MemoryRouter, Outlet, Route, Routes, useNavigate } from '../utils/RoutingUtils';
 import type { NavigateFunction } from '../utils/RoutingUtils';
 import { QueryClient, QueryClientProvider } from '../utils/reactQueryHooks';
-import { renderWithDesignSystem } from '../utils/TestUtils.react18';
+import { renderWithDesignSystem, renderWithIntl } from '../utils/TestUtils.react18';
 
 jest.mock('../../account/hooks', () => ({
   useCurrentUserIsAdmin: jest.fn(() => false),
@@ -50,6 +51,33 @@ describe('MlflowSidebar', () => {
     expect(screen.getByRole('link', { name: 'Prompts' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /MCP/ })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Skills/ })).toBeInTheDocument();
+  });
+
+  test('renders Chinese labels when the locale is zh-CN', () => {
+    renderWithIntl(
+      <DesignSystemProvider>
+        <QueryClientProvider client={new QueryClient()}>
+          <MemoryRouter initialEntries={['/experiments']}>
+            <MlflowSidebar showSidebar setShowSidebar={() => {}} />
+          </MemoryRouter>
+        </QueryClientProvider>
+      </DesignSystemProvider>,
+      {},
+      {
+        locale: 'zh-CN',
+        messages: {
+          uAv9Zs: '主页',
+          U4ox5k: '实验',
+          jiIft9: '设置',
+          YqXBoN: '语言',
+        },
+      },
+    );
+
+    expect(screen.getByRole('link', { name: '主页' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '实验' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '设置' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '中文' })).toHaveAttribute('aria-pressed', 'true');
   });
 
   test('shows the top-level menu after navigating back to the experiments list', () => {

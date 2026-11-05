@@ -871,6 +871,10 @@
     "defaultMessage": "Add tags",
     "description": "Add new prompt version tags button"
   },
+  "0yS0iF": {
+    "defaultMessage": "Language",
+    "description": "Settings row title for the display language"
+  },
   "0yvVF0": {
     "defaultMessage": "Refresh traces",
     "description": "Aria label for the refresh traces button in the traces table toolbar"
@@ -1626,10 +1630,6 @@
   "3NBvz7": {
     "defaultMessage": "Cancel",
     "description": "experiment page > edit experiment modal > cancel button"
-  },
-  "3PBIB8": {
-    "defaultMessage": "Appearance, product feedback, telemetry, and workspace demo data.",
-    "description": "Settings content section subtitle for general preferences including demo data"
   },
   "3PV8Q2": {
     "defaultMessage": "Use",
@@ -8299,6 +8299,10 @@
     "defaultMessage": "Permissions",
     "description": "Tab trigger for the user's permissions"
   },
+  "OUimk6": {
+    "defaultMessage": "Choose Chinese or English. The page reloads to apply the change, and English is used when a phrase has not been translated yet.",
+    "description": "Settings row description for the display language switcher"
+  },
   "OW3pF8": {
     "defaultMessage": "Show {count} more intermediate {count, plural, =1 {step} other {steps}}",
     "description": "Link that expands a collapsed list of intermediate function execution steps when clicked"
@@ -9818,6 +9822,10 @@
   "TULATU": {
     "defaultMessage": "User",
     "description": "Tag marking a per-user budget policy"
+  },
+  "TVys8V": {
+    "defaultMessage": "Account menu for {username}",
+    "description": "Accessible label for the sidebar account menu"
   },
   "TWnsnV": {
     "defaultMessage": "Run Name",
@@ -11555,6 +11563,10 @@
     "defaultMessage": "Choose experiment type",
     "description": "A title for the modal displayed when the experiment type could not be inferred"
   },
+  "YqXBoN": {
+    "defaultMessage": "Language",
+    "description": "Accessible label for the language switcher"
+  },
   "YrYgo5": {
     "defaultMessage": "Select an endpoint to view logs",
     "description": "No endpoint selected message for logs tab"
@@ -12886,6 +12898,10 @@
   "dA7hRP": {
     "defaultMessage": "Could not save. Try again.",
     "description": "Inline error shown when logging thumbs feedback fails in a custom trace view"
+  },
+  "dDZsLz": {
+    "defaultMessage": "Toggle sidebar",
+    "description": "Accessible label for the button that collapses or expands the sidebar"
   },
   "dDbfnY": {
     "defaultMessage": "{count} {count, plural, one {hour} other {hours}}",
@@ -16914,6 +16930,10 @@
   "pGmDzQ": {
     "defaultMessage": "This skill may have been deleted or the URL may be incorrect.",
     "description": "Description when a Skill cannot be loaded"
+  },
+  "pGqJsn": {
+    "defaultMessage": "Language, appearance, telemetry, and workspace demo data.",
+    "description": "Settings content section subtitle for general preferences including language and demo data"
   },
   "pIgQXZ": {
     "defaultMessage": "View dataset",

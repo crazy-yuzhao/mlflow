@@ -8,13 +8,15 @@
 import { jest, describe, beforeEach, afterEach, it, expect } from '@jest/globals';
 import React from 'react';
 import { createIntl } from 'react-intl';
-import { I18nUtils, useI18nInit } from './I18nUtils';
+import { detectBrowserLocale, I18nUtils, useI18nInit } from './I18nUtils';
 import { renderHook, waitFor } from '@mlflow/mlflow/src/common/utils/TestUtils.react18';
 
 // see mock for ./loadMessages in setupTests.js
 
 describe('I18nUtils', () => {
   let oldLocation: any;
+  const originalLanguages = navigator.languages;
+  const originalLanguage = navigator.language;
   beforeEach(() => {
     oldLocation = window.location;
   });
@@ -22,6 +24,8 @@ describe('I18nUtils', () => {
   afterEach(() => {
     localStorage.clear();
     window.location = oldLocation;
+    Object.defineProperty(window.navigator, 'languages', { value: originalLanguages, configurable: true });
+    Object.defineProperty(window.navigator, 'language', { value: originalLanguage, configurable: true });
   });
 
   const setQueryLocale = (locale: any) => {
@@ -34,6 +38,11 @@ describe('I18nUtils', () => {
 
   const setLocalStorageLocale = (locale: any) => {
     localStorage.setItem('locale', locale);
+  };
+
+  const setNavigatorLanguages = (languages: string[]) => {
+    Object.defineProperty(window.navigator, 'languages', { value: languages, configurable: true });
+    Object.defineProperty(window.navigator, 'language', { value: languages[0] ?? '', configurable: true });
   };
 
   describe('getCurrentLocale', () => {
@@ -69,6 +78,47 @@ describe('I18nUtils', () => {
       setLocalStorageLocale('test-locale');
       const locale = I18nUtils.getCurrentLocale();
       expect(locale).toBe('test-locale');
+    });
+
+    it('defaults to zh-CN when the browser prefers Chinese and nothing is stored', () => {
+      setNavigatorLanguages(['zh-CN', 'en-US']);
+      expect(detectBrowserLocale()).toBe('zh-CN');
+      expect(I18nUtils.getCurrentLocale()).toBe('zh-CN');
+    });
+
+    it('keeps English when the browser prefers English', () => {
+      setNavigatorLanguages(['en-US', 'zh-CN']);
+      expect(detectBrowserLocale()).toBeNull();
+      expect(I18nUtils.getCurrentLocale()).toBe('en');
+    });
+
+    it('lets a stored English choice override a Chinese browser', () => {
+      setNavigatorLanguages(['zh-CN']);
+      setLocalStorageLocale('en');
+      expect(I18nUtils.getCurrentLocale()).toBe('en');
+    });
+
+    it('treats a generic zh browser language as zh-CN', () => {
+      setNavigatorLanguages(['zh']);
+      expect(I18nUtils.getCurrentLocale()).toBe('zh-CN');
+    });
+  });
+
+  describe('setCurrentLocale', () => {
+    it('persists the locale, drops a stale l query, and reloads', () => {
+      const assign = jest.fn();
+      delete (window as any).location;
+      (window as any).location = {
+        href: 'http://localhost:5000/experiments?l=en',
+        search: '?l=en',
+        assign,
+        reload: jest.fn(),
+      };
+
+      I18nUtils.setCurrentLocale('zh-CN');
+
+      expect(localStorage.getItem('locale')).toBe('zh-CN');
+      expect(assign).toHaveBeenCalledWith('http://localhost:5000/experiments');
     });
   });
 
