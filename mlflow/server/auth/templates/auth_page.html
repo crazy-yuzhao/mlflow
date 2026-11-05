@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="{{ copy.html_lang }}" class="theme-{{ theme }}" data-theme="{{ theme }}" data-lang="{{ lang }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#10211f">
+  <meta name="theme-color" content="{{ '#1a211f' if theme == 'dark' else '#10211f' }}">
   <meta name="robots" content="noindex">
-  <title>衡鉴 · Agent 评测平台</title>
+  <title>{{ copy.title }}</title>
   <link
     rel="icon"
     href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%2310211f'/%3E%3Cpath d='M20 6.2 32.6 13.4v14.2L20 34.8 7.4 27.6V13.4L20 6.2Z' stroke='%23D7F36A' stroke-width='1.2' fill='none'/%3E%3Cpath d='M13.2 24.2h3.2v3.1h-3.2zm5.4-5.4h3.2v8.5h-3.2zm5.4-4.3h3.2v12.8h-3.2' fill='%23D7F36A'/%3E%3C/svg%3E"
@@ -22,8 +22,9 @@
       --lime: #d7f36a;
       --lime-deep: #badb48;
       --coral: #ef8664;
-      --sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-      --display: "Avenir Next", "Gill Sans", "Trebuchet MS", sans-serif;
+      --mint: #3ad7a0;
+      --sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", "Noto Sans SC", sans-serif;
+      --display: "Avenir Next", "Gill Sans", Inter, "Trebuchet MS", sans-serif;
     }
     * { box-sizing: border-box; }
     body {
@@ -158,54 +159,265 @@
     .switch { margin: 18px 0 0; color: #69766f; font-size: 12px; text-align: center; }
     .switch a { color: #788d56; font-weight: 550; text-decoration: none; }
     .switch a:hover { color: #485d30; text-decoration: underline; }
+
+    .pref { position: fixed; top: 18px; right: 20px; z-index: 40; }
+    .pref-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      height: 40px;
+      padding: 4px 12px 4px 8px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 999px;
+      background: #262928;
+      box-shadow: 0 10px 28px rgba(0,0,0,.22);
+      color: var(--mint);
+    }
+    .pref-lang, .pref-theme {
+      border: 0;
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+    .pref-lang {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      height: 32px;
+      padding: 0 2px 0 6px;
+      border-radius: 999px;
+      color: var(--mint);
+    }
+    .pref-code {
+      font-family: var(--display);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      line-height: 1;
+    }
+    .pref-compass { width: 18px; height: 18px; display: block; }
+    .pref-chevron { width: 10px; height: 10px; display: block; transition: transform .16s ease; }
+    .pref-lang[aria-expanded="true"] .pref-chevron { transform: rotate(180deg); }
+    .pref-theme {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      color: #f4f6f2;
+    }
+    .pref-theme svg { width: 18px; height: 18px; display: block; }
+    html[data-theme="light"] .icon-sun { display: none; }
+    html[data-theme="dark"] .icon-moon { display: none; }
+    .pref-lang:focus-visible, .pref-theme:focus-visible, .pref-option:focus-visible {
+      outline: 2px solid rgba(58, 215, 160, .75);
+      outline-offset: 2px;
+    }
+    .pref-menu {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      display: grid;
+      gap: 2px;
+      min-width: 176px;
+      margin: 0;
+      padding: 8px;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 14px;
+      background: #2e3130;
+      box-shadow: 0 18px 44px rgba(0,0,0,.32);
+    }
+    .pref-menu[hidden] { display: none; }
+    .pref-menu::before {
+      content: "";
+      position: absolute;
+      top: -6px;
+      left: 58px;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-bottom: 7px solid #2e3130;
+    }
+    .pref-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 9px 12px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: #a4a8a6;
+      font-size: 14px;
+      line-height: 1.2;
+      text-align: left;
+    }
+    .pref-option[aria-selected="true"] { color: #f5f6f4; }
+    .pref-option:hover { background: rgba(255,255,255,.06); color: #fff; }
+    .pref-flag {
+      font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+      font-size: 16px;
+      line-height: 1;
+    }
+
     @keyframes rise { from { opacity: 0; transform: perspective(1200px) rotateY(-2deg) rotateX(1deg) translateY(14px); } to { opacity: 1; transform: perspective(1200px) rotateY(-2deg) rotateX(1deg) translateY(0); } }
     @keyframes fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     @media (max-width: 980px) { .page { grid-template-columns: minmax(0, 1fr) minmax(370px, .82fr); } .console-body { grid-template-columns: 1fr 135px; } }
     @media (max-width: 760px) {
       .page { display: block; }
       .story { min-height: 680px; padding: 27px 25px 65px; }
-      .edition { top: 36px; right: 25px; }
-      .hero { margin-top: 67px; }
+      .brand { max-width: calc(100% - 156px); }
+      .edition { position: static; display: block; margin-top: 12px; }
+      .hero { margin-top: 36px; }
       h1 { font-size: clamp(35px, 9vw, 48px); }
       .console { margin-top: 37px; transform: none; }
       .story-foot { left: 25px; right: 25px; bottom: 22px; }
       .access { min-height: 690px; padding: 67px 26px 76px; }
       .access::before { inset: 12px; }
       .access-foot { bottom: 26px; }
+      .pref { top: 16px; right: 12px; }
       @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
     }
-    @media (max-width: 440px) { .story { min-height: 720px; } .console-body { grid-template-columns: 1fr; } .metrics { grid-template-columns: 1fr 1fr; } .run-strip span:nth-child(2) { display: none; } .edition { font-size: 8px; } }
+    @media (max-width: 440px) {
+      .story { min-height: 720px; }
+      .console-body { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .run-strip span:nth-child(2) { display: none; }
+      .edition { font-size: 8px; }
+      .pref-pill { gap: 10px; height: 36px; padding-right: 8px; }
+      .pref-code { font-size: 12px; }
+    }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+
+    html[data-theme="dark"] { color-scheme: dark; }
+    html[data-theme="dark"] body { background: #1a211f; color: #e7eee8; }
+    html[data-theme="dark"] .story {
+      background:
+        radial-gradient(ellipse at 77% 17%, rgba(73, 115, 96, .28), transparent 38%),
+        radial-gradient(ellipse at 6% 96%, rgba(75, 112, 94, .2), transparent 36%),
+        #0c1412;
+    }
+    html[data-theme="dark"] .access { background: #1a211f; }
+    html[data-theme="dark"] .access::before { border-color: rgba(215, 243, 106, .1); }
+    html[data-theme="dark"] .form-kicker { color: #93a89c; }
+    html[data-theme="dark"] .form-sub,
+    html[data-theme="dark"] .hint { color: #9aaba3; }
+    html[data-theme="dark"] .field-head { color: #d7e3dc; }
+    html[data-theme="dark"] .field-head a,
+    html[data-theme="dark"] .switch a { color: #c6e25a; }
+    html[data-theme="dark"] .field-head a:hover,
+    html[data-theme="dark"] .switch a:hover { color: #d7f36a; }
+    html[data-theme="dark"] .input-wrap svg,
+    html[data-theme="dark"] .show-password { color: #8fa199; }
+    html[data-theme="dark"] input[type="text"],
+    html[data-theme="dark"] input[type="email"],
+    html[data-theme="dark"] input[type="password"] {
+      border-color: #31403a;
+      background: rgba(8, 14, 12, .72);
+      color: #e7eee8;
+    }
+    html[data-theme="dark"] input::placeholder { color: #7e8e86; }
+    html[data-theme="dark"] input:focus {
+      border-color: #b7d45a;
+      background: #121a17;
+      box-shadow: 0 0 0 3px rgba(215, 243, 106, .14);
+    }
+    html[data-theme="dark"] .remember,
+    html[data-theme="dark"] .switch { color: #aebbb4; }
+    html[data-theme="dark"] .remember input { border-color: #4a5b54; background: #101614; }
+    html[data-theme="dark"] .remember input:checked {
+      border-color: #d7f36a;
+      background: #d7f36a;
+      box-shadow: inset 0 0 0 3px #1a211f;
+    }
+    html[data-theme="dark"] .submit {
+      background: #d7f36a;
+      color: #142320;
+      box-shadow: none;
+    }
+    html[data-theme="dark"] .submit:hover { background: #e3f78d; }
+    html[data-theme="dark"] .submit svg { color: #142320; }
+    html[data-theme="dark"] .divider { color: #7e8d86; }
+    html[data-theme="dark"] .divider::before,
+    html[data-theme="dark"] .divider::after { background: #2c3a34; }
+    html[data-theme="dark"] .sso { border-color: #3a4943; color: #d5e2da; }
+    html[data-theme="dark"] .sso:hover { border-color: #8ea86a; background: rgba(255,255,255,.04); }
+    html[data-theme="dark"] .security-note {
+      border-color: #2e3c36;
+      background: rgba(0,0,0,.18);
+      color: #9aaba3;
+    }
+    html[data-theme="dark"] .security-note svg { color: #d7f36a; }
+    html[data-theme="dark"] .access-foot { color: #7d8d86; }
+    html[data-theme="dark"] .error {
+      border-color: rgba(239, 134, 100, .45);
+      background: rgba(239, 134, 100, .14);
+      color: #ffb5a0;
+    }
+    html[data-theme="dark"] .pref-pill { box-shadow: 0 10px 28px rgba(0,0,0,.35); }
   </style>
 </head>
 <body>
+  <div class="pref" id="pref">
+    <div class="pref-pill">
+      <button class="pref-lang" id="pref-lang" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="pref-menu" aria-label="{{ copy.lang_label }}">
+        <svg class="pref-compass" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <path fill="currentColor" d="M14.85 8.15 13.05 13.05 8.15 14.85 9.95 9.95 14.85 8.15Z"/>
+          <circle cx="12" cy="12" r="1.05" fill="#262928"/>
+        </svg>
+        <span class="pref-code">{{ copy.code }}</span>
+        <svg class="pref-chevron" viewBox="0 0 12 12" aria-hidden="true">
+          <path d="M2.2 4.2 6 8l3.8-3.8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="pref-theme" id="pref-theme" type="button" aria-label="{{ copy.theme_label }}">
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M12 3.2v2.2M12 18.6v2.2M3.2 12h2.2M18.6 12h2.2M5.8 5.8l1.5 1.5M16.7 16.7l1.5 1.5M18.2 5.8l-1.5 1.5M7.3 16.7l-1.5 1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15.6 14.9A6.3 6.3 0 0 1 9.1 8.3 6.4 6.4 0 1 0 15.6 14.9Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="pref-menu" id="pref-menu" role="listbox" aria-label="{{ copy.lang_label }}" hidden>
+      <button class="pref-option" type="button" role="option" data-lang="zh" aria-selected="{{ 'true' if lang == 'zh' else 'false' }}">
+        <span class="pref-flag" aria-hidden="true">🇨🇳</span>
+        <span>{{ copy.lang_zh }}</span>
+      </button>
+      <button class="pref-option" type="button" role="option" data-lang="en" aria-selected="{{ 'true' if lang == 'en' else 'false' }}">
+        <span class="pref-flag" aria-hidden="true">🇺🇸</span>
+        <span>{{ copy.lang_en }}</span>
+      </button>
+    </div>
+  </div>
   <main class="page">
-    <section class="story" aria-label="衡鉴平台介绍">
-      <a class="brand" href="#top" aria-label="衡鉴 Agent 评测平台">
+    <section class="story" aria-label="{{ copy.story_label }}">
+      <a class="brand" href="#top" aria-label="{{ copy.brand_label }}">
         <svg class="brand-mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">
           <path d="M20 2.8 36.2 12v16L20 37.2 3.8 28V12L20 2.8Z" stroke="#D7F36A" stroke-width="1.35" opacity=".82"/>
           <path d="M11 24.5h4.2v4H11zm7-7h4.2v11.1H18zm7-5.6h4.2v16.7H25" fill="#D7F36A"/>
           <path d="m10.4 16.1 4.1 3.9 7.3-7" stroke="#EFF5E9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           <circle cx="29.7" cy="10.3" r="1.4" fill="#EF8664"/>
         </svg>
-        <span class="brand-name"><strong>衡鉴</strong><span>Agent Evaluation</span></span>
+        <span class="brand-name"><strong>{{ copy.brand_name }}</strong><span>{{ copy.brand_tag }}</span></span>
       </a>
-      <span class="edition">MLFLOW · AGENT QUALITY SYSTEM</span>
+      <span class="edition">{{ copy.edition }}</span>
 
       <div class="hero" id="top">
-        <div class="eyebrow">从实验追踪，到可信评测</div>
-        <h1>让每一次智能，<br><em>都经得起验证。</em></h1>
-        <p class="intro">把 Agent 的运行轨迹、评测数据与实验结果，汇聚在一个可追踪、可比较、可复现的工作台。</p>
+        <div class="eyebrow">{{ copy.eyebrow }}</div>
+        <h1>{{ copy.hero_line }}<br><em>{{ copy.hero_em }}</em></h1>
+        <p class="intro">{{ copy.intro }}</p>
       </div>
 
-      <div class="console" aria-label="评测工作台示意图">
+      <div class="console" aria-label="{{ copy.console_label }}">
         <div class="console-top">
-          <div class="console-title"><i class="live"></i> Agent 评测概览 <span style="color:#82958a">/</span> 生产助手 v2.4</div>
-          <span class="run-id">RUN #24-0918 · JUST NOW</span>
+          <div class="console-title"><i class="live"></i> {{ copy.console_title }} <span style="color:#82958a">/</span> {{ copy.console_subject }}</div>
+          <span class="run-id">{{ copy.run_id }}</span>
         </div>
         <div class="console-body">
           <div>
-            <div class="chart-head"><span>综合质量得分</span><div><strong>92.8</strong><small>↗ 4.6%</small></div></div>
+            <div class="chart-head"><span>{{ copy.chart_label }}</span><div><strong>92.8</strong><small>↗ 4.6%</small></div></div>
             <svg class="chart" viewBox="0 0 400 95" preserveAspectRatio="none" aria-hidden="true">
               <defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D7F36A" stop-opacity=".22"/><stop offset="1" stop-color="#D7F36A" stop-opacity="0"/></linearGradient></defs>
               <path d="M0 76H400M0 48H400M0 20H400" stroke="#a9c0ae" stroke-opacity=".13" stroke-dasharray="3 5"/>
@@ -216,60 +428,60 @@
             <div class="chart-labels"><span>09:00</span><span>10:30</span><span>12:00</span><span>13:30</span><span>15:00</span></div>
           </div>
           <div class="metrics">
-            <div class="metric"><div class="metric-label">任务成功率 <i>+2.1%</i></div><div class="metric-value">98.4<span>%</span></div></div>
-            <div class="metric"><div class="metric-label">事实准确率 <i>+1.8%</i></div><div class="metric-value">94.7<span>%</span></div></div>
+            <div class="metric"><div class="metric-label">{{ copy.metric_success }} <i>+2.1%</i></div><div class="metric-value">98.4<span>%</span></div></div>
+            <div class="metric"><div class="metric-label">{{ copy.metric_factual }} <i>+1.8%</i></div><div class="metric-value">94.7<span>%</span></div></div>
           </div>
         </div>
-        <div class="run-strip"><span>当前实验 <strong>support-agent-prod</strong></span><span>评测集 <strong>客服问题集 · 1,240 条</strong></span><span class="pass">● 全部检查通过</span></div>
+        <div class="run-strip"><span>{{ copy.strip_experiment }} <strong>support-agent-prod</strong></span><span>{{ copy.strip_dataset }} <strong>{{ copy.strip_dataset_value }}</strong></span><span class="pass">● {{ copy.strip_pass }}</span></div>
       </div>
-      <div class="story-foot"><span>TRACE EVERY RUN. TRUST EVERY RELEASE.</span><span>由 MLflow 实验追踪能力驱动</span></div>
+      <div class="story-foot"><span>{{ copy.foot_en }}</span><span>{{ copy.foot_powered }}</span></div>
     </section>
 
-    <section class="access" aria-label="{% if page == 'signup' %}注册{% elif page == 'logout' %}退出登录{% else %}登录{% endif %}">
+    <section class="access" aria-label="{% if page == 'signup' %}{{ copy.access_signup }}{% elif page == 'logout' %}{{ copy.access_logout }}{% else %}{{ copy.access_login }}{% endif %}">
       <div class="access-inner">
         {% if page == 'signup' %}
-        <p class="form-kicker">CREATE ACCOUNT · HENGJIAN</p>
-        <h2>创建账号</h2>
-        <p class="form-sub">注册后即可在授权范围内追踪实验，让每一个评测结论都有迹可循。</p>
+        <p class="form-kicker">{{ copy.signup_kicker }}</p>
+        <h2>{{ copy.signup_title }}</h2>
+        <p class="form-sub">{{ copy.signup_sub }}</p>
         {% if error %}
         <p class="error" role="alert">{{ error }}</p>
         {% endif %}
         <form id="signup-form" action="{{ form_action }}" method="post" autocomplete="on">
           <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
           <div class="field">
-            <label class="field-head" for="username">用户名</label>
+            <label class="field-head" for="username">{{ copy.username }}</label>
             <div class="input-wrap">
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 20c.4-3.3 2.7-5.2 6.5-5.2s6.1 1.9 6.5 5.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-              <input id="username" name="username" type="text" autocomplete="username" placeholder="请输入用户名" spellcheck="false" {% if username_minlength %}minlength="{{ username_minlength }}"{% endif %} required>
+              <input id="username" name="username" type="text" autocomplete="username" placeholder="{{ copy.username_ph }}" spellcheck="false" {% if username_minlength %}minlength="{{ username_minlength }}"{% endif %} required>
             </div>
           </div>
           <div class="field">
-            <div class="field-head"><label for="password">密码</label></div>
+            <div class="field-head"><label for="password">{{ copy.password }}</label></div>
             <div class="input-wrap">
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-              <input id="password" name="password" type="password" autocomplete="{{ password_autocomplete }}" placeholder="至少 12 位密码" {% if password_minlength %}minlength="{{ password_minlength }}"{% endif %} required>
-              <button class="show-password" id="show-password" type="button" aria-label="显示密码" title="显示密码"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12s3.2-5.5 9-5.5 9 5.5 9 5.5-3.2 5.5-9 5.5S3 12 3 12Z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg></button>
+              <input id="password" name="password" type="password" autocomplete="{{ password_autocomplete }}" placeholder="{{ copy.signup_password_ph }}" {% if password_minlength %}minlength="{{ password_minlength }}"{% endif %} required>
+              <button class="show-password" id="show-password" type="button" aria-label="{{ copy.show_password }}" title="{{ copy.show_password }}"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12s3.2-5.5 9-5.5 9 5.5 9 5.5-3.2 5.5-9 5.5S3 12 3 12Z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg></button>
             </div>
           </div>
           {% if password_hint %}
           <p class="hint">{{ password_hint }}</p>
           {% endif %}
-          <button class="submit" type="submit">注册 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="submit" type="submit">{{ copy.signup_submit }} <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </form>
-        <p class="switch">已有账号？<a href="{{ alt_href }}">登录</a></p>
-        <div class="security-note"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 20 6v5.2c0 5.1-3.3 8.4-8 10.8-4.7-2.4-8-5.7-8-10.8V6l8-3Z" stroke="currentColor" stroke-width="1.6"/><path d="m8.5 12 2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>新账号默认没有管理权限。创建后由管理员授予实验、评测与 Trace 的访问范围。</span></div>
+        <p class="switch">{{ copy.signup_switch }}<a href="{{ alt_href }}">{{ copy.signup_switch_link }}</a></p>
+        <div class="security-note"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 20 6v5.2c0 5.1-3.3 8.4-8 10.8-4.7-2.4-8-5.7-8-10.8V6l8-3Z" stroke="currentColor" stroke-width="1.6"/><path d="m8.5 12 2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>{{ copy.signup_note }}</span></div>
         {% elif page == 'logout' %}
-        <p class="form-kicker">SIGN OUT · HENGJIAN</p>
-        <h2>正在退出登录</h2>
-        <p class="form-sub">正在清除登录状态，即将返回登录页。</p>
+        <p class="form-kicker">{{ copy.logout_kicker }}</p>
+        <h2>{{ copy.logout_title }}</h2>
+        <p class="form-sub">{{ copy.logout_sub }}</p>
         {{ logout_script }}
         <noscript>
-          <p class="switch"><a href="{{ alt_href }}">返回登录</a></p>
+          <p class="switch"><a href="{{ alt_href }}">{{ copy.logout_back }}</a></p>
         </noscript>
         {% else %}
-        <p class="form-kicker">WELCOME BACK · HENGJIAN</p>
-        <h2>登录工作台</h2>
-        <p class="form-sub">继续追踪实验，让每一个评测结论都有迹可循。</p>
+        <p class="form-kicker">{{ copy.login_kicker }}</p>
+        <h2>{{ copy.login_title }}</h2>
+        <p class="form-sub">{{ copy.login_sub }}</p>
         {% if error %}
         <p class="error" role="alert">{{ error }}</p>
         {% endif %}
@@ -277,36 +489,42 @@
           <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
           <input type="hidden" name="next" id="next" value="{{ next_url }}" />
           <div class="field">
-            <label class="field-head" for="account">账号</label>
+            <label class="field-head" for="account">{{ copy.account }}</label>
             <div class="input-wrap">
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 20c.4-3.3 2.7-5.2 6.5-5.2s6.1 1.9 6.5 5.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-              <input id="account" name="username" type="text" autocomplete="username" placeholder="请输入工作邮箱或用户名" value="{{ username }}" spellcheck="false" required>
+              <input id="account" name="username" type="text" autocomplete="username" placeholder="{{ copy.account_ph }}" value="{{ username }}" spellcheck="false" required>
             </div>
           </div>
           <div class="field">
-            <div class="field-head"><label for="password">密码</label><a href="#forgot" id="forgot-link">忘记密码？</a></div>
+            <div class="field-head"><label for="password">{{ copy.password }}</label><a href="#forgot" id="forgot-link">{{ copy.forgot }}</a></div>
             <div class="input-wrap">
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-              <input id="password" name="password" type="password" autocomplete="{{ password_autocomplete }}" placeholder="请输入密码" required>
-              <button class="show-password" id="show-password" type="button" aria-label="显示密码" title="显示密码"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12s3.2-5.5 9-5.5 9 5.5 9 5.5-3.2 5.5-9 5.5S3 12 3 12Z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg></button>
+              <input id="password" name="password" type="password" autocomplete="{{ password_autocomplete }}" placeholder="{{ copy.password_ph }}" required>
+              <button class="show-password" id="show-password" type="button" aria-label="{{ copy.show_password }}" title="{{ copy.show_password }}"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12s3.2-5.5 9-5.5 9 5.5 9 5.5-3.2 5.5-9 5.5S3 12 3 12Z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg></button>
             </div>
           </div>
-          <label class="remember"><input type="checkbox" name="remember" value="1"{% if remember %} checked{% endif %}><span>7 天内保持登录</span></label>
-          <button class="submit" type="submit">登录衡鉴工作台 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <label class="remember"><input type="checkbox" name="remember" value="1"{% if remember %} checked{% endif %}><span>{{ copy.remember }}</span></label>
+          <button class="submit" type="submit">{{ copy.login_submit }} <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </form>
-        <div class="divider">或</div>
-        <button class="sso" id="sso-button" type="button"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 20 6v5.2c0 5.1-3.3 8.4-8 10.8-4.7-2.4-8-5.7-8-10.8V6l8-3Z" stroke="currentColor" stroke-width="1.5"/><path d="m8.5 12 2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>使用企业 SSO 登录</button>
-        <div class="security-note"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 20 6v5.2c0 5.1-3.3 8.4-8 10.8-4.7-2.4-8-5.7-8-10.8V6l8-3Z" stroke="currentColor" stroke-width="1.6"/><path d="m8.5 12 2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>你的实验与评测记录受到权限保护。登录后可查看授权范围内的 Tracking、Runs 与 Trace。</span></div>
+        <div class="divider">{{ copy.divider }}</div>
+        <button class="sso" id="sso-button" type="button"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 20 6v5.2c0 5.1-3.3 8.4-8 10.8-4.7-2.4-8-5.7-8-10.8V6l8-3Z" stroke="currentColor" stroke-width="1.5"/><path d="m8.5 12 2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>{{ copy.sso }}</button>
+        <div class="security-note"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 20 6v5.2c0 5.1-3.3 8.4-8 10.8-4.7-2.4-8-5.7-8-10.8V6l8-3Z" stroke="currentColor" stroke-width="1.6"/><path d="m8.5 12 2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>{{ copy.login_note }}</span></div>
         {% endif %}
       </div>
-      <div class="access-foot">© 2026 HENGJIAN · AGENT EVALUATION PLATFORM</div>
+      <div class="access-foot">{{ copy.footer }}</div>
     </section>
   </main>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script>
     (function () {
+      var i18n = {{ i18n_js }};
+      var prefs = {{ prefs_js }};
+      var root = document.documentElement;
       var toast = document.getElementById("toast");
       var toastTimer;
+      var langBtn = document.getElementById("pref-lang");
+      var menu = document.getElementById("pref-menu");
+      var themeBtn = document.getElementById("pref-theme");
       function showToast(message) {
         if (!toast) return;
         toast.textContent = message;
@@ -314,6 +532,63 @@
         clearTimeout(toastTimer);
         toastTimer = setTimeout(function () { toast.classList.remove("visible"); }, 2800);
       }
+      function persist(name, value) {
+        document.cookie = name + "=" + encodeURIComponent(value) + "; Path=/; Max-Age=31536000; SameSite=Lax";
+        try { localStorage.setItem(name, value); } catch (err) {}
+      }
+      function closeMenu() {
+        if (!menu) return;
+        menu.setAttribute("hidden", "");
+        if (langBtn) langBtn.setAttribute("aria-expanded", "false");
+      }
+      if (langBtn && menu) {
+        langBtn.addEventListener("click", function () {
+          var open = menu.hasAttribute("hidden");
+          if (open) {
+            menu.removeAttribute("hidden");
+            langBtn.setAttribute("aria-expanded", "true");
+          } else {
+            closeMenu();
+          }
+        });
+        menu.addEventListener("click", function (event) {
+          var option = event.target.closest("[data-lang]");
+          if (!option) return;
+          var nextLang = option.getAttribute("data-lang");
+          if (!nextLang || nextLang === prefs.lang) {
+            closeMenu();
+            return;
+          }
+          persist(prefs.langCookie, nextLang);
+          var url = new URL(window.location.href);
+          url.searchParams.set("lang", nextLang);
+          window.location.assign(url.toString());
+        });
+      }
+      if (themeBtn) {
+        themeBtn.addEventListener("click", function () {
+          closeMenu();
+          var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+          root.setAttribute("data-theme", next);
+          root.classList.remove("theme-light", "theme-dark");
+          root.classList.add("theme-" + next);
+          persist(prefs.themeCookie, next);
+          themeBtn.setAttribute("aria-label", next === "dark" ? i18n.themeToLight : i18n.themeToDark);
+          var themeMeta = document.querySelector('meta[name="theme-color"]');
+          if (themeMeta) themeMeta.setAttribute("content", next === "dark" ? "#1a211f" : "#10211f");
+          var url = new URL(window.location.href);
+          if (url.searchParams.has("theme")) {
+            url.searchParams.delete("theme");
+            history.replaceState(null, "", url.pathname + url.search + url.hash);
+          }
+        });
+      }
+      document.addEventListener("click", function (event) {
+        if (!event.target.closest || !event.target.closest(".pref")) closeMenu();
+      });
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") closeMenu();
+      });
       var toggle = document.getElementById("show-password");
       if (toggle) {
         toggle.addEventListener("click", function (event) {
@@ -321,7 +596,7 @@
           if (!input) return;
           var reveal = input.type === "password";
           input.type = reveal ? "text" : "password";
-          var label = reveal ? "隐藏密码" : "显示密码";
+          var label = reveal ? i18n.hidePassword : i18n.showPassword;
           event.currentTarget.setAttribute("aria-label", label);
           event.currentTarget.title = label;
         });
@@ -330,13 +605,13 @@
       if (forgot) {
         forgot.addEventListener("click", function (event) {
           event.preventDefault();
-          showToast("请联系平台管理员重置密码。");
+          showToast(i18n.toastForgot);
         });
       }
       var sso = document.getElementById("sso-button");
       if (sso) {
         sso.addEventListener("click", function () {
-          showToast("企业 SSO 入口待接入身份提供方。");
+          showToast(i18n.toastSso);
         });
       }
       var next = document.getElementById("next");

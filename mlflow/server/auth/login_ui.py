@@ -2,6 +2,7 @@
 
 The pages are plain HTML so they render before the React bundle, and so a logged-out
 browser never has to interpret a ``401 WWW-Authenticate: Basic`` challenge.
+Language and theme are presentation-only and do not affect authentication.
 """
 
 from __future__ import annotations
@@ -16,7 +17,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
-from jinja2 import Environment
+from jinja2 import Environment, StrictUndefined
 from markupsafe import Markup
 
 from mlflow.server.handlers import STATIC_PREFIX_ENV_VAR
@@ -28,8 +29,16 @@ SESSION_PASSWORD_TAG_KEY = "mlflow_basic_auth_pw_tag"
 # which ``install_remember_me_session`` raises to at least this long.
 REMEMBER_ME_LIFETIME = timedelta(days=7)
 _REMEMBER_FORM_VALUES = {"1", "on", "true", "yes"}
+# Presentation only. These cookies never participate in authentication.
+UI_LANG_COOKIE = "mlflow_ui_lang"
+UI_THEME_COOKIE = "mlflow_ui_theme"
+UI_LANG_QUERY = "lang"
+UI_THEME_QUERY = "theme"
+_DEFAULT_LANG = "zh"
+_DEFAULT_THEME = "light"
+_LOCALIZED_KEYS = ("error_bad_credentials", "error_missing_credentials", "password_hint")
 
-_TEMPLATE = Environment(autoescape=True).from_string(
+_TEMPLATE = Environment(autoescape=True, undefined=StrictUndefined).from_string(
     (Path(__file__).parent / "templates" / "auth_page.html").read_text(encoding="utf-8")
 )
 # ASCII-only so a crafted `next` cannot smuggle whitespace, quotes, or header breaks.
@@ -246,6 +255,234 @@ def apply_remember_me(session, *, remember: bool) -> None:
         del session.mlflow_auth_lifetime
 
 
+# Visible copy for the shared login / signup / logout page. Keys match across languages.
+_COPY: dict[str, dict[str, str]] = {
+    "zh": {
+        "html_lang": "zh-CN",
+        "code": "ZH",
+        "title": "衡鉴 · Agent 评测平台",
+        "story_label": "衡鉴平台介绍",
+        "brand_label": "衡鉴 Agent 评测平台",
+        "brand_name": "衡鉴",
+        "brand_tag": "Agent Evaluation",
+        "edition": "MLFLOW · AGENT QUALITY SYSTEM",
+        "eyebrow": "从实验追踪，到可信评测",
+        "hero_line": "让每一次智能，",
+        "hero_em": "都经得起验证。",
+        "intro": (
+            "把 Agent 的运行轨迹、评测数据与实验结果，汇聚在一个可追踪、可比较、可复现的工作台。"
+        ),
+        "console_label": "评测工作台示意图",
+        "console_title": "Agent 评测概览",
+        "console_subject": "生产助手 v2.4",
+        "run_id": "RUN #24-0918 · JUST NOW",
+        "chart_label": "综合质量得分",
+        "metric_success": "任务成功率",
+        "metric_factual": "事实准确率",
+        "strip_experiment": "当前实验",
+        "strip_dataset": "评测集",
+        "strip_dataset_value": "客服问题集 · 1,240 条",
+        "strip_pass": "全部检查通过",
+        "foot_en": "TRACE EVERY RUN. TRUST EVERY RELEASE.",
+        "foot_powered": "由 MLflow 实验追踪能力驱动",
+        "access_login": "登录",
+        "access_signup": "注册",
+        "access_logout": "退出登录",
+        "signup_kicker": "CREATE ACCOUNT · HENGJIAN",
+        "signup_title": "创建账号",
+        "signup_sub": "注册后即可在授权范围内追踪实验，让每一个评测结论都有迹可循。",
+        "username": "用户名",
+        "username_ph": "请输入用户名",
+        "password": "密码",
+        "signup_password_ph": "至少 12 位密码",
+        "password_hint": "密码至少 12 位",
+        "signup_submit": "注册",
+        "show_password": "显示密码",
+        "hide_password": "隐藏密码",
+        "signup_switch": "已有账号？",
+        "signup_switch_link": "登录",
+        "signup_note": "新账号默认没有管理权限。创建后由管理员授予实验、评测与 Trace 的访问范围。",
+        "logout_kicker": "SIGN OUT · HENGJIAN",
+        "logout_title": "正在退出登录",
+        "logout_sub": "正在清除登录状态，即将返回登录页。",
+        "logout_back": "返回登录",
+        "login_kicker": "WELCOME BACK · HENGJIAN",
+        "login_title": "登录工作台",
+        "login_sub": "继续追踪实验，让每一个评测结论都有迹可循。",
+        "account": "账号",
+        "account_ph": "请输入工作邮箱或用户名",
+        "forgot": "忘记密码？",
+        "password_ph": "请输入密码",
+        "remember": "7 天内保持登录",
+        "login_submit": "登录衡鉴工作台",
+        "divider": "或",
+        "sso": "使用企业 SSO 登录",
+        "login_note": (
+            "你的实验与评测记录受到权限保护。登录后可查看授权范围内的 Tracking、Runs 与 Trace。"
+        ),
+        "footer": "© 2026 HENGJIAN · AGENT EVALUATION PLATFORM",
+        "toast_forgot": "请联系平台管理员重置密码。",
+        "toast_sso": "企业 SSO 入口待接入身份提供方。",
+        "error_bad_credentials": "用户名或密码不正确",
+        "error_missing_credentials": "请输入用户名和密码",
+        "lang_label": "选择语言",
+        "lang_zh": "简体中文",
+        "lang_en": "English",
+        "theme_to_dark": "切换到深色主题",
+        "theme_to_light": "切换到浅色主题",
+    },
+    "en": {
+        "html_lang": "en",
+        "code": "EN",
+        "title": "Hengjian · Agent Evaluation Platform",
+        "story_label": "About Hengjian",
+        "brand_label": "Hengjian Agent Evaluation",
+        "brand_name": "Hengjian",
+        "brand_tag": "Agent Evaluation",
+        "edition": "MLFLOW · AGENT QUALITY SYSTEM",
+        "eyebrow": "From experiment tracking to trusted evaluation",
+        "hero_line": "Let every intelligence",
+        "hero_em": "stand up to verification.",
+        "intro": (
+            "Bring agent traces, evaluation data, and experiment results together "
+            "in one workspace you can track, compare, and reproduce."
+        ),
+        "console_label": "Evaluation workspace preview",
+        "console_title": "Agent evaluation overview",
+        "console_subject": "Production assistant v2.4",
+        "run_id": "RUN #24-0918 · JUST NOW",
+        "chart_label": "Overall quality score",
+        "metric_success": "Task success rate",
+        "metric_factual": "Factual accuracy",
+        "strip_experiment": "Current experiment",
+        "strip_dataset": "Evaluation set",
+        "strip_dataset_value": "Support questions · 1,240",
+        "strip_pass": "All checks passed",
+        "foot_en": "TRACE EVERY RUN. TRUST EVERY RELEASE.",
+        "foot_powered": "Powered by MLflow experiment tracking",
+        "access_login": "Sign in",
+        "access_signup": "Sign up",
+        "access_logout": "Sign out",
+        "signup_kicker": "CREATE ACCOUNT · HENGJIAN",
+        "signup_title": "Create account",
+        "signup_sub": (
+            "Sign up to track experiments you are authorized to see, "
+            "so every evaluation stays traceable."
+        ),
+        "username": "Username",
+        "username_ph": "Enter a username",
+        "password": "Password",
+        "signup_password_ph": "At least 12 characters",
+        "password_hint": "Password must be at least 12 characters",
+        "signup_submit": "Sign up",
+        "show_password": "Show password",
+        "hide_password": "Hide password",
+        "signup_switch": "Already have an account? ",
+        "signup_switch_link": "Sign in",
+        "signup_note": (
+            "New accounts have no admin permissions. An administrator grants access "
+            "to experiments, evaluations, and traces after the account is created."
+        ),
+        "logout_kicker": "SIGN OUT · HENGJIAN",
+        "logout_title": "Signing out",
+        "logout_sub": "Clearing your session and returning to the sign-in page.",
+        "logout_back": "Back to sign in",
+        "login_kicker": "WELCOME BACK · HENGJIAN",
+        "login_title": "Sign in to the workspace",
+        "login_sub": "Continue tracking experiments so every evaluation stays traceable.",
+        "account": "Account",
+        "account_ph": "Work email or username",
+        "forgot": "Forgot password?",
+        "password_ph": "Enter your password",
+        "remember": "Stay signed in for 7 days",
+        "login_submit": "Sign in to Hengjian",
+        "divider": "or",
+        "sso": "Sign in with enterprise SSO",
+        "login_note": (
+            "Experiments and evaluations are protected by permissions. After signing in "
+            "you can view the Tracking, Runs, and Traces you are allowed to access."
+        ),
+        "footer": "© 2026 HENGJIAN · AGENT EVALUATION PLATFORM",
+        "toast_forgot": "Contact a platform admin to reset your password.",
+        "toast_sso": "Enterprise SSO is not connected to an identity provider yet.",
+        "error_bad_credentials": "Incorrect username or password",
+        "error_missing_credentials": "Enter a username and password",
+        "lang_label": "Choose language",
+        "lang_zh": "简体中文",
+        "lang_en": "English",
+        "theme_to_dark": "Switch to dark theme",
+        "theme_to_light": "Switch to light theme",
+    },
+}
+
+
+def _normalize_lang(value: str | None) -> str | None:
+    if not isinstance(value, str):
+        return None
+    token = value.strip().lower().replace("_", "-")
+    if token in {"zh", "zh-cn", "zh-hans", "cn", "chinese"}:
+        return "zh"
+    if token in {"en", "en-us", "en-gb", "english"}:
+        return "en"
+    return None
+
+
+def _normalize_theme(value: str | None) -> str | None:
+    if not isinstance(value, str):
+        return None
+    token = value.strip().lower()
+    if token in {"light", "dark"}:
+        return token
+    return None
+
+
+def resolve_auth_page_prefs() -> tuple[str, str]:
+    """Language and theme for the auth pages.
+
+    Query parameters win over cookies so a shared link can preview a locale without
+    sticking. Unknown values fall back to Simplified Chinese and the light layout.
+    """
+    lang, theme = _DEFAULT_LANG, _DEFAULT_THEME
+    try:
+        from flask import has_request_context, request
+    except ImportError:
+        return lang, theme
+    if not has_request_context():
+        return lang, theme
+    lang = (
+        _normalize_lang(request.args.get(UI_LANG_QUERY))
+        or _normalize_lang(request.cookies.get(UI_LANG_COOKIE))
+        or lang
+    )
+    theme = (
+        _normalize_theme(request.args.get(UI_THEME_QUERY))
+        or _normalize_theme(request.cookies.get(UI_THEME_COOKIE))
+        or theme
+    )
+    return lang, theme
+
+
+def _localize_known(text: str, copy: dict[str, str]) -> str:
+    if not text:
+        return ""
+    for messages in _COPY.values():
+        for key in _LOCALIZED_KEYS:
+            if text == messages[key]:
+                return copy[key]
+    return text
+
+
+def _js_object(value: object) -> Markup:
+    encoded = (
+        json
+        .dumps(value, ensure_ascii=False)
+        .replace("<", "\\u003c")
+        .replace(">", "\\u003e")
+        .replace("&", "\\u0026")
+    )
+    return Markup(encoded)
+
+
 def render_login_page(
     *,
     csrf_token: str,
@@ -344,5 +581,28 @@ def _render(**context: object) -> str:
     context.setdefault("password_autocomplete", "")
     context.setdefault("alt_href", "")
     context.setdefault("show_fields", False)
-    context["error_js"] = _js_string(str(context.get("error") or ""))
+    lang, theme = resolve_auth_page_prefs()
+    copy = dict(_COPY[lang])
+    copy["theme_label"] = copy["theme_to_dark"] if theme == "light" else copy["theme_to_light"]
+    error = _localize_known(str(context.get("error") or ""), copy)
+    context["error"] = error
+    context["password_hint"] = _localize_known(str(context.get("password_hint") or ""), copy)
+    context["lang"] = lang
+    context["theme"] = theme
+    context["copy"] = copy
+    context["error_js"] = _js_string(error)
+    context["i18n_js"] = _js_object({
+        "showPassword": copy["show_password"],
+        "hidePassword": copy["hide_password"],
+        "toastForgot": copy["toast_forgot"],
+        "toastSso": copy["toast_sso"],
+        "themeToDark": copy["theme_to_dark"],
+        "themeToLight": copy["theme_to_light"],
+    })
+    context["prefs_js"] = _js_object({
+        "langCookie": UI_LANG_COOKIE,
+        "themeCookie": UI_THEME_COOKIE,
+        "lang": lang,
+        "theme": theme,
+    })
     return _TEMPLATE.render(**context)

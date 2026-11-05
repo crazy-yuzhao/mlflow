@@ -12,9 +12,12 @@ from mlflow.server import auth as auth_module
 from mlflow.server.auth.login_ui import (
     SESSION_PASSWORD_TAG_KEY,
     SESSION_USERNAME_KEY,
+    UI_LANG_COOKIE,
+    UI_THEME_COOKIE,
     login_redirect_location,
     password_tag,
     prefers_browser_login_page,
+    render_login_page,
     safe_next_url,
 )
 from mlflow.server.handlers import STATIC_PREFIX_ENV_VAR
@@ -50,6 +53,30 @@ _PAGE_COPY = (
     'name="username"',
     'name="csrf_token"',
     'name="remember"',
+)
+_PAGE_COPY_EN = (
+    "Hengjian · Agent Evaluation Platform",
+    "Let every intelligence",
+    "stand up to verification.",
+    "Agent evaluation overview",
+    "Overall quality score",
+    "Task success rate",
+    "Factual accuracy",
+    "Powered by MLflow experiment tracking",
+    "Sign in to the workspace",
+    "Account",
+    "Work email or username",
+    "Forgot password?",
+    "Enter your password",
+    "Stay signed in for 7 days",
+    "Sign in to Hengjian",
+    "Sign in with enterprise SSO",
+    "Contact a platform admin to reset your password.",
+    "Enterprise SSO is not connected to an identity provider yet.",
+    'class="pref-code">EN<',
+    'name="username"',
+    'name="password"',
+    'name="csrf_token"',
 )
 
 
@@ -363,3 +390,124 @@ def test_remember_me_extends_cookie_to_seven_days(auth_server: str):
     assert transient_cookie.expires is None
     version = session.get(f"{base}/version")
     assert version.status_code == 200
+
+
+def test_auth_page_copy_covers_both_languages():
+    from mlflow.server.auth.login_ui import _COPY
+
+    assert set(_COPY["zh"]) == set(_COPY["en"])
+    assert _COPY["zh"]["login_title"] == "登录工作台"
+    assert _COPY["en"]["error_bad_credentials"] == "Incorrect username or password"
+
+
+def test_render_login_page_applies_lang_and_theme():
+    import flask
+
+    app = flask.Flask(__name__)
+    with app.test_request_context("/login?lang=en&theme=dark"):
+        html = render_login_page(csrf_token="token", next_url="/version")
+    assert 'data-theme="dark"' in html
+    assert 'class="theme-dark"' in html
+    assert 'data-lang="en"' in html
+    for text in _PAGE_COPY_EN:
+        assert text in html
+    assert "登录工作台" not in html
+    assert 'name="username"' in html
+    assert 'value="/version"' in html
+
+    with app.test_request_context(
+        "/login",
+        headers={"Cookie": f"{UI_LANG_COOKIE}=en; {UI_THEME_COOKIE}=dark"},
+    ):
+        html = render_login_page(
+            csrf_token="token",
+            username="ada",
+            error="用户名或密码不正确",
+        )
+    assert "Incorrect username or password" in html
+    assert "用户名或密码不正确" not in html
+    assert 'value="ada"' in html
+    assert 'data-theme="dark"' in html
+
+    with app.test_request_context("/login?lang=zh", headers={"Cookie": f"{UI_LANG_COOKIE}=en"}):
+        html = render_login_page(csrf_token="token")
+    assert "登录工作台" in html
+    assert 'data-theme="light"' in html
+    assert 'class="theme-light"' in html
+    assert 'class="pref-code">ZH<' in html
+
+
+def test_login_page_language_and_theme(auth_server: str):
+    base = auth_server
+    chinese = requests.get(f"{base}/login")
+    assert chinese.status_code == 200
+    assert 'data-theme="light"' in chinese.text
+    assert 'data-lang="zh"' in chinese.text
+    assert 'class="pref-code">ZH<' in chinese.text
+    assert "简体中文" in chinese.text
+    assert "English" in chinese.text
+
+    by_param = requests.get(f"{base}/login", params={"lang": "en"})
+    assert by_param.status_code == 200
+    assert "WWW-Authenticate" not in by_param.headers
+    for text in _PAGE_COPY_EN:
+        assert text in by_param.text
+    assert "登录工作台" not in by_param.text
+    assert 'data-lang="en"' in by_param.text
+
+    by_cookie = requests.get(f"{base}/login", cookies={UI_LANG_COOKIE: "en"})
+    assert "Sign in to the workspace" in by_cookie.text
+    assert "Forgot password?" in by_cookie.text
+    assert "Stay signed in for 7 days" in by_cookie.text
+    assert 'data-lang="en"' in by_cookie.text
+
+    ignored = requests.get(f"{base}/login", params={"lang": "fr"})
+    assert "登录工作台" in ignored.text
+    assert 'data-lang="zh"' in ignored.text
+
+    dark_param = requests.get(f"{base}/login", params={"theme": "dark"})
+    assert 'data-theme="dark"' in dark_param.text
+    assert 'class="theme-dark"' in dark_param.text
+    assert "登录工作台" in dark_param.text
+
+    dark_cookie = requests.get(f"{base}/login", cookies={UI_THEME_COOKIE: "dark"})
+    assert 'data-theme="dark"' in dark_cookie.text
+
+    override = requests.get(
+        f"{base}/login",
+        params={"lang": "zh", "theme": "light"},
+        cookies={UI_LANG_COOKIE: "en", UI_THEME_COOKIE: "dark"},
+    )
+    assert "登录工作台" in override.text
+    assert 'data-theme="light"' in override.text
+
+    with requests.Session() as session:
+        session.cookies.set(UI_LANG_COOKIE, "en")
+        wrong = _post_login(session, base, ADMIN_USERNAME, "not-the-admin-password", "/")
+    assert wrong.status_code == 401
+    assert "Incorrect username or password" in wrong.text
+    assert "用户名或密码不正确" not in wrong.text
+    assert "WWW-Authenticate" not in wrong.headers
+
+    with requests.Session() as session:
+        session.cookies.set(UI_LANG_COOKIE, "en")
+        page = session.get(f"{base}/login")
+        missing = session.post(
+            f"{base}/login",
+            data={"username": "", "password": "", "csrf_token": _csrf_token(page.text)},
+        )
+    assert missing.status_code == 401
+    assert "Enter a username and password" in missing.text
+
+    signup = requests.get(
+        f"{base}/signup",
+        params={"lang": "en", "theme": "dark"},
+        auth=(ADMIN_USERNAME, ADMIN_PASSWORD),
+    )
+    assert signup.status_code == 200
+    assert "Create account" in signup.text
+    assert "Password must be at least 12 characters" in signup.text
+    assert "Sign up" in signup.text
+    assert 'data-theme="dark"' in signup.text
+    assert 'name="username"' in signup.text
+    assert 'name="password"' in signup.text
