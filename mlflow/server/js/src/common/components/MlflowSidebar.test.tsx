@@ -6,6 +6,7 @@ import { MemoryRouter, Outlet, Route, Routes, useNavigate } from '../utils/Routi
 import type { NavigateFunction } from '../utils/RoutingUtils';
 import { QueryClient, QueryClientProvider } from '../utils/reactQueryHooks';
 import { renderWithDesignSystem, renderWithIntl } from '../utils/TestUtils.react18';
+import { useFeatureEnabled } from '../../experiment-tracking/hooks/useServerInfo';
 
 jest.mock('../../account/hooks', () => ({
   useCurrentUserIsAdmin: jest.fn(() => false),
@@ -83,6 +84,18 @@ describe('MlflowSidebar', () => {
     expect(screen.queryByRole('button', { name: '中文' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'English' })).not.toBeInTheDocument();
     expect(screen.queryByText('3.18.1.dev0')).not.toBeInTheDocument();
+  });
+
+  test('renders AI Gateway without a New badge', () => {
+    jest.mocked(useFeatureEnabled).mockReturnValue(true);
+    try {
+      renderSidebarAt('/experiments');
+
+      expect(screen.getByRole('link', { name: 'AI Gateway' })).toBeInTheDocument();
+      expect(screen.queryByText('New')).not.toBeInTheDocument();
+    } finally {
+      jest.mocked(useFeatureEnabled).mockReturnValue(false);
+    }
   });
 
   test('shows the evaluation logo and omits docs and the language toggle', () => {

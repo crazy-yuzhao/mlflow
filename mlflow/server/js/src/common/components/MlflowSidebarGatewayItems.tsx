@@ -6,7 +6,7 @@ import {
   useDesignSystemTheme,
 } from '@databricks/design-system';
 import { FormattedMessage } from '@databricks/i18n';
-import { GatewayLabel, GatewayNewTag } from './GatewayNewTag';
+import { GatewayLabel } from './GatewayNewTag';
 import GatewayRoutes from '../../gateway/routes';
 import { matchPath } from '../utils/RoutingUtils';
 import type { Location } from '../utils/RoutingUtils';
@@ -37,12 +37,7 @@ export const MlflowSidebarGatewayItems = ({ collapsed }: { collapsed: boolean })
         }}
       >
         <CloudModelIcon />
-        {!collapsed && (
-          <>
-            <GatewayLabel />
-            <GatewayNewTag />
-          </>
-        )}
+        {!collapsed && <GatewayLabel />}
       </div>
       <MlflowSidebarLink
         css={{ paddingLeft: collapsed ? undefined : theme.spacing.lg }}

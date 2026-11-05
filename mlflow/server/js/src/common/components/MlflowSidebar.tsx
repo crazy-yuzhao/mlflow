@@ -25,7 +25,7 @@ import AccountRoutes from '../../account/routes';
 import AdminRoutes from '../../admin/routes';
 import { useCurrentUserIsAdmin, useCurrentUserQuery, useIsBasicAuth } from '../../account/hooks';
 import { performLogout } from '../../account/auth-utils';
-import { GatewayLabel, GatewayNewTag } from './GatewayNewTag';
+import { GatewayLabel } from './GatewayNewTag';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useWorkflowType, WorkflowType } from '../contexts/WorkflowTypeContext';
 import { shouldEnableWorkflowBasedNavigation, shouldEnableWorkspaces } from '../utils/FeatureUtils';
@@ -230,12 +230,7 @@ export function MlflowSidebar({
               linkProps: {
                 to: GatewayRoutes.gatewayPageRoute,
                 isActive: (location: Location) => !enableWorkflowBasedNavigation && isGatewayActive(location),
-                children: (
-                  <>
-                    <GatewayLabel />
-                    <GatewayNewTag />
-                  </>
-                ),
+                children: <GatewayLabel />,
               },
               componentId: 'mlflow.sidebar.gateway_tab_link',
               nestedItems:
