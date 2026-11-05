@@ -11,7 +11,7 @@ import {
   useDesignSystemTheme,
 } from '@databricks/design-system';
 import { FieldLabel } from './FieldLabel';
-import { useResourceTypeLabel } from '../resourceTypeLabels';
+import { usePermissionLabel, useResourceTypeLabel } from '../resourceTypeLabels';
 import { formatResourcePattern } from '../types';
 import {
   RolePermissionForm,
@@ -75,6 +75,7 @@ export const RolePermissionsSection = ({
   const { theme } = useDesignSystemTheme();
   const intl = useIntl();
   const labelFor = useResourceTypeLabel();
+  const permissionLabel = usePermissionLabel();
   const [draft, setDraft] = useState<RolePermissionDraft>(ROLE_PERMISSION_DRAFT_DEFAULT);
 
   const canAdd = isRolePermissionDraftFillable(draft);
@@ -163,7 +164,7 @@ export const RolePermissionsSection = ({
               </TableCell>
               <TableCell css={{ flex: 1 }}>
                 <Tag componentId="admin.role_permissions.staged_level_tag" color="indigo">
-                  {p.permission}
+                  {permissionLabel(p.permission)}
                 </Tag>
               </TableCell>
               <TableCell css={{ flex: 0, minWidth: 60, maxWidth: 60 }}>

@@ -64,6 +64,22 @@ describe('admin permission pickers in zh-CN', () => {
     expect(screen.getByText('选择实验')).toBeInTheDocument();
   });
 
+  it('shows Chinese permission labels while submitting the English API code', async () => {
+    const onChange = jest.fn();
+    renderZh(
+      <DirectPermissionForm
+        value={{ ...DIRECT_PERMISSION_DEFAULT, resourceType: 'gateway_secret' }}
+        onChange={onChange}
+      />,
+    );
+    await userEvent.click(document.getElementById('admin-direct-permission-level')!);
+    for (const label of ['读取', '使用', '编辑', '管理', '拒绝']) {
+      expect(screen.getByRole('option', { name: label })).toBeInTheDocument();
+    }
+    await userEvent.click(screen.getByRole('option', { name: '编辑' }));
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ permission: 'EDIT' }));
+  });
+
   it('renders the create role dialog copy in Chinese and keeps permission codes', async () => {
     renderZh(<CreateRoleModal open onClose={() => {}} />);
     expect(screen.getByRole('button', { name: '取消' })).toBeInTheDocument();
@@ -71,7 +87,12 @@ describe('admin permission pickers in zh-CN', () => {
     await userEvent.click(screen.getByRole('button', { name: '权限' }));
     expect(screen.getByText('为此角色添加一项或多项权限。之后还可以在角色详情页继续添加。')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '添加' })).toBeInTheDocument();
-    expect(screen.getByText('READ')).toBeInTheDocument();
+    expect(screen.getByText('读取')).toBeInTheDocument();
+    await userEvent.click(document.getElementById('admin-role-permission-form-level')!);
+    expect(screen.getByRole('option', { name: '读取' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: '编辑' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: '管理' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: '拒绝' })).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: '分配用户' }));
     expect(screen.getByText('为此角色分配一名或多名用户。之后还可以在角色详情页继续分配。')).toBeInTheDocument();
   });

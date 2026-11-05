@@ -18,6 +18,7 @@ import { useResourceOptionsQuery } from '../hooks';
 import { useWorkspacesEnabled } from '../../experiment-tracking/hooks/useServerInfo';
 import {
   ResourceRequiredError,
+  usePermissionLabel,
   useResourcePickerMessages,
   useResourceTypeLabel,
   WildcardOnlyHint,
@@ -83,6 +84,7 @@ export const RolePermissionForm = ({
 }: RolePermissionFormProps) => {
   const { theme } = useDesignSystemTheme();
   const labelFor = useResourceTypeLabel();
+  const permissionLabel = usePermissionLabel();
   const [resourceSearch, setResourceSearch] = useState('');
   // Hide ``workspace`` in single-tenant mode where the workspace concept
   // collapses to the single ``default`` slot.
@@ -277,7 +279,7 @@ export const RolePermissionForm = ({
         >
           {getGrantablePermissions(value.resourceType).map((p) => (
             <SimpleSelectOption key={p} value={p}>
-              {p}
+              {permissionLabel(p)}
             </SimpleSelectOption>
           ))}
         </SimpleSelect>

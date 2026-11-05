@@ -18,7 +18,7 @@ import {
   type DirectGrantResourceType,
   type DirectPermissionValue,
 } from './DirectPermissionForm';
-import { useResourceTypeLabel } from '../resourceTypeLabels';
+import { usePermissionLabel, useResourceTypeLabel } from '../resourceTypeLabels';
 import { ALL_RESOURCE_PATTERN, formatResourcePattern } from '../types';
 
 // Returns true when the draft differs from the default — i.e. the user has
@@ -72,6 +72,7 @@ export const DirectPermissionsSection = ({
   const { theme } = useDesignSystemTheme();
   const intl = useIntl();
   const labelFor = useResourceTypeLabel();
+  const permissionLabel = usePermissionLabel();
   const [draft, setDraft] = useState<DirectPermissionValue>(DIRECT_PERMISSION_DEFAULT);
 
   const handleAdd = () => {
@@ -153,7 +154,7 @@ export const DirectPermissionsSection = ({
               </TableCell>
               <TableCell css={{ flex: 1 }}>
                 <Tag componentId="admin.direct_permissions.staged_level_tag" color="indigo">
-                  {p.permission}
+                  {permissionLabel(p.permission)}
                 </Tag>
               </TableCell>
               <TableCell css={{ flex: 0, minWidth: 60, maxWidth: 60 }}>

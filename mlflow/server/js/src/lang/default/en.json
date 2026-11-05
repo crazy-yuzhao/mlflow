@@ -6255,6 +6255,10 @@
     "defaultMessage": "Scanning your traces for issues. This can take a while.",
     "description": "Experiment issues tab > In-progress issue detection state description"
   },
+  "GtDWWG": {
+    "defaultMessage": "MANAGE",
+    "description": "Admin permission picker label for the MANAGE permission level"
+  },
   "Gtv1O5": {
     "defaultMessage": "Reject requests",
     "description": "Budget action that rejects requests when the budget is exceeded"
@@ -6606,6 +6610,10 @@
   "HqkKUn": {
     "defaultMessage": "Select traces to analyze first.",
     "description": "Tooltip on the disabled Run button when no traces are selected"
+  },
+  "HqmU/a": {
+    "defaultMessage": "USE",
+    "description": "Admin permission picker label for the USE permission level"
   },
   "Hr6QZk": {
     "defaultMessage": "Running",
@@ -15255,6 +15263,10 @@
     "defaultMessage": "Run name",
     "description": "Column selector label for the run-name column"
   },
+  "hF7du+": {
+    "defaultMessage": "DENY",
+    "description": "Admin permission picker label for the DENY permission level"
+  },
   "hFKR7V": {
     "defaultMessage": "Group traces by session",
     "description": "Accessible label for the group by session button in the V4 traces table toolbar"
@@ -18219,6 +18231,10 @@
     "defaultMessage": "See details",
     "description": "Evaluation review > assessments > see details button"
   },
+  "piA8JL": {
+    "defaultMessage": "EDIT",
+    "description": "Admin permission picker label for the EDIT permission level"
+  },
   "pjCmlG": {
     "defaultMessage": "Usage",
     "description": "Section title for endpoint usage"
@@ -20226,6 +20242,10 @@
   "vz0hOh": {
     "defaultMessage": "Last year",
     "description": "Date range preset in the evaluation runs filters"
+  },
+  "vzFb4s": {
+    "defaultMessage": "READ",
+    "description": "Admin permission picker label for the READ permission level"
   },
   "w+Josc": {
     "defaultMessage": "Enter an expectation name",

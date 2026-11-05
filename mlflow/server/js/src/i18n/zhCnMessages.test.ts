@@ -74,5 +74,10 @@ describe('zh-CN supplement', () => {
       '选择{resource}',
     );
     expect(catalog[messageId('Add', 'Button that stages a permission on a role or user')]).toBe('添加');
+    expect(catalog[messageId('READ', 'Admin permission picker label for the READ permission level')]).toBe('读取');
+    expect(catalog[messageId('USE', 'Admin permission picker label for the USE permission level')]).toBe('使用');
+    expect(catalog[messageId('EDIT', 'Admin permission picker label for the EDIT permission level')]).toBe('编辑');
+    expect(catalog[messageId('MANAGE', 'Admin permission picker label for the MANAGE permission level')]).toBe('管理');
+    expect(catalog[messageId('DENY', 'Admin permission picker label for the DENY permission level')]).toBe('拒绝');
   });
 });

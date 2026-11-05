@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { defineMessage, FormattedMessage, useIntl, type MessageDescriptor } from 'react-intl';
-import type { RESOURCE_TYPES } from './types';
+import type { PERMISSIONS, RESOURCE_TYPES } from './types';
 
 /**
  * English labels match ``RESOURCE_TYPE_LABELS``. The picker renders these
@@ -111,6 +111,44 @@ const NO_RESOURCES_FOUND = defineMessage({
   defaultMessage: 'No resources found',
   description: 'Empty state when a resource type has nothing to pick',
 });
+
+/**
+ * Display labels for permission levels. The select value and the API payload
+ * stay the English code (`READ`, `EDIT`, `MANAGE`, `DENY`, `USE`).
+ */
+export const PERMISSION_LABEL_MESSAGES = {
+  READ: defineMessage({
+    defaultMessage: 'READ',
+    description: 'Admin permission picker label for the READ permission level',
+  }),
+  USE: defineMessage({
+    defaultMessage: 'USE',
+    description: 'Admin permission picker label for the USE permission level',
+  }),
+  EDIT: defineMessage({
+    defaultMessage: 'EDIT',
+    description: 'Admin permission picker label for the EDIT permission level',
+  }),
+  MANAGE: defineMessage({
+    defaultMessage: 'MANAGE',
+    description: 'Admin permission picker label for the MANAGE permission level',
+  }),
+  DENY: defineMessage({
+    defaultMessage: 'DENY',
+    description: 'Admin permission picker label for the DENY permission level',
+  }),
+} satisfies Record<(typeof PERMISSIONS)[number], MessageDescriptor>;
+
+export function usePermissionLabel() {
+  const intl = useIntl();
+  return useCallback(
+    (permission: string) => {
+      const descriptor = PERMISSION_LABEL_MESSAGES[permission as (typeof PERMISSIONS)[number]];
+      return descriptor ? intl.formatMessage(descriptor) : permission;
+    },
+    [intl],
+  );
+}
 
 export function useResourceTypeLabel() {
   const intl = useIntl();
