@@ -4,6 +4,9 @@ HOME = "/"
 # Bare like HOME: callers apply the static prefix themselves.
 SERVER_VERSION = "/version"
 SIGNUP = "/signup"
+# Browser login/logout pages. Callers apply the static prefix at registration time.
+LOGIN = "/login"
+LOGOUT = "/logout"
 CREATE_USER = _get_rest_path("/mlflow/users/create")
 AJAX_CREATE_USER = _get_ajax_path("/mlflow/users/create")
 CREATE_USER_UI = _get_rest_path("/mlflow/users/create-ui")

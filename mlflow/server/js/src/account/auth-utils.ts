@@ -29,32 +29,15 @@ export const clearAuthCookies = () => {
 };
 
 /**
- * Basic Auth has no server-side session - logging out means making the
- * browser forget its cached realm creds. ``xhr.open(url, async, user,
- * pass)`` is the only API that overwrites them; ``fetch()`` with an
- * ``Authorization`` header is treated as a one-off override and leaves
- * the cache intact.
+ * Basic Auth now keeps a server session (``mlflow_session``) for the browser
+ * login page. Logout clears that cookie via ``/logout``, which also overwrites
+ * any realm credentials the browser cached from the old native prompt.
+ * ``clearAuthCookies`` still drops the dev user-switcher cookies; the session
+ * cookie itself is HttpOnly and only the server can expire it.
  */
 export const performLogout = (queryClient?: { clear: () => void }) => {
   clearAuthCookies();
   queryClient?.clear();
-
-  // Per-load nonce - if the bogus creds collide with real ones, the XHR
-  // would succeed and the browser would keep the cached creds.
-  const nonce = Date.now().toString(36) + Math.random().toString(36).slice(2);
-  const bogus = `mlflow-logged-out-${nonce}`;
-  const usersCurrentUrl = new URL('ajax-api/2.0/mlflow/users/current', window.location.href).toString();
-  const homeUrl = new URL('.', window.location.href).toString();
-
-  const goHome = () => window.location.assign(homeUrl);
-  try {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', usersCurrentUrl, true, bogus, bogus);
-    // Wait for the cache write before navigating - otherwise the home-page
-    // request could fire with stale creds and silently auto-auth.
-    xhr.onloadend = goHome;
-    xhr.send();
-  } catch {
-    goHome();
-  }
+  const base = new URL('.', window.location.href);
+  window.location.assign(new URL('logout', base).toString());
 };
