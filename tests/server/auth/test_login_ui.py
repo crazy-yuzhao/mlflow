@@ -349,7 +349,8 @@ def test_login_page_session_and_basic_auth(auth_server: str):
         assert "衡鉴" in signup.text
         assert "创建账号" in signup.text
         assert "密码至少 12 位" in signup.text
-        assert "#10211f" in signup.text
+        assert "--eval-bg: #F7F7F7" in signup.text
+        assert "--eval-primary: #2272B4" in signup.text
         assert _csrf_token(signup.text)
 
         logged_out = session.get(f"{base}/logout")
