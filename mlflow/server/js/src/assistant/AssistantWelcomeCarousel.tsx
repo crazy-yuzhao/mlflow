@@ -4,7 +4,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { ChevronLeftIcon, ChevronRightIcon, Typography, useDesignSystemTheme } from '@databricks/design-system';
 
 import assistantDebugImg from '../common/static/assistant-debug.svg';
@@ -103,7 +103,10 @@ export const AssistantWelcomeCarousel = () => {
         }}
       >
         <Typography.Title level={3} css={{ margin: 0 }}>
-          Welcome to MLflow Assistant
+          <FormattedMessage
+            defaultMessage="Welcome to Hengjian Assistant"
+            description="Title of the assistant welcome carousel"
+          />
         </Typography.Title>
       </div>
 

@@ -10,7 +10,39 @@
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
     -->
     <link rel="manifest" href="./static-files/manifest.json" crossorigin="use-credentials" />
-    <title>MLflow</title>
+    <title>Hengjian</title>
+    <script>
+      // Same rule as productNameForLocale, applied before React boots.
+      // Preference order matches I18nUtils.getCurrentLocale: saved locale, then the
+      // login cookie, then a Chinese browser. English and every other language stay Hengjian.
+      (function () {
+        try {
+          function isZh(value) {
+            return String(value || '').toLowerCase().indexOf('zh') === 0;
+          }
+          var stored = window.localStorage && localStorage.getItem('locale');
+          if (stored) {
+            if (isZh(stored)) document.title = '衡鉴';
+            return;
+          }
+          var match = document.cookie.match(/(?:^|; )mlflow_ui_lang=([^;]*)/);
+          var cookie = match ? decodeURIComponent(match[1]) : '';
+          if (cookie === 'zh' || cookie === 'en') {
+            if (cookie === 'zh') document.title = '衡鉴';
+            return;
+          }
+          var languages = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
+          for (var i = 0; i < languages.length; i++) {
+            var lang = String(languages[i] || '').toLowerCase();
+            if (lang.indexOf('zh') === 0) {
+              document.title = '衡鉴';
+              return;
+            }
+            if (lang === 'en' || lang.indexOf('en-') === 0) return;
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
 
   <body>

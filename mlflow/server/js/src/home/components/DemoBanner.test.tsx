@@ -27,18 +27,18 @@ describe('DemoBanner', () => {
   it('renders banner with title and launch button', () => {
     renderWithDesignSystem(<DemoBanner />);
 
-    expect(screen.getByText('New to MLflow?')).toBeInTheDocument();
+    expect(screen.getByText('New to Hengjian?')).toBeInTheDocument();
     expect(screen.getByText('Launch Demo')).toBeInTheDocument();
   });
 
   it('dismisses banner on close and persists in localStorage', async () => {
     renderWithDesignSystem(<DemoBanner />);
 
-    expect(screen.getByText('New to MLflow?')).toBeInTheDocument();
+    expect(screen.getByText('New to Hengjian?')).toBeInTheDocument();
 
     await userEvent.click(screen.getByLabelText('Dismiss'));
 
-    expect(screen.queryByText('New to MLflow?')).not.toBeInTheDocument();
+    expect(screen.queryByText('New to Hengjian?')).not.toBeInTheDocument();
     expect(localStorage.getItem('mlflow.demo.banner.dismissed')).toBe('true');
   });
 
@@ -47,7 +47,7 @@ describe('DemoBanner', () => {
 
     renderWithDesignSystem(<DemoBanner />);
 
-    expect(screen.queryByText('New to MLflow?')).not.toBeInTheDocument();
+    expect(screen.queryByText('New to Hengjian?')).not.toBeInTheDocument();
   });
 
   it('navigates to returned URL on successful demo generation', async () => {

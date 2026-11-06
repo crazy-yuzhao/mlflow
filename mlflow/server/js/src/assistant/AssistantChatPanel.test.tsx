@@ -181,7 +181,7 @@ describe('AssistantChatPanel', () => {
     mockSetupComplete = false;
     renderChatPanel();
 
-    expect(screen.getByText('Welcome to MLflow Assistant')).toBeInTheDocument();
+    expect(screen.getByText('Welcome to Hengjian Assistant')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Get Started' })).not.toBeInTheDocument();
     expect(screen.queryByPlaceholderText('Ask a question...')).not.toBeInTheDocument();
   });
@@ -192,7 +192,7 @@ describe('AssistantChatPanel', () => {
     renderChatPanel();
 
     expect(screen.getByText('Assistant setup required')).toBeInTheDocument();
-    expect(screen.queryByText('Welcome to MLflow Assistant')).not.toBeInTheDocument();
+    expect(screen.queryByText('Welcome to Hengjian Assistant')).not.toBeInTheDocument();
     expect(screen.queryByPlaceholderText('Ask a question...')).not.toBeInTheDocument();
   });
 
@@ -212,7 +212,7 @@ describe('AssistantChatPanel', () => {
     const { rerenderChatPanel } = renderChatPanel();
 
     // Setup prompt is shown; no input yet; the seed has NOT been consumed.
-    expect(screen.getByText('Welcome to MLflow Assistant')).toBeInTheDocument();
+    expect(screen.getByText('Welcome to Hengjian Assistant')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Get Started' })).not.toBeInTheDocument();
     expect(screen.queryByPlaceholderText('Ask a question...')).not.toBeInTheDocument();
     expect(mockClearPendingPrompt).not.toHaveBeenCalled();
