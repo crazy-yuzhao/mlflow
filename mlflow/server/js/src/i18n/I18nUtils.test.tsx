@@ -17,12 +17,20 @@ describe('I18nUtils', () => {
   let oldLocation: any;
   const originalLanguages = navigator.languages;
   const originalLanguage = navigator.language;
+  const clearPrefCookies = () => {
+    document.cookie = 'mlflow_ui_lang=; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    document.cookie = 'mlflow_ui_theme=; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  };
+
   beforeEach(() => {
     oldLocation = window.location;
+    localStorage.clear();
+    clearPrefCookies();
   });
 
   afterEach(() => {
     localStorage.clear();
+    clearPrefCookies();
     window.location = oldLocation;
     Object.defineProperty(window.navigator, 'languages', { value: originalLanguages, configurable: true });
     Object.defineProperty(window.navigator, 'language', { value: originalLanguage, configurable: true });
@@ -102,6 +110,45 @@ describe('I18nUtils', () => {
       setNavigatorLanguages(['zh']);
       expect(I18nUtils.getCurrentLocale()).toBe('zh-CN');
     });
+
+    it('does not publish a browser language to the login cookie', () => {
+      setNavigatorLanguages(['zh-CN', 'en-US']);
+      expect(I18nUtils.getCurrentLocale()).toBe('zh-CN');
+      expect(document.cookie).not.toContain('mlflow_ui_lang=');
+    });
+
+    it('maps a zh login cookie to zh-CN over a stale English locale', () => {
+      document.cookie = 'mlflow_ui_lang=zh; Path=/';
+      setLocalStorageLocale('en');
+      expect(I18nUtils.getCurrentLocale()).toBe('zh-CN');
+      expect(localStorage.getItem('locale')).toBe('zh-CN');
+    });
+
+    it('maps an en login cookie over a stale zh-CN locale', () => {
+      document.cookie = 'mlflow_ui_lang=en; Path=/';
+      setLocalStorageLocale('zh-CN');
+      expect(I18nUtils.getCurrentLocale()).toBe('en');
+      expect(localStorage.getItem('locale')).toBe('en');
+    });
+
+    it('publishes a stored English choice to the login cookie', () => {
+      setLocalStorageLocale('en');
+      expect(I18nUtils.getCurrentLocale()).toBe('en');
+      expect(document.cookie).toContain('mlflow_ui_lang=en');
+      expect(localStorage.getItem('mlflow_ui_lang')).toBe('en');
+    });
+
+    it('keeps en-US when the login cookie is also English', () => {
+      document.cookie = 'mlflow_ui_lang=en; Path=/';
+      setLocalStorageLocale('en-US');
+      expect(I18nUtils.getCurrentLocale()).toBe('en-US');
+    });
+
+    it('does not replace an unsupported catalog with the login cookie', () => {
+      document.cookie = 'mlflow_ui_lang=zh; Path=/';
+      setLocalStorageLocale('de-DE');
+      expect(I18nUtils.getCurrentLocale()).toBe('de-DE');
+    });
   });
 
   describe('setCurrentLocale', () => {
@@ -118,6 +165,8 @@ describe('I18nUtils', () => {
       I18nUtils.setCurrentLocale('zh-CN');
 
       expect(localStorage.getItem('locale')).toBe('zh-CN');
+      expect(localStorage.getItem('mlflow_ui_lang')).toBe('zh');
+      expect(document.cookie).toContain('mlflow_ui_lang=zh');
       expect(assign).toHaveBeenCalledWith('http://localhost:5000/experiments');
     });
   });

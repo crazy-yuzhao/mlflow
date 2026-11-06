@@ -10,6 +10,7 @@ import { createIntlCache, createIntl } from 'react-intl';
 import { DEFAULT_LOCALE, loadMessages } from './loadMessages';
 import { useEffect, useState } from 'react';
 import { LOCALE_STORAGE_KEY } from './supportedLocales';
+import { localeOverriddenByLoginCookie, publishLoginLanguage } from '../common/utils/uiPreferences';
 
 // eslint-disable-next-line @databricks/no-const-object-record-string -- TODO(FEINF-2058)
 const FALLBACK_LOCALES: Record<string, string> = {
@@ -101,23 +102,42 @@ export const I18nUtils = {
 
   getCurrentLocale() {
     const queryParams = new URLSearchParams(window.location.search);
-    const getLocale = () => {
-      const langFromQuery = queryParams.get('l');
-      if (langFromQuery) {
-        // eslint-disable-next-line @databricks/no-direct-storage -- go/no-direct-storage
-        window.localStorage.setItem(LOCALE_STORAGE_KEY, langFromQuery);
-      }
-      // An explicit choice (including English) wins over the browser language.
+    const langFromQuery = queryParams.get('l');
+    if (langFromQuery) {
       // eslint-disable-next-line @databricks/no-direct-storage -- go/no-direct-storage
-      return window.localStorage.getItem(LOCALE_STORAGE_KEY) || detectBrowserLocale() || DEFAULT_LOCALE;
-    };
-    const locale = getLocale();
-
-    // _ in the locale causes createIntl to throw, so convert to default locale
-    if (locale.includes('_')) {
-      return DEFAULT_LOCALE;
+      window.localStorage.setItem(LOCALE_STORAGE_KEY, langFromQuery);
+      publishLoginLanguage(langFromQuery);
+      // _ in the locale causes createIntl to throw, so convert to default locale
+      if (langFromQuery.includes('_')) {
+        return DEFAULT_LOCALE;
+      }
+      return langFromQuery;
     }
-    return locale;
+
+    // The auth-page cookie is the shared preference. It overrides a stale
+    // `locale` value when the two pages disagree (zh vs en).
+    const fromLoginCookie = localeOverriddenByLoginCookie();
+    if (fromLoginCookie) {
+      if (fromLoginCookie.includes('_')) {
+        return DEFAULT_LOCALE;
+      }
+      return fromLoginCookie;
+    }
+
+    // An explicit choice (including English) wins over the browser language.
+    // Publish it so the next auth page render uses the same language.
+    // A browser default is not published: the auth page keeps its own default
+    // until someone actually picks a language.
+    // eslint-disable-next-line @databricks/no-direct-storage -- go/no-direct-storage
+    const stored = window.localStorage.getItem(LOCALE_STORAGE_KEY);
+    if (stored) {
+      publishLoginLanguage(stored);
+      if (stored.includes('_')) {
+        return DEFAULT_LOCALE;
+      }
+      return stored;
+    }
+    return detectBrowserLocale() || DEFAULT_LOCALE;
   },
 
   /**
@@ -128,6 +148,7 @@ export const I18nUtils = {
   setCurrentLocale(locale: string) {
     // eslint-disable-next-line @databricks/no-direct-storage -- go/no-direct-storage
     window.localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+    publishLoginLanguage(locale);
     const url = new URL(window.location.href);
     url.searchParams.delete('l');
     const next = url.toString();
