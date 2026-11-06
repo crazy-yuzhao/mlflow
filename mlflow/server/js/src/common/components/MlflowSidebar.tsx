@@ -33,7 +33,7 @@ import { SERVER_FEATURE_KEYS, useFeatureEnabled } from '../../experiment-trackin
 import { extractWorkspaceFromSearchParams, useActiveWorkspace } from '../../workspaces/utils/WorkspaceUtils';
 import { SETTINGS_RETURN_TO_PARAM, SETTINGS_SECTION_GENERAL } from '../../settings/settingsSectionConstants';
 import { getSidebarItemStyles, MlflowSidebarLink } from './MlflowSidebarLink';
-import { EvalPlatformLogo } from './EvalPlatformLogo';
+import { HengjianLogo } from './HengjianLogo';
 import { WorkspaceSelector } from '../../workspaces/components/WorkspaceSelector';
 import { MlflowSidebarExperimentItems } from './MlflowSidebarExperimentItems';
 import { MlflowSidebarGatewayItems } from './MlflowSidebarGatewayItems';
@@ -293,7 +293,7 @@ export function MlflowSidebar({
               },
             }}
           >
-            <EvalPlatformLogo />
+            <HengjianLogo />
           </Link>
         )}
         <Button

@@ -11,7 +11,6 @@ import {
   ModelsIcon,
   PlayIcon,
   PlusMinusSquareIcon,
-  SpeechBubbleIcon,
   TextBoxIcon,
   UserGroupIcon,
 } from '@databricks/design-system';
@@ -67,17 +66,6 @@ const ExperimentPageSideNavGenAIConfig = {
       icon: <ChartLineIcon />,
       tabName: ExperimentPageTabName.Dashboard,
       componentId: 'mlflow.experiment-side-nav.genai.dashboard',
-    },
-    {
-      label: (
-        <FormattedMessage
-          defaultMessage="Sessions"
-          description="Label for the chat sessions tab in the MLflow experiment navbar"
-        />
-      ),
-      icon: <SpeechBubbleIcon />,
-      tabName: ExperimentPageTabName.ChatSessions,
-      componentId: 'mlflow.experiment-side-nav.genai.sessions',
     },
   ],
   evaluation: [

@@ -1210,7 +1210,6 @@ module.exports = {
   "mlflow.experiment-side-nav.genai.playground": "",
   "mlflow.experiment-side-nav.genai.prompts": "",
   "mlflow.experiment-side-nav.genai.review-queue": "",
-  "mlflow.experiment-side-nav.genai.sessions": "",
   "mlflow.experiment-side-nav.genai.traces": "",
   "mlflow.experiment-side-nav.genai.training-runs": "",
 

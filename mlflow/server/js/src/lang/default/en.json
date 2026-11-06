@@ -7115,6 +7115,10 @@
     "defaultMessage": "Select or type",
     "description": "Placeholder for a searchable trace filter value combobox"
   },
+  "JT+jB1": {
+    "defaultMessage": "Hengjian",
+    "description": "Accessible name for the Hengjian logo in the sidebar"
+  },
   "JUTcIz": {
     "defaultMessage": "Time created",
     "description": "Header for the time created column in the experiments table"
@@ -10451,10 +10455,6 @@
     "defaultMessage": "Hide raw server.json",
     "description": "Toggle to hide raw server.json"
   },
-  "TJQL/G": {
-    "defaultMessage": "Evaluation platform",
-    "description": "Accessible name for the evaluation platform logo in the sidebar"
-  },
   "TKo/CQ": {
     "defaultMessage": "Metadata",
     "description": "Column selector label for the aggregate metadata column"
@@ -13314,10 +13314,6 @@
   "bmH/Ju": {
     "defaultMessage": "Source:",
     "description": "Label for source field in create MCP server modal"
-  },
-  "bmHBO7": {
-    "defaultMessage": "Sessions",
-    "description": "Label for the chat sessions tab in the MLflow experiment navbar"
   },
   "bmQatm": {
     "defaultMessage": "Does the assistant maintain its assigned role throughout the conversation?",

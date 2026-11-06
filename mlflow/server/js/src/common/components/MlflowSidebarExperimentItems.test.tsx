@@ -36,11 +36,13 @@ describe('MlflowSidebarExperimentItems', () => {
       '/experiments/test-123/traces?startTimeLabel=LAST_24_HOURS&startTime=2024-01-01&selectedTraceId=trace-123',
     ]);
 
-    // Sessions link (traces-related tab) - should preserve ALL params
-    const sessionsLink = screen.getByText('Sessions').closest('a');
-    expect(sessionsLink).toHaveAttribute('href', expect.stringContaining('startTimeLabel=LAST_24_HOURS'));
-    expect(sessionsLink).toHaveAttribute('href', expect.stringContaining('startTime=2024-01-01'));
-    expect(sessionsLink).toHaveAttribute('href', expect.stringContaining('selectedTraceId=trace-123'));
+    expect(screen.queryByText('Sessions')).not.toBeInTheDocument();
+
+    // Dashboard stays a traces-related tab and should preserve ALL params
+    const dashboardLink = screen.getByText('Dashboard').closest('a');
+    expect(dashboardLink).toHaveAttribute('href', expect.stringContaining('startTimeLabel=LAST_24_HOURS'));
+    expect(dashboardLink).toHaveAttribute('href', expect.stringContaining('startTime=2024-01-01'));
+    expect(dashboardLink).toHaveAttribute('href', expect.stringContaining('selectedTraceId=trace-123'));
 
     // Overview link (traces-related tab) - should preserve ALL params
     const overviewLink = screen.getByText('Overview').closest('a');

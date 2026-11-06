@@ -86,8 +86,12 @@ test.each([
       ExperimentPageTabName.Traces,
       ...(enabled && storeType === 'SqlStore' ? [ExperimentPageTabName.Issues] : []),
       ExperimentPageTabName.Dashboard,
-      ExperimentPageTabName.ChatSessions,
     ]);
+    expect(
+      Object.values(result.current.genai)
+        .flat()
+        .some(({ tabName }) => tabName === ExperimentPageTabName.ChatSessions),
+    ).toBe(false);
     expect(
       Object.values(result.current.custom)
         .flat()
