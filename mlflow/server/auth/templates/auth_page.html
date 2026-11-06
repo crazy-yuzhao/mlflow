@@ -2,6 +2,98 @@
 <html lang="{{ copy.html_lang }}" class="theme-{{ theme }}" data-theme="{{ theme }}" data-lang="{{ lang }}">
 <head>
   <meta charset="utf-8">
+  <script>
+    (function () {
+      var prefs = {{ prefs_js }};
+      function writeCookie(name, value) {
+        document.cookie = name + "=" + encodeURIComponent(value) + "; Path=/; Max-Age=31536000; SameSite=Lax";
+      }
+      function localeFamily(value) {
+        var token = String(value || "").trim().toLowerCase().replace(/_/g, "-");
+        if (token === "zh" || token.indexOf("zh-") === 0 || token === "cn" || token === "chinese") return "zh";
+        if (token === "en" || token.indexOf("en-") === 0 || token === "english") return "en";
+        return "";
+      }
+      function rememberLang(lang) {
+        if (lang !== "zh" && lang !== "en") return;
+        writeCookie(prefs.langCookie, lang);
+        try {
+          localStorage.setItem(prefs.langCookie, lang);
+          var current = localStorage.getItem(prefs.localeKey) || "";
+          var family = localeFamily(current);
+          if (!current || (family && family !== lang)) {
+            localStorage.setItem(prefs.localeKey, lang === "zh" ? prefs.localeZh : prefs.localeEn);
+          }
+        } catch (err) {}
+      }
+      function rememberTheme(theme) {
+        if (theme !== "light" && theme !== "dark") return;
+        writeCookie(prefs.themeCookie, theme);
+        try {
+          localStorage.setItem(prefs.themeCookie, theme);
+          localStorage.setItem(prefs.darkModeKey, theme === "dark" ? "true" : "false");
+          localStorage.setItem(prefs.namedThemeKey, theme);
+        } catch (err) {}
+      }
+      window.mlflowAuthPrefs = { rememberLang: rememberLang, rememberTheme: rememberTheme };
+      function cookieHas(name) {
+        var parts = document.cookie ? document.cookie.split(";") : [];
+        for (var i = 0; i < parts.length; i += 1) {
+          if (parts[i].trim().indexOf(name + "=") === 0) return true;
+        }
+        return false;
+      }
+      var params = new URLSearchParams(window.location.search);
+      var langChanged = false;
+      var themeChanged = false;
+      try {
+        if (!params.get("lang") && !cookieHas(prefs.langCookie)) {
+          var fromLocale = "";
+          var fromLoginKey = "";
+          try {
+            fromLocale = localeFamily(localStorage.getItem(prefs.localeKey));
+            fromLoginKey = localeFamily(localStorage.getItem(prefs.langCookie));
+          } catch (err) {}
+          var lang = fromLocale || fromLoginKey;
+          if (lang) {
+            rememberLang(lang);
+            if (lang !== prefs.lang) langChanged = true;
+          }
+        }
+        if (!params.get("theme") && !cookieHas(prefs.themeCookie)) {
+          var theme = "";
+          try {
+            theme = localStorage.getItem(prefs.themeCookie) || "";
+            if (theme !== "light" && theme !== "dark") {
+              var flag = localStorage.getItem(prefs.darkModeKey);
+              var named = localStorage.getItem(prefs.namedThemeKey);
+              if (flag === "true") theme = "dark";
+              else if (flag === "false") theme = "light";
+              else if (named === "dark" || named === "light") theme = named;
+              else theme = "";
+            }
+          } catch (err) {}
+          if (theme === "light" || theme === "dark") {
+            rememberTheme(theme);
+            if (theme !== prefs.theme) themeChanged = true;
+          }
+        }
+      } catch (err) {}
+      var isLogout = /\/logout\/?$/.test(window.location.pathname || "");
+      if (!(langChanged || themeChanged) || isLogout) {
+        try { sessionStorage.removeItem("mlflow_ui_pref_sync"); } catch (err) {}
+        return;
+      }
+      try {
+        if (sessionStorage.getItem("mlflow_ui_pref_sync") === "1") return;
+        sessionStorage.setItem("mlflow_ui_pref_sync", "1");
+      } catch (err) {
+        return;
+      }
+      window.__mlflowPrefReload = true;
+      window.location.replace(window.location.href);
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="{{ '#1F272D' if theme == 'dark' else '#F7F7F7' }}">
   <meta name="robots" content="noindex">
@@ -461,6 +553,11 @@
     (function () {
       var i18n = {{ i18n_js }};
       var prefs = {{ prefs_js }};
+      if (window.__mlflowPrefReload || !window.mlflowAuthPrefs) return;
+      var rememberLang = window.mlflowAuthPrefs.rememberLang;
+      var rememberTheme = window.mlflowAuthPrefs.rememberTheme;
+      if (prefs.storedLang) rememberLang(prefs.storedLang);
+      if (prefs.storedTheme) rememberTheme(prefs.storedTheme);
       var root = document.documentElement;
       var toast = document.getElementById("toast");
       var toastTimer;
@@ -473,10 +570,6 @@
         toast.classList.add("visible");
         clearTimeout(toastTimer);
         toastTimer = setTimeout(function () { toast.classList.remove("visible"); }, 2800);
-      }
-      function persist(name, value) {
-        document.cookie = name + "=" + encodeURIComponent(value) + "; Path=/; Max-Age=31536000; SameSite=Lax";
-        try { localStorage.setItem(name, value); } catch (err) {}
       }
       function closeMenu() {
         if (!menu) return;
@@ -501,7 +594,7 @@
             closeMenu();
             return;
           }
-          persist(prefs.langCookie, nextLang);
+          rememberLang(nextLang);
           var url = new URL(window.location.href);
           url.searchParams.set("lang", nextLang);
           window.location.assign(url.toString());
@@ -514,7 +607,7 @@
           root.setAttribute("data-theme", next);
           root.classList.remove("theme-light", "theme-dark");
           root.classList.add("theme-" + next);
-          persist(prefs.themeCookie, next);
+          rememberTheme(next);
           themeBtn.setAttribute("aria-label", next === "dark" ? i18n.themeToLight : i18n.themeToDark);
           var themeMeta = document.querySelector('meta[name="theme-color"]');
           if (themeMeta) themeMeta.setAttribute("content", next === "dark" ? "#1F272D" : "#F7F7F7");

@@ -10,6 +10,11 @@ import requests
 from mlflow.environment_variables import MLFLOW_AUTH_ADMIN_PASSWORD, MLFLOW_FLASK_SERVER_SECRET_KEY
 from mlflow.server import auth as auth_module
 from mlflow.server.auth.login_ui import (
+    REACT_DARK_MODE_STORAGE_KEY,
+    REACT_LOCALE_EN,
+    REACT_LOCALE_STORAGE_KEY,
+    REACT_LOCALE_ZH,
+    REACT_NAMED_THEME_STORAGE_KEY,
     SESSION_PASSWORD_TAG_KEY,
     SESSION_USERNAME_KEY,
     UI_LANG_COOKIE,
@@ -391,6 +396,66 @@ def test_remember_me_extends_cookie_to_seven_days(auth_server: str):
     assert transient_cookie.expires is None
     version = session.get(f"{base}/version")
     assert version.status_code == 200
+
+
+def test_signed_in_preference_keys_match_the_react_bridge():
+    assert UI_LANG_COOKIE == "mlflow_ui_lang"
+    assert UI_THEME_COOKIE == "mlflow_ui_theme"
+    assert REACT_LOCALE_STORAGE_KEY == "locale"
+    assert REACT_LOCALE_ZH == "zh-CN"
+    assert REACT_LOCALE_EN == "en"
+    assert REACT_DARK_MODE_STORAGE_KEY == "_mlflow_dark_mode_toggle_enabled"
+    assert REACT_NAMED_THEME_STORAGE_KEY == "databricks-dark-mode-pref"
+    root = Path(__file__).resolve().parents[3]
+    bridge_path = root / "mlflow/server/js/src/common/utils/uiPreferences.ts"
+    bridge = bridge_path.read_text(encoding="utf-8")
+    for value in (
+        UI_LANG_COOKIE,
+        UI_THEME_COOKIE,
+        REACT_DARK_MODE_STORAGE_KEY,
+        REACT_NAMED_THEME_STORAGE_KEY,
+        REACT_LOCALE_ZH,
+        REACT_LOCALE_EN,
+    ):
+        assert value in bridge
+    locales_path = root / "mlflow/server/js/src/i18n/supportedLocales.ts"
+    locales = locales_path.read_text(encoding="utf-8")
+    assert f"'{REACT_LOCALE_STORAGE_KEY}'" in locales
+
+
+def test_login_page_mirrors_preferences_into_signed_in_storage():
+    import flask
+
+    app = flask.Flask(__name__)
+    with app.test_request_context("/login"):
+        html = render_login_page(csrf_token="token")
+    assert '"storedLang": ""' in html
+    assert '"storedTheme": ""' in html
+    assert f'"langCookie": "{UI_LANG_COOKIE}"' in html
+    assert f'"themeCookie": "{UI_THEME_COOKIE}"' in html
+    assert f'"localeKey": "{REACT_LOCALE_STORAGE_KEY}"' in html
+    assert f'"localeZh": "{REACT_LOCALE_ZH}"' in html
+    assert f'"localeEn": "{REACT_LOCALE_EN}"' in html
+    assert f'"darkModeKey": "{REACT_DARK_MODE_STORAGE_KEY}"' in html
+    assert f'"namedThemeKey": "{REACT_NAMED_THEME_STORAGE_KEY}"' in html
+    assert (
+        'localStorage.setItem(prefs.localeKey, lang === "zh" ? prefs.localeZh : prefs.localeEn)'
+        in html
+    )
+    assert 'localStorage.setItem(prefs.darkModeKey, theme === "dark" ? "true" : "false")' in html
+    assert "localStorage.setItem(prefs.namedThemeKey, theme)" in html
+    assert 'name="csrf_token"' in html
+    assert 'name="remember"' in html
+
+    with app.test_request_context(
+        "/login",
+        headers={"Cookie": f"{UI_LANG_COOKIE}=en; {UI_THEME_COOKIE}=dark"},
+    ):
+        saved = render_login_page(csrf_token="token")
+    assert '"storedLang": "en"' in saved
+    assert '"storedTheme": "dark"' in saved
+    assert 'data-lang="en"' in saved
+    assert 'data-theme="dark"' in saved
 
 
 def test_auth_page_copy_covers_both_languages():

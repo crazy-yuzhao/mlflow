@@ -30,8 +30,16 @@ SESSION_PASSWORD_TAG_KEY = "mlflow_basic_auth_pw_tag"
 REMEMBER_ME_LIFETIME = timedelta(days=7)
 _REMEMBER_FORM_VALUES = {"1", "on", "true", "yes"}
 # Presentation only. These cookies never participate in authentication.
+# The signed-in React UI reads the same cookies and mirrors them into the
+# localStorage keys below. Keep the strings aligned with
+# mlflow/server/js/src/common/utils/uiPreferences.ts and supportedLocales.ts.
 UI_LANG_COOKIE = "mlflow_ui_lang"
 UI_THEME_COOKIE = "mlflow_ui_theme"
+REACT_LOCALE_STORAGE_KEY = "locale"
+REACT_LOCALE_ZH = "zh-CN"
+REACT_LOCALE_EN = "en"
+REACT_DARK_MODE_STORAGE_KEY = "_mlflow_dark_mode_toggle_enabled"
+REACT_NAMED_THEME_STORAGE_KEY = "databricks-dark-mode-pref"
 UI_LANG_QUERY = "lang"
 UI_THEME_QUERY = "theme"
 _DEFAULT_LANG = "zh"
@@ -436,30 +444,33 @@ def _normalize_theme(value: str | None) -> str | None:
     return None
 
 
+def _read_request_prefs() -> tuple[str | None, str | None, str | None, str | None]:
+    """Query lang, cookie lang, query theme, cookie theme. Each is normalized or None."""
+    try:
+        from flask import has_request_context, request
+    except ImportError:
+        return None, None, None, None
+    if not has_request_context():
+        return None, None, None, None
+    return (
+        _normalize_lang(request.args.get(UI_LANG_QUERY)),
+        _normalize_lang(request.cookies.get(UI_LANG_COOKIE)),
+        _normalize_theme(request.args.get(UI_THEME_QUERY)),
+        _normalize_theme(request.cookies.get(UI_THEME_COOKIE)),
+    )
+
+
 def resolve_auth_page_prefs() -> tuple[str, str]:
     """Language and theme for the auth pages.
 
     Query parameters win over cookies so a shared link can preview a locale without
     sticking. Unknown values fall back to Simplified Chinese and the light layout.
     """
-    lang, theme = _DEFAULT_LANG, _DEFAULT_THEME
-    try:
-        from flask import has_request_context, request
-    except ImportError:
-        return lang, theme
-    if not has_request_context():
-        return lang, theme
-    lang = (
-        _normalize_lang(request.args.get(UI_LANG_QUERY))
-        or _normalize_lang(request.cookies.get(UI_LANG_COOKIE))
-        or lang
+    query_lang, cookie_lang, query_theme, cookie_theme = _read_request_prefs()
+    return (
+        query_lang or cookie_lang or _DEFAULT_LANG,
+        query_theme or cookie_theme or _DEFAULT_THEME,
     )
-    theme = (
-        _normalize_theme(request.args.get(UI_THEME_QUERY))
-        or _normalize_theme(request.cookies.get(UI_THEME_COOKIE))
-        or theme
-    )
-    return lang, theme
 
 
 def _localize_known(text: str, copy: dict[str, str]) -> str:
@@ -599,10 +610,21 @@ def _render(**context: object) -> str:
         "themeToDark": copy["theme_to_dark"],
         "themeToLight": copy["theme_to_light"],
     })
+    _, cookie_lang, _, cookie_theme = _read_request_prefs()
+    # ``stored*`` is the cookie only. The page script mirrors that explicit
+    # choice into the React keys and, when the cookie is missing, copies a
+    # React choice back into the cookie. The rendered default is not a choice.
     context["prefs_js"] = _js_object({
         "langCookie": UI_LANG_COOKIE,
         "themeCookie": UI_THEME_COOKIE,
         "lang": lang,
         "theme": theme,
+        "storedLang": cookie_lang or "",
+        "storedTheme": cookie_theme or "",
+        "localeKey": REACT_LOCALE_STORAGE_KEY,
+        "localeZh": REACT_LOCALE_ZH,
+        "localeEn": REACT_LOCALE_EN,
+        "darkModeKey": REACT_DARK_MODE_STORAGE_KEY,
+        "namedThemeKey": REACT_NAMED_THEME_STORAGE_KEY,
     })
     return _TEMPLATE.render(**context)
