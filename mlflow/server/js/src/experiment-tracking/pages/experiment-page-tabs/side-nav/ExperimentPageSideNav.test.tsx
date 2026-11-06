@@ -71,7 +71,7 @@ describe('ExperimentPageSideNav', () => {
       expect(screen.getByText('Observability')).toBeInTheDocument();
       expect(screen.getByText('Traces')).toBeInTheDocument();
       expect(screen.getByText('Dashboard')).toBeInTheDocument();
-      expect(screen.getByText('Sessions')).toBeInTheDocument();
+      expect(screen.queryByText('Sessions')).not.toBeInTheDocument();
 
       // Check evaluation section
       expect(screen.getByText('Evaluation')).toBeInTheDocument();
