@@ -109,7 +109,7 @@ const HomePage = () => {
             >
               <HomeIcon />
             </span>
-            <FormattedMessage defaultMessage="Welcome to MLflow" description="Home page hero title" />
+            <FormattedMessage defaultMessage="Welcome to Hengjian" description="Home page hero title" />
           </span>
         }
       />

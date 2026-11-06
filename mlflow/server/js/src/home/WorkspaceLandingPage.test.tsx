@@ -66,9 +66,9 @@ describe('WorkspaceLandingPage', () => {
     );
   };
 
-  test('renders Welcome to MLflow header', () => {
+  test('renders Welcome to Hengjian header', () => {
     renderComponent();
-    expect(screen.getByText('Welcome to MLflow')).toBeInTheDocument();
+    expect(screen.getByText('Welcome to Hengjian')).toBeInTheDocument();
   });
 
   test('renders all main sections', async () => {

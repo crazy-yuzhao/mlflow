@@ -67,7 +67,7 @@ export const LaunchDemoCard = () => {
             marginBottom: theme.spacing.xs,
           }}
         >
-          <FormattedMessage defaultMessage="New to MLflow?" description="Demo banner title" />
+          <FormattedMessage defaultMessage="New to Hengjian?" description="Demo banner title" />
         </div>
         <div css={{ color: theme.colors.textSecondary }}>
           <FormattedMessage

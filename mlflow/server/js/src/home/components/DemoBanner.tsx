@@ -76,7 +76,7 @@ export const DemoBanner = () => {
       </button>
       <Empty
         image={<BeakerIcon css={{ fontSize: 48, color: theme.colors.actionPrimaryBackgroundDefault }} />}
-        title={<FormattedMessage defaultMessage="New to MLflow?" description="Demo banner title" />}
+        title={<FormattedMessage defaultMessage="New to Hengjian?" description="Demo banner title" />}
         description={
           <FormattedMessage
             defaultMessage="Explore GenAI features with pre-populated sample data including traces, evaluations, and prompts."

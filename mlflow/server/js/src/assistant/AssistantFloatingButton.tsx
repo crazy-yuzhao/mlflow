@@ -183,8 +183,8 @@ export const AssistantFloatingButton = () => {
       </span>
       <span className="assistant-fab-label">
         <FormattedMessage
-          defaultMessage="MLflow Assistant"
-          description="Label revealed when hovering the floating MLflow assistant button"
+          defaultMessage="Hengjian Assistant"
+          description="Label revealed when hovering the floating Hengjian assistant button"
         />
       </span>
     </button>

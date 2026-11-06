@@ -42,14 +42,14 @@ describe('AssistantFloatingButton', () => {
   test('auto-opens the panel once on first load', () => {
     renderFab();
     expect(mockOpenPanel).toHaveBeenCalledTimes(1);
-    expect(screen.getByRole('button', { name: 'MLflow Assistant' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Hengjian Assistant' })).toBeInTheDocument();
   });
 
   test('opens the panel when clicked', async () => {
     renderFab();
     // Ignore the first-load auto-open so we isolate the click.
     mockOpenPanel.mockClear();
-    await userEvent.click(screen.getByRole('button', { name: 'MLflow Assistant' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Hengjian Assistant' }));
     expect(mockOpenPanel).toHaveBeenCalledTimes(1);
   });
 
@@ -68,14 +68,14 @@ describe('AssistantFloatingButton', () => {
     mockAssistant = { isLocalServer: false, canUseAssistant: false, isPanelOpen: false, openPanel: mockOpenPanel };
     renderFab();
     expect(mockOpenPanel).not.toHaveBeenCalled();
-    expect(screen.queryByRole('button', { name: 'MLflow Assistant' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Hengjian Assistant' })).not.toBeInTheDocument();
   });
 
   test('does not render when canUseAssistant is false even if isLocalServer is true', () => {
     // Verifies the render guard uses canUseAssistant, not isLocalServer.
     mockAssistant = { isLocalServer: true, canUseAssistant: false, isPanelOpen: false, openPanel: mockOpenPanel };
     renderFab();
-    expect(screen.queryByRole('button', { name: 'MLflow Assistant' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Hengjian Assistant' })).not.toBeInTheDocument();
   });
 
   test('renders but does not auto-open on a remote server with remote access enabled', () => {
@@ -85,20 +85,20 @@ describe('AssistantFloatingButton', () => {
     mockAssistant = { isLocalServer: false, canUseAssistant: true, isPanelOpen: false, openPanel: mockOpenPanel };
     renderFab();
     expect(mockOpenPanel).not.toHaveBeenCalled();
-    expect(screen.getByRole('button', { name: 'MLflow Assistant' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Hengjian Assistant' })).toBeInTheDocument();
   });
 
   test('does not auto-open when the panel is already open', () => {
     mockAssistant.isPanelOpen = true;
     renderFab();
     expect(mockOpenPanel).not.toHaveBeenCalled();
-    expect(screen.queryByRole('button', { name: 'MLflow Assistant' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Hengjian Assistant' })).not.toBeInTheDocument();
   });
 
   test('stays visible (repositioned) when a right-side surface is open', () => {
     mockObstructionWidth = 600;
     renderFab();
-    expect(screen.getByRole('button', { name: 'MLflow Assistant' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Hengjian Assistant' })).toBeInTheDocument();
   });
 
   test('lifts (stays visible) when a bottom-pinned action bar is registered', () => {
@@ -106,6 +106,6 @@ describe('AssistantFloatingButton', () => {
     renderFab();
     // The button rises above the bar rather than hiding; the bottom-inset math runs with a
     // real number (regression guard: an undefined height would make `bottom` NaN).
-    expect(screen.getByRole('button', { name: 'MLflow Assistant' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Hengjian Assistant' })).toBeInTheDocument();
   });
 });

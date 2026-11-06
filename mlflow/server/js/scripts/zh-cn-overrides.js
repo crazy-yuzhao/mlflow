@@ -64,8 +64,11 @@ module.exports = {
   GenAI: 'GenAI',
   Assistant: '助手',
 
-  // Home
-  'Welcome to MLflow': '欢迎使用 MLflow',
+  // Home and assistant chrome
+  'Welcome to Hengjian': '欢迎使用衡鉴',
+  'New to Hengjian?': '刚接触衡鉴？',
+  'Hengjian Assistant': '衡鉴助手',
+  'Welcome to Hengjian Assistant': '欢迎使用衡鉴助手',
   Tracing: '跟踪',
   'Capture and debug LLM interactions and agent workflows.': '捕获并调试 LLM 交互与智能体工作流。',
   'Measure and compare LLM quality with built-in and custom scorers.': '使用内置和自定义评分器衡量并比较 LLM 质量。',

@@ -1935,10 +1935,6 @@
     "defaultMessage": "No providers selected",
     "description": "Label for selector when no providers are selected"
   },
-  "46+W5N": {
-    "defaultMessage": "New to MLflow?",
-    "description": "Demo banner title"
-  },
   "460gm9": {
     "defaultMessage": "Choose which questions reviewers answer for traces in this queue.",
     "description": "Queue settings: questions field hint"
@@ -2610,6 +2606,10 @@
   "64SfR8": {
     "defaultMessage": "enter a model identifier",
     "description": "Link text to switch to direct model identifier input"
+  },
+  "64innc": {
+    "defaultMessage": "Hengjian Assistant",
+    "description": "Title for the global Assistant chat panel"
   },
   "656rRX": {
     "defaultMessage": "Go back to <link>the home page.</link>",
@@ -5587,6 +5587,10 @@
     "defaultMessage": "Edit tags",
     "description": "Run page > Overview > Tags cell > 'Edit' button label"
   },
+  "EwKtzO": {
+    "defaultMessage": "Welcome to Hengjian Assistant",
+    "description": "Title of the assistant welcome carousel"
+  },
   "Ey+oLI": {
     "defaultMessage": "Request",
     "description": "Column label for request"
@@ -8051,6 +8055,10 @@
     "defaultMessage": "You cannot delete your own account.",
     "description": "Tooltip explaining why the row checkbox is disabled for the current user"
   },
+  "MA341c": {
+    "defaultMessage": "Hengjian Assistant",
+    "description": "Label revealed when hovering the floating Hengjian assistant button"
+  },
   "MB3kda": {
     "defaultMessage": "{pendingCount} pending {pendingCount, plural, =1 {change} other {changes}}",
     "description": "Evaluation review > assessments > pending entries counter"
@@ -9354,10 +9362,6 @@
   "PuAOdF": {
     "defaultMessage": "Found {newCount, plural, one {1 new issue} other {# new issues}} across {traceCount, plural, one {1 trace} other {# traces}}.",
     "description": "Notification body shown when every issue an issue detection job found is newly reported"
-  },
-  "PuXTcZ": {
-    "defaultMessage": "Welcome to MLflow",
-    "description": "Workspace landing page title"
   },
   "PuoR9y": {
     "defaultMessage": "Copy the prompt below to fix this issue with your coding agent.",
@@ -11791,10 +11795,6 @@
     "defaultMessage": "Previous trace",
     "description": "Review focused view: previous-trace button"
   },
-  "X1/rxD": {
-    "defaultMessage": "MLflow Assistant",
-    "description": "Label revealed when hovering the floating MLflow assistant button"
-  },
   "X11caV": {
     "defaultMessage": "Failed to override assessment. Error: {error}",
     "description": "Error message when overriding an assessment fails"
@@ -13566,6 +13566,10 @@
   "cX321S": {
     "defaultMessage": "Compared with baseline {baseline}, {run} shares no success-rate scorers with it.",
     "description": "Baseline-relative comparison summary when the runs share only numeric scorers"
+  },
+  "cX6GGw": {
+    "defaultMessage": "Welcome to Hengjian",
+    "description": "Workspace landing page title"
   },
   "cXNimy": {
     "defaultMessage": "Runtime hint",
@@ -15390,6 +15394,10 @@
   "hcDB9U": {
     "defaultMessage": "+∞",
     "description": "Label displaying positive infinity symbol displayed on a plot UI element"
+  },
+  "hchioQ": {
+    "defaultMessage": "Welcome to Hengjian",
+    "description": "Home page hero title"
   },
   "he7/4n": {
     "defaultMessage": "Pick your language and follow the steps.",
@@ -18003,10 +18011,6 @@
     "defaultMessage": "Load prompt from registry",
     "description": "Title of the prompt-registry picker modal on the playground page"
   },
-  "p/wUKB": {
-    "defaultMessage": "MLflow Assistant",
-    "description": "Title for the global Assistant chat panel"
-  },
   "p0FZXy": {
     "defaultMessage": "Add at least one non-empty message before saving.",
     "description": "Warning shown in the playground save-prompt-version modal when there are no messages to save"
@@ -18134,6 +18138,10 @@
   "pKpwfT": {
     "defaultMessage": "Delete",
     "description": "Confirm button for deleting a skill"
+  },
+  "pKx4Xh": {
+    "defaultMessage": "New to Hengjian?",
+    "description": "Demo banner title"
   },
   "pMb1cg": {
     "defaultMessage": "Download {contentType} ({size})",
@@ -19106,10 +19114,6 @@
   "sFqnju": {
     "defaultMessage": "Trace ID",
     "description": "Label for the trace ID of a cross-trace span link"
-  },
-  "sGXhV4": {
-    "defaultMessage": "Welcome to MLflow",
-    "description": "Home page hero title"
   },
   "sH/tur": {
     "defaultMessage": "Draft",

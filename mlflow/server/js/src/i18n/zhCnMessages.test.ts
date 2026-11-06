@@ -14,6 +14,16 @@ describe('zh-CN supplement', () => {
     expect(catalog[messageId('General', 'Sidebar link: Settings > General')]).toBe('常规');
     expect(catalog[messageId('Language', 'Accessible label for the language switcher')]).toBe('语言');
     expect(catalog[messageId('Hengjian', 'Accessible name for the Hengjian logo in the sidebar')]).toBe('衡鉴');
+    expect(catalog[messageId('Welcome to Hengjian', 'Home page hero title')]).toBe('欢迎使用衡鉴');
+    expect(catalog[messageId('Welcome to Hengjian', 'Workspace landing page title')]).toBe('欢迎使用衡鉴');
+    expect(catalog[messageId('New to Hengjian?', 'Demo banner title')]).toBe('刚接触衡鉴？');
+    expect(catalog[messageId('Hengjian Assistant', 'Title for the global Assistant chat panel')]).toBe('衡鉴助手');
+    expect(
+      catalog[messageId('Hengjian Assistant', 'Label revealed when hovering the floating Hengjian assistant button')],
+    ).toBe('衡鉴助手');
+    expect(catalog[messageId('Welcome to Hengjian Assistant', 'Title of the assistant welcome carousel')]).toBe(
+      '欢迎使用衡鉴助手',
+    );
     expect(catalog[messageId('Endpoints', 'Sidebar link for gateway endpoints')]).toBe('端点');
   });
 

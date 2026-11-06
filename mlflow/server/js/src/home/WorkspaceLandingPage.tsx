@@ -32,7 +32,7 @@ const WorkspaceLandingPage = () => {
       }}
     >
       <Header
-        title={<FormattedMessage defaultMessage="Welcome to MLflow" description="Workspace landing page title" />}
+        title={<FormattedMessage defaultMessage="Welcome to Hengjian" description="Workspace landing page title" />}
       />
       <TelemetryInfoAlert />
       <React.Suspense fallback={<HomePageSectionSkeleton />}>

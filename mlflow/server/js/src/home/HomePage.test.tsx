@@ -159,6 +159,7 @@ describe('HomePage', () => {
       expect(screen.getByTestId('experiments-home-view')).toBeInTheDocument();
     });
 
+    expect(screen.getByText('Welcome to Hengjian')).toBeInTheDocument();
     expect(
       screen.queryByText(
         (_, element) => element?.textContent === 'Workspace "other-name" was not found, go back to the home page.',
