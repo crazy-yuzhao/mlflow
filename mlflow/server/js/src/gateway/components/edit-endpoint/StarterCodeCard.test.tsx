@@ -20,10 +20,10 @@ describe('StarterCodeCard', () => {
     jest.restoreAllMocks();
   });
 
-  it('renders with MLflow Chat Completions as default', () => {
+  it('renders with Hengjian chat completions as default', () => {
     renderCard({ endpointName: 'my-endpoint' });
     expect(screen.getByText('View starter code')).toBeInTheDocument();
-    expect(screen.getByText('MLflow Chat Completions')).toBeInTheDocument();
+    expect(screen.getByText('Hengjian chat completions')).toBeInTheDocument();
     expect(screen.getByText('Try in Browser')).toBeInTheDocument();
   });
 
@@ -35,9 +35,9 @@ describe('StarterCodeCard', () => {
     expect(codeBlock?.textContent).toContain('chat/completions');
   });
 
-  it('shows only MLflow Chat Completions when provider has no passthrough', () => {
+  it('shows only Hengjian chat completions when provider has no passthrough', () => {
     renderCard({ endpointName: 'my-endpoint', provider: 'cohere' });
-    expect(screen.getByText('MLflow Chat Completions')).toBeInTheDocument();
+    expect(screen.getByText('Hengjian chat completions')).toBeInTheDocument();
     expect(screen.queryByText('OpenAI Responses')).not.toBeInTheDocument();
     expect(screen.queryByText('Anthropic Messages')).not.toBeInTheDocument();
     expect(screen.queryByText('Gemini Generate Content')).not.toBeInTheDocument();
@@ -45,7 +45,7 @@ describe('StarterCodeCard', () => {
 
   it('shows OpenAI Responses tab for openai provider', () => {
     renderCard({ endpointName: 'my-endpoint', provider: 'openai' });
-    expect(screen.getByText('MLflow Chat Completions')).toBeInTheDocument();
+    expect(screen.getByText('Hengjian chat completions')).toBeInTheDocument();
     expect(screen.getByText('OpenAI Responses')).toBeInTheDocument();
   });
 
@@ -68,7 +68,7 @@ describe('StarterCodeCard', () => {
     renderCard({ endpointName: 'jev-evaluator', provider: 'typesafe' });
 
     expect(screen.getByText('TypeSafe System One')).toBeInTheDocument();
-    expect(screen.queryByText('MLflow Chat Completions')).not.toBeInTheDocument();
+    expect(screen.queryByText('Hengjian chat completions')).not.toBeInTheDocument();
     const code = document.querySelector('pre')?.textContent;
     expect(code).toContain('/gateway/typesafe/v1/systemone');
     expect(code).toContain('"model": "jev-evaluator"');
@@ -80,7 +80,7 @@ describe('StarterCodeCard', () => {
     const { rerender } = renderWithDesignSystem(<StarterCodeCard endpointName="my-endpoint" provider="openai" />);
     rerender(<StarterCodeCard endpointName="my-endpoint" provider="typesafe" />);
 
-    expect(screen.queryByText('MLflow Chat Completions')).not.toBeInTheDocument();
+    expect(screen.queryByText('Hengjian chat completions')).not.toBeInTheDocument();
     expect(document.querySelector('pre')?.textContent).toContain('/gateway/typesafe/v1/systemone');
   });
 

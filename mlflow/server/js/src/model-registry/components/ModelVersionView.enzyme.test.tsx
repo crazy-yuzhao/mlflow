@@ -184,7 +184,7 @@ describe('ModelVersionView', () => {
     const mockUpdatePageTitle = jest.fn();
     Utils.updatePageTitle = mockUpdatePageTitle;
     wrapper = createComponentInstance(minimalProps);
-    expect(mockUpdatePageTitle.mock.calls[0][0]).toBe('Model A v1 - MLflow Model');
+    expect(mockUpdatePageTitle.mock.calls[0][0]).toBe('Model A v1 - Hengjian Model');
   });
   test('should tags rendered in the UI', () => {
     wrapper = createComponentInstance(minimalProps);

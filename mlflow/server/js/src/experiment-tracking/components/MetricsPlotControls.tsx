@@ -71,7 +71,7 @@ class MetricsPlotControlsImpl extends React.Component<Props> {
     );
     const completedRunsTooltipText = (
       <FormattedMessage
-        defaultMessage="MLflow UI automatically fetches metric histories for active runs and updates the metrics plot with a {interval} second interval."
+        defaultMessage="The UI automatically fetches metric histories for active runs and updates the metrics plot with a {interval} second interval."
         description="Helpful tooltip message to explain the automatic metrics plot update"
         values={{ interval: Math.round(EXPERIMENT_RUNS_SAMPLE_METRIC_AUTO_REFRESH_INTERVAL / 1000) }}
       />

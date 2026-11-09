@@ -1,5 +1,5 @@
 export const buildCreatePromptPrompt =
-  (): string => `Help me create and test my first MLflow registered prompt. Take it one step at a time:
+  (): string => `Help me create and test my first registered prompt. Take it one step at a time:
 
 1. Add \`mlflow\` as a dependency if needed.
 2. Ask what the prompt is for (e.g. summarizing an article, extracting action items).
@@ -12,7 +12,7 @@ export const buildCreatePromptPrompt =
 Infer the package manager, entry point, and framework from the repo. Run \`mlflow skills list\` rather than guessing at APIs. If you hit a blocker you can't resolve (missing API key, permissions, dependencies), stop and tell me what you need.`;
 
 export const buildCreatePromptAssistantPrompt =
-  (): string => `Help me create and test my first MLflow registered prompt. Take it one step at a time:
+  (): string => `Help me create and test my first registered prompt. Take it one step at a time:
 
 1. Ask what the prompt is for (e.g. summarizing an article, extracting action items).
 2. Ask whether it should be global or attached to an experiment.

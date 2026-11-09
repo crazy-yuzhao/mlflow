@@ -127,7 +127,7 @@ export const ModelTraceExplorerFrameRenderer = ({
           />
           <Typography.Title level={4} withoutMargins>
             <FormattedMessage
-              defaultMessage="MLflow Trace UI"
+              defaultMessage="Hengjian Trace UI"
               description="Title of the trace viewer embedded in a notebook"
             />
           </Typography.Title>

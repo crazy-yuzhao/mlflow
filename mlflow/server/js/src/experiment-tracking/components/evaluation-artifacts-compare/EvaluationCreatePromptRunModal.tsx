@@ -251,7 +251,7 @@ export const EvaluationCreatePromptRunModal = ({
         const errorMessage = getPromptEngineeringErrorMessage(e);
         const wrappedMessage = intl.formatMessage(
           {
-            defaultMessage: 'MLflow deployment returned the following error: "{errorMessage}"',
+            defaultMessage: 'The deployment returned the following error: "{errorMessage}"',
             description: 'Experiment page > MLflow deployment error message',
           },
           {

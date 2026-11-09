@@ -29,7 +29,7 @@ export const TelemetryInfoAlert = () => {
         <div css={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.sm }}>
           <span>
             <FormattedMessage
-              defaultMessage="MLflow collects usage data to improve the product. To confirm your preferences, please visit the settings page in the navigation sidebar. To learn more about what data is collected, please visit the <documentation>documentation</documentation>."
+              defaultMessage="Hengjian collects usage data to improve the product. To confirm your preferences, please visit the settings page in the navigation sidebar. To learn more about what data is collected, please visit the <documentation>documentation</documentation>."
               description="Telemetry alert description"
               values={{
                 documentation: (chunks: any) => (

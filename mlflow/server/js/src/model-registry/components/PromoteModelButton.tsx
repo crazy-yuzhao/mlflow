@@ -130,10 +130,7 @@ export const PromoteModelButton = (props: PromoteModelButtonImplProps) => {
       <>
         <Typography.Paragraph css={{ marginTop: '-12px' }}>
           <FormattedMessage
-            defaultMessage="Copy your MLflow models to another registered model for
-            simple model promotion across environments. For more mature production-grade setups, we
-            recommend setting up automated model training workflows to produce models in controlled
-            environments. <link>Learn more</link>"
+            defaultMessage="Copy your models to another registered model for simple model promotion across environments. For more mature production-grade setups, we recommend setting up automated model training workflows to produce models in controlled environments. <link>Learn more</link>"
             description="Model registry > OSS Promote model modal > description paragraph body"
             values={{
               link: (chunks) => (

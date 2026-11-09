@@ -340,9 +340,7 @@ describe('useCreateMCPServerVersionModal', () => {
     await userEvent.click(screen.getByText('Python'));
 
     await waitFor(() => {
-      expect(
-        screen.getByText('Use the MLflow Python client to register an MCP server from a URL:'),
-      ).toBeInTheDocument();
+      expect(screen.getByText('Use the Python client to register an MCP server from a URL:')).toBeInTheDocument();
       expect(screen.getByText(/register_mcp_server_from_url/)).toBeInTheDocument();
     });
 

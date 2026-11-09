@@ -358,7 +358,7 @@ describe('SkillRegistryPage', () => {
     );
     expect(screen.getByText('@ocp-admin')).toBeInTheDocument();
     expect(screen.getByText('v4')).toBeInTheDocument();
-    expect(screen.getByText('MLflow artifacts')).toBeInTheDocument();
+    expect(screen.getByText('Hengjian artifacts')).toBeInTheDocument();
     expect(screen.getByText('Last modified')).toBeInTheDocument();
     expect(screen.getByText('Source')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Use' })).toBeInTheDocument();

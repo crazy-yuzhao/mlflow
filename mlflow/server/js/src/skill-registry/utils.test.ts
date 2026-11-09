@@ -45,7 +45,7 @@ describe('formatSkillSourceLabel', () => {
     expect(formatSkillSourceLabel('git')).toBe('Git');
     expect(formatSkillSourceLabel('oci')).toBe('OCI image');
     expect(formatSkillSourceLabel('zip')).toBe('ZIP archive');
-    expect(formatSkillSourceLabel('mlflow')).toBe('MLflow artifacts');
+    expect(formatSkillSourceLabel('mlflow')).toBe('Hengjian artifacts');
     expect(formatSkillSourceLabel(null)).toBe('');
   });
 });

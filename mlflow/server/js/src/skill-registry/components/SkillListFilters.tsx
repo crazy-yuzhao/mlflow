@@ -184,7 +184,14 @@ export const SkillListFilters = ({
         </SimpleSelectOption>
         {SKILL_CATALOG_SOURCE_TYPE_OPTIONS.map((option) => (
           <SimpleSelectOption key={option} value={option}>
-            {formatSkillSourceLabel(option)}
+            {option === 'mlflow' ? (
+              <FormattedMessage
+                defaultMessage="Hengjian artifacts"
+                description="Skill source label for content stored on this server"
+              />
+            ) : (
+              formatSkillSourceLabel(option)
+            )}
           </SimpleSelectOption>
         ))}
       </SimpleSelect>

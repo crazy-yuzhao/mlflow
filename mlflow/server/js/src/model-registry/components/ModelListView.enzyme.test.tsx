@@ -78,6 +78,6 @@ describe('ModelListView', () => {
     Utils.updatePageTitle = mockUpdatePageTitle;
     // @ts-expect-error TS(2554): Expected 1 arguments, but got 0.
     wrapper = setupModelListViewWithIntl();
-    expect(mockUpdatePageTitle.mock.calls[0][0]).toBe('MLflow Models');
+    expect(mockUpdatePageTitle.mock.calls[0][0]).toBe('Hengjian Models');
   });
 });

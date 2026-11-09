@@ -48,7 +48,7 @@ export const LaunchDemoCard = () => {
       <img
         src={theme.isDarkMode ? demoScreenshotDark : demoScreenshot}
         alt={intl.formatMessage({
-          defaultMessage: 'MLflow Tracing UI',
+          defaultMessage: 'Hengjian Tracing UI',
           description: 'Screenshot of the MLflow tracing user interface',
         })}
         css={{
@@ -71,7 +71,7 @@ export const LaunchDemoCard = () => {
         </div>
         <div css={{ color: theme.colors.textSecondary }}>
           <FormattedMessage
-            defaultMessage="Explore MLflow's core features with pre-populated sample data including traces, evaluations, and prompts."
+            defaultMessage="Explore this platform's core features with pre-populated sample data including traces, evaluations, and prompts."
             description="Demo banner description"
           />
         </div>

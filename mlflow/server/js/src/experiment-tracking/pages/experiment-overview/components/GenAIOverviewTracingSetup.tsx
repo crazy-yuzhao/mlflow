@@ -74,7 +74,7 @@ export const TracingSetup = ({ experimentIds }: { experimentIds: string[] }) => 
   const agentSetupPrompt = intl.formatMessage(
     {
       defaultMessage:
-        'Install the MLflow AI skill from https://github.com/mlflow/skills and use it to add tracing to this application following MLflow best practices. Configure tracing to use MLflow tracking server {serverUrl} and experiment ID {experimentId}. Run one traced operation and confirm the trace reaches the experiment. Do not create a new experiment or write credentials into the repository.',
+        'Install the AI skill from https://github.com/mlflow/skills and use it to add tracing to this application. Configure tracing to use tracking server {serverUrl} and experiment ID {experimentId}. Run one traced operation and confirm the trace reaches the experiment. Do not create a new experiment or write credentials into the repository.',
       description: 'Coding agent prompt for setting up tracing',
     },
     {

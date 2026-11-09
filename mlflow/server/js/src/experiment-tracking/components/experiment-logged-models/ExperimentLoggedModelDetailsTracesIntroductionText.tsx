@@ -13,7 +13,7 @@ mlflow.set_active_model(model_id="${modelId}")`;
     <>
       <Typography.Paragraph>
         <FormattedMessage
-          defaultMessage="This tab displays all the traces logged to this logged model. MLflow supports automatic tracing for many popular generative AI frameworks. Follow the steps below to log your first trace. For more information about MLflow Tracing, visit the <a>MLflow documentation</a>."
+          defaultMessage="This tab displays all the traces logged to this logged model. Automatic tracing is available for many popular generative AI frameworks. Follow the steps below to log your first trace. For more information about tracing, visit the <a>documentation</a>."
           description="Message that explains the function of the 'Traces' tab in logged model page. This message is followed by a tutorial explaining how to get started with MLflow Tracing."
           values={{
             a: (text: string) => (

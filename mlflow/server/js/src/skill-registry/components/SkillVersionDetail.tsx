@@ -74,7 +74,7 @@ const ContentDigestInfo = ({ version }: { version: SkillVersion }) => {
   } else if (version.source_type === 'mlflow') {
     content = (
       <FormattedMessage
-        defaultMessage="No digest was recorded. This version's files are stored in MLflow, so its content does not change."
+        defaultMessage="No digest was recorded. This version's files are stored on this server, so its content does not change."
         description="Tooltip for a missing digest on an uploaded skill version"
       />
     );
@@ -140,7 +140,14 @@ const SkillSourceDetails = ({ version }: { version: SkillVersion }) => {
       <span css={{ ...flexRowStyles(theme), flexWrap: 'wrap', minWidth: 0 }}>
         {source.label && (
           <Tag componentId="mlflow.skill_registry.detail.version.source_type" color="charcoal">
-            {source.label}
+            {version.source_type === 'mlflow' ? (
+              <FormattedMessage
+                defaultMessage="Hengjian artifacts"
+                description="Skill source label for content stored on this server"
+              />
+            ) : (
+              source.label
+            )}
           </Tag>
         )}
         {source.locator &&

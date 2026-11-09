@@ -13,7 +13,7 @@ describe('GenAIOverviewPromptBox', () => {
     const onSubmit = createSubmit().mockResolvedValue('submitted');
     renderWithDesignSystem(<GenAIOverviewPromptBox onClearChartContext={jest.fn()} onSubmit={onSubmit} />);
 
-    const overviewInput = screen.getByRole('textbox', { name: 'Ask MLflow about this agent' });
+    const overviewInput = screen.getByRole('textbox', { name: 'Ask Hengjian about this agent' });
     await userEvent.click(overviewInput);
     await userEvent.type(overviewInput, 'Line one{shift>}{enter}{/shift}Line two');
 
@@ -29,7 +29,7 @@ describe('GenAIOverviewPromptBox', () => {
     renderWithDesignSystem(<GenAIOverviewPromptBox onClearChartContext={jest.fn()} onSubmit={createSubmit()} />);
 
     const overviewInput = screen.getByRole<HTMLTextAreaElement>('textbox', {
-      name: 'Ask MLflow about this agent',
+      name: 'Ask Hengjian about this agent',
     });
     const rowHeight = Number.parseFloat(overviewInput.style.height);
     let scrollHeight = rowHeight * 3;

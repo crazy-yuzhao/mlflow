@@ -87,13 +87,13 @@ describe('EvalRunsEmptyStateCard', () => {
     expect(btn).toHaveTextContent('Evaluate traces');
   });
 
-  it('renders the three tabs in order: Copy for coding agent → Python → MLflow assistant', () => {
+  it('renders the three tabs in order: Copy for coding agent → Python → Hengjian assistant', () => {
     renderCard();
     const tabs = screen.getAllByRole('tab').map((t) => t.textContent?.trim() ?? '');
-    expect(tabs).toEqual(['Copy for coding agent', 'Python', 'MLflow assistant']);
+    expect(tabs).toEqual(['Copy for coding agent', 'Python', 'Hengjian assistant']);
   });
 
-  it('renders the sparkle icon on the MLflow assistant tab', () => {
+  it('renders the sparkle icon on the Hengjian assistant tab', () => {
     renderCard();
     expect(screen.getByTestId('assistant-sparkle-icon')).toBeInTheDocument();
   });
@@ -102,7 +102,7 @@ describe('EvalRunsEmptyStateCard', () => {
     const user = userEvent.setup({ pointerEventsCheck: 0 });
     renderCard();
 
-    await user.click(screen.getByRole('tab', { name: /MLflow assistant/ }));
+    await user.click(screen.getByRole('tab', { name: /Hengjian assistant/ }));
     await user.click(screen.getByRole('button', { name: /Open assistant/ }));
 
     expect(mockOpenPanel).toHaveBeenCalledTimes(1);

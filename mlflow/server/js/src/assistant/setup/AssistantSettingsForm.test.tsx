@@ -82,7 +82,7 @@ describe('AssistantSettingsForm', () => {
     renderForm();
 
     // Provider permissions the remote caller CAN set are still editable.
-    expect(screen.getByRole('checkbox', { name: /Read MLflow doc/ })).not.toBeDisabled();
+    expect(screen.getByRole('checkbox', { name: /Read documentation/ })).not.toBeDisabled();
     expect(screen.getByRole('checkbox', { name: /Edit project code/ })).not.toBeDisabled();
 
     // Full access cannot be granted from a remote client.
@@ -90,9 +90,9 @@ describe('AssistantSettingsForm', () => {
 
     // Project path and skills point at the host filesystem, so the inputs are replaced by a note.
     expect(screen.queryByPlaceholderText('/Users/me/projects/my-llm-project')).not.toBeInTheDocument();
-    expect(screen.getByText(/Project paths point at the MLflow server host/)).toBeInTheDocument();
+    expect(screen.getByText(/Project paths point at this server host/)).toBeInTheDocument();
     expect(screen.queryByText('Custom location')).not.toBeInTheDocument();
-    expect(screen.getByText(/Skills are installed on the MLflow server host/)).toBeInTheDocument();
+    expect(screen.getByText(/Skills are installed on this server host/)).toBeInTheDocument();
   });
 
   test('a remote save writes only provider settings, forces full access off, and skips skills install', async () => {
@@ -141,7 +141,7 @@ describe('AssistantSettingsForm', () => {
 
     // Changing a permission checkbox (not only a path input) clears the error and re-enables
     // Finish, so the user is not stuck after a 403.
-    await user.click(screen.getByRole('checkbox', { name: /Read MLflow doc/ }));
+    await user.click(screen.getByRole('checkbox', { name: /Read documentation/ }));
     expect(screen.queryByText(/Full access can only be enabled/)).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Finish' })).not.toBeDisabled();
   });

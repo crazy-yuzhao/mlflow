@@ -147,7 +147,7 @@ describe('Experiment Issues', () => {
     );
     renderPage();
     expect(await screen.findByText('Unable to load server information')).toBeInTheDocument();
-    expect(screen.queryByText('The Issues tab requires an MLflow server with SQL storage.')).not.toBeInTheDocument();
+    expect(screen.queryByText('The Issues tab requires this server to use SQL storage.')).not.toBeInTheDocument();
     expect(searches).toHaveLength(0);
     server.use(
       rest.get('*/ajax-api/3.0/mlflow/server-info', (_req, res, ctx) => res(ctx.json({ store_type: 'SqlStore' }))),
@@ -160,7 +160,7 @@ describe('Experiment Issues', () => {
       rest.get('*/ajax-api/3.0/mlflow/server-info', (_req, res, ctx) => res(ctx.json({ store_type: 'FileStore' }))),
     );
     renderPage();
-    expect(await screen.findByText('The Issues tab requires an MLflow server with SQL storage.')).toBeInTheDocument();
+    expect(await screen.findByText('The Issues tab requires this server to use SQL storage.')).toBeInTheDocument();
     expect(screen.queryByText('Unable to load server information')).not.toBeInTheDocument();
     expect(searches).toHaveLength(0);
   });
@@ -994,7 +994,7 @@ describe('Experiment Issues', () => {
   test('does not call Issue APIs for unsupported or proxied storage', async () => {
     server.use(rest.get('*/ajax-api/3.0/mlflow/server-info', (_req, res, ctx) => res(ctx.json({ store_type: null }))));
     renderPage();
-    expect(await screen.findByText('The Issues tab requires an MLflow server with SQL storage.')).toBeInTheDocument();
+    expect(await screen.findByText('The Issues tab requires this server to use SQL storage.')).toBeInTheDocument();
     expect(searches).toEqual([]);
   });
 });

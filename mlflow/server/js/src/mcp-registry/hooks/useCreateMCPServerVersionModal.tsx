@@ -65,7 +65,7 @@ const SDKRegistrationSnippet = () => {
     <div>
       <Typography.Text color="secondary">
         <FormattedMessage
-          defaultMessage="Use the MLflow Python client to register an MCP server from a URL:"
+          defaultMessage="Use the Python client to register an MCP server from a URL:"
           description="Instruction text for Python-based MCP server registration"
         />
       </Typography.Text>

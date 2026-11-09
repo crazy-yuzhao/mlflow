@@ -24,7 +24,7 @@ describe('QuickStartTemplates', () => {
     expect(screen.getByText('Get started with AI Gateway')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'A Gateway endpoint routes your agent calls to any AI model, with built-in usage tracking through MLflow Tracing, budget controls, and more.',
+        'A Gateway endpoint routes your agent calls to any AI model, with built-in usage tracking through tracing, budget controls, and more.',
       ),
     ).toBeInTheDocument();
   });

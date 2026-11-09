@@ -226,7 +226,7 @@ const EvaluateTracesSection: React.FC<EvaluateTracesSectionProps> = ({ control, 
                 <FormUI.Hint>
                   {isSessionLevelScorer ? (
                     <FormattedMessage
-                      defaultMessage="Filter applies to the first trace in each session. Only run on sessions where the first trace matches this filter; leave blank to run on all. Uses MLflow {link}."
+                      defaultMessage="Filter applies to the first trace in each session. Only run on sessions where the first trace matches this filter; leave blank to run on all. Uses the {link}."
                       description="Hint text for filter string input for session-level scorers"
                       values={{
                         link: (
@@ -245,7 +245,7 @@ const EvaluateTracesSection: React.FC<EvaluateTracesSectionProps> = ({ control, 
                     />
                   ) : (
                     <FormattedMessage
-                      defaultMessage="Only run on traces matching this filter; leave blank to run on all. Uses MLflow {link}."
+                      defaultMessage="Only run on traces matching this filter; leave blank to run on all. Uses the {link}."
                       description="Hint text for filter string input"
                       values={{
                         link: (

@@ -278,7 +278,7 @@ export const ExperimentLoggedModelListPageTableEmpty = ({
               />
             ) : (
               <FormattedMessage
-                defaultMessage="Your models will appear here once you log them using newest version of MLflow. <link>Learn more</link>."
+                defaultMessage="Your models will appear here once you log them with the latest client. <link>Learn more</link>."
                 description="Placeholder for empty models table on the logged models list page"
                 values={{
                   link: (chunks) => (
@@ -340,7 +340,7 @@ export const ExperimentLoggedModelListPageTableEmpty = ({
       >
         <Typography.Text>
           <FormattedMessage
-            defaultMessage="Install MLflow 3:"
+            defaultMessage="Install the client:"
             description="Instruction for installing MLflow from mlflow-3 branch in log MLflow 3 models"
           />
         </Typography.Text>

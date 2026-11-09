@@ -360,7 +360,7 @@ const SettingsPage = () => {
               }
               subtitle={
                 <FormattedMessage
-                  defaultMessage="Receive HTTP notifications when events occur in MLflow."
+                  defaultMessage="Receive HTTP notifications when events occur on this server."
                   description="Settings content section subtitle for webhooks"
                 />
               }

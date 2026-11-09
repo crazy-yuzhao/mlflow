@@ -41,7 +41,7 @@ import { useGenAIOverviewStaleIssueDetectionState } from './hooks/useGenAIOvervi
 import { useDetectionTraceIds } from '../experiment-issues/useIssueDetection';
 
 const GENAI_OVERVIEW_EVAL_SETUP_PROMPT =
-  'Set up and run an offline evaluation for this MLflow experiment. Inspect its traces and issue-detection results, propose an evaluation dataset and offline evaluation scorers, and ask for confirmation. After confirmation, create the dataset and any scorer definitions needed only for this offline evaluation, then run it using MLflow so the result is logged as an evaluation run in this experiment. Do not register or schedule online scorers, enable monitoring, or change sampling settings.';
+  'Set up and run an offline evaluation for this experiment. Inspect its traces and issue-detection results, propose an evaluation dataset and offline evaluation scorers, and ask for confirmation. After confirmation, create the dataset and any scorer definitions needed only for this offline evaluation, then run it so the result is logged as an evaluation run in this experiment. Do not register or schedule online scorers, enable monitoring, or change sampling settings.';
 
 const ISSUE_DETECTION_DOCS_URL = 'https://mlflow.org/docs/latest/genai/eval-monitor/ai-insights/detect-issues/';
 
@@ -201,7 +201,7 @@ export const ExperimentGenAIJourneyOverviewPage = () => {
   );
   const tracingOnboardingDescription = (
     <FormattedMessage
-      defaultMessage="Start tracing your agent with one command to send traces to MLflow."
+      defaultMessage="Start tracing your agent with one command to send traces to Hengjian."
       description="Tracing quick setup explanation"
     />
   );
@@ -482,12 +482,12 @@ export const ExperimentGenAIJourneyOverviewPage = () => {
           <Typography.Title level={2} withoutMargins>
             {showTracingOnboarding ? (
               <FormattedMessage
-                defaultMessage="Send your first trace to MLflow in just a minute"
+                defaultMessage="Send your first trace to Hengjian in just a minute"
                 description="First trace onboarding title"
               />
             ) : (
               <FormattedMessage
-                defaultMessage="Let's improve your agent with MLflow"
+                defaultMessage="Let's improve your agent with Hengjian"
                 description="GenAI overview title"
               />
             )}
@@ -665,7 +665,7 @@ export const ExperimentGenAIJourneyOverviewPage = () => {
                   description={
                     !isIssueDetectionEnabled && analyzeState.status !== 'completed' ? (
                       <FormattedMessage
-                        defaultMessage="Issue detection is not enabled for this MLflow server. Ask an administrator to restart the server with MLFLOW_ENABLE_AI_GATEWAY=true."
+                        defaultMessage="Issue detection is not enabled for this server. Ask an administrator to restart the server with MLFLOW_ENABLE_AI_GATEWAY=true."
                         description="Analyze overview description shown when issue detection is unavailable"
                       />
                     ) : (

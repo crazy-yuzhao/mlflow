@@ -88,7 +88,7 @@ export const ModelTraceExplorerOSSNotebookRenderer = () => {
             <>
               <Typography.Paragraph>
                 <FormattedMessage
-                  defaultMessage="An error occurred while attempting to fetch trace data (ID: {traceId}). Please ensure that the MLflow tracking server is running, and that the trace data exists. Error details:"
+                  defaultMessage="An error occurred while attempting to fetch trace data (ID: {traceId}). Please ensure that the tracking server is running, and that the trace data exists. Error details:"
                   description="An error message explaining that an error occurred while fetching trace data"
                   values={{ traceId: traceIds[activeTraceIndex] }}
                 />
@@ -131,7 +131,7 @@ export const ModelTraceExplorerOSSNotebookRenderer = () => {
         >
           <Typography.Title level={4} withoutMargins>
             <FormattedMessage
-              defaultMessage="MLflow Trace UI"
+              defaultMessage="Hengjian Trace UI"
               description="Title of the trace viewer embedded in a notebook"
             />
           </Typography.Title>
@@ -173,12 +173,12 @@ export const ModelTraceExplorerOSSNotebookRenderer = () => {
           href={getMlflowUILinkForTrace(traceIds[activeTraceIndex], experimentIds[activeTraceIndex])}
           openInNewTab
           title={intl.formatMessage({
-            defaultMessage: 'View in MLflow UI',
+            defaultMessage: 'View in the Hengjian UI',
             description: 'Link to the MLflow UI for an alternate view of the current trace',
           })}
         >
           <FormattedMessage
-            defaultMessage="View in MLflow UI"
+            defaultMessage="View in the Hengjian UI"
             description="Link to the MLflow UI for an alternate view of the current trace"
           />
         </Typography.Link>

@@ -76,10 +76,7 @@ export const GatewaySetupGuide = () => {
           <CloudModelIcon css={{ fontSize: 48 }} />
         </div>
         <Typography.Title level={2} css={{ margin: 0, textAlign: 'center' }}>
-          <FormattedMessage
-            defaultMessage="Set up MLflow AI Gateway"
-            description="AI Gateway setup guide > Main title"
-          />
+          <FormattedMessage defaultMessage="Set up the AI Gateway" description="AI Gateway setup guide > Main title" />
         </Typography.Title>
         <Typography.Text color="secondary" css={{ textAlign: 'center' }}>
           <FormattedMessage
@@ -105,13 +102,13 @@ export const GatewaySetupGuide = () => {
         <section css={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.sm }}>
           <Typography.Title level={4} css={{ margin: 0 }}>
             <FormattedMessage
-              defaultMessage="1. Install MLflow with GenAI extras on the server"
+              defaultMessage="1. Install GenAI extras on the server"
               description="AI Gateway setup guide > Step 1 title"
             />
           </Typography.Title>
           <Typography.Text color="secondary">
             <FormattedMessage
-              defaultMessage="The AI Gateway requires additional dependencies installed on the MLflow tracking server (not client machines):"
+              defaultMessage="The AI Gateway requires additional dependencies installed on the tracking server (not client machines):"
               description="AI Gateway setup guide > Step 1 description"
             />
           </Typography.Text>
@@ -144,7 +141,7 @@ export const GatewaySetupGuide = () => {
           </Typography.Title>
           <Typography.Text color="secondary">
             <FormattedMessage
-              defaultMessage="The AI Gateway requires a SQL-based backend store (SQLite, PostgreSQL, MySQL, or MSSQL) to persist credentials securely. Start the MLflow server with a database URI:"
+              defaultMessage="The AI Gateway requires a SQL-based backend store (SQLite, PostgreSQL, MySQL, or MSSQL) to persist credentials securely. Start the server with a database URI:"
               description="AI Gateway setup guide > Step 2 description"
             />
           </Typography.Text>
@@ -178,7 +175,7 @@ export const GatewaySetupGuide = () => {
           </Typography.Title>
           <Typography.Text color="secondary">
             <FormattedMessage
-              defaultMessage="For local development, MLflow uses a default passphrase. For production deployments, server administrators must set a secure encryption passphrase on the tracking server before starting it:"
+              defaultMessage="For local development, this server uses a default passphrase. For production deployments, server administrators must set a secure encryption passphrase on the tracking server before starting it:"
               description="AI Gateway setup guide > Step 3 description"
             />
           </Typography.Text>
@@ -238,7 +235,7 @@ export const GatewaySetupGuide = () => {
                     css={{ display: 'inline-flex', gap: theme.spacing.xs, alignItems: 'center' }}
                   >
                     <FormattedMessage
-                      defaultMessage="MLflow documentation"
+                      defaultMessage="Hengjian documentation"
                       description="AI Gateway setup guide > Documentation link text"
                     />
                     <NewWindowIcon css={{ fontSize: 14 }} />

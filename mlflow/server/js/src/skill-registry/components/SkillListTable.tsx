@@ -113,7 +113,14 @@ const SkillSourceCell = ({ row }: CellContext<Skill, unknown>) => {
   if (!label) return '—';
   return (
     <Tag componentId="mlflow.skill_registry.table.source" color="charcoal">
-      {label}
+      {row.original.source_type === 'mlflow' ? (
+        <FormattedMessage
+          defaultMessage="Hengjian artifacts"
+          description="Skill source label for content stored on this server"
+        />
+      ) : (
+        label
+      )}
     </Tag>
   );
 };

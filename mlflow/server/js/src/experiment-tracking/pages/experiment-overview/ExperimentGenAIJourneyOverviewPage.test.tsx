@@ -158,7 +158,7 @@ describe('ExperimentGenAIJourneyOverviewPage', () => {
   test('submits the selected chart through the existing Assistant', async () => {
     renderPage();
 
-    expect(await screen.findByRole('heading', { name: "Let's improve your agent with MLflow" })).toBeVisible();
+    expect(await screen.findByRole('heading', { name: "Let's improve your agent with Hengjian" })).toBeVisible();
     await userEvent.click(screen.getByRole('button', { name: 'Attach trace chart' }));
     await userEvent.type(screen.getByRole('textbox', { name: 'Ask Assistant about the selected chart' }), 'Why?');
     await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
@@ -194,8 +194,8 @@ describe('ExperimentGenAIJourneyOverviewPage', () => {
 
     renderPage();
 
-    expect(await screen.findByRole('heading', { name: "Let's improve your agent with MLflow" })).toBeVisible();
-    expect(screen.queryByRole('textbox', { name: 'Ask MLflow about this agent' })).not.toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: "Let's improve your agent with Hengjian" })).toBeVisible();
+    expect(screen.queryByRole('textbox', { name: 'Ask Hengjian about this agent' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Attach trace chart' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Detect issues' })).not.toBeInTheDocument();
   });
@@ -205,7 +205,7 @@ describe('ExperimentGenAIJourneyOverviewPage', () => {
 
     expect(
       await screen.findByText(
-        'Issue detection is not enabled for this MLflow server. Ask an administrator to restart the server with MLFLOW_ENABLE_AI_GATEWAY=true.',
+        'Issue detection is not enabled for this server. Ask an administrator to restart the server with MLFLOW_ENABLE_AI_GATEWAY=true.',
       ),
     ).toBeVisible();
     expect(screen.queryByRole('button', { name: 'Detect issues' })).not.toBeInTheDocument();
@@ -311,7 +311,7 @@ describe('ExperimentGenAIJourneyOverviewPage', () => {
     renderPage();
 
     expect(
-      await screen.findByRole('heading', { name: 'Send your first trace to MLflow in just a minute' }),
+      await screen.findByRole('heading', { name: 'Send your first trace to Hengjian in just a minute' }),
     ).toBeVisible();
     expect(screen.queryByText('Waiting for traces…')).not.toBeInTheDocument();
   });

@@ -8,7 +8,7 @@ import {
   Typography,
   useDesignSystemTheme,
 } from '@databricks/design-system';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { CopyButton } from '@mlflow/mlflow/src/shared/building_blocks/CopyButton';
 import { CodeSnippet } from '@databricks/web-shared/snippet';
 import { TryItPanel } from '../endpoints/TryItPanel';
@@ -353,6 +353,7 @@ interface StarterCodeCardProps {
 
 export const StarterCodeCard = ({ endpointName, provider }: StarterCodeCardProps) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const [selectedApi, setSelectedApi] = useState<ApiVariant>('chat-completions');
   const [language, setLanguage] = useState<'curl' | 'python'>('curl');
   const [isTryItOpen, setIsTryItOpen] = useState(false);
@@ -367,12 +368,22 @@ export const StarterCodeCard = ({ endpointName, provider }: StarterCodeCardProps
 
   const apiOptions = useMemo(() => {
     const options: { value: ApiVariant; label: string }[] =
-      provider === 'typesafe' ? [] : [{ value: 'chat-completions', label: 'MLflow Chat Completions' }];
+      provider === 'typesafe'
+        ? []
+        : [
+            {
+              value: 'chat-completions',
+              label: intl.formatMessage({
+                defaultMessage: 'Hengjian chat completions',
+                description: 'Starter code tab for the chat completions API',
+              }),
+            },
+          ];
     if (passthrough) {
       options.push({ value: passthrough.variant, label: passthrough.label });
     }
     return options;
-  }, [passthrough, provider]);
+  }, [intl, passthrough, provider]);
 
   const activeApi = apiOptions.some((option) => option.value === selectedApi) ? selectedApi : apiOptions[0].value;
 

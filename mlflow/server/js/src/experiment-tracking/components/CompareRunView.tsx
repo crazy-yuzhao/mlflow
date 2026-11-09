@@ -95,7 +95,7 @@ class CompareRunView extends Component<CompareRunViewProps, CompareRunViewState>
     const pageTitle = this.props.intl.formatMessage(
       {
         description: 'Page title for the compare runs page',
-        defaultMessage: 'Comparing {runs} MLflow Runs',
+        defaultMessage: 'Comparing {runs} runs',
       },
       {
         runs: this.props.runInfos.length,

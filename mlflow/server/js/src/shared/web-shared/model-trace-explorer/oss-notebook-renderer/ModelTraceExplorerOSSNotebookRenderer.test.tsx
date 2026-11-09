@@ -55,10 +55,10 @@ describe('ModelTraceExplorerOSSNotebookRenderer', () => {
       </IntlProvider>,
     );
 
-    expect(await screen.findByText('MLflow Trace UI')).toBeInTheDocument();
+    expect(await screen.findByText('Hengjian Trace UI')).toBeInTheDocument();
     expect(await screen.findByText('document-qa-chain')).toBeInTheDocument();
   });
-  it('builds the "View in MLflow UI" link with both selectedEvaluationId and traceId', async () => {
+  it('builds the "View in the Hengjian UI" link with both selectedEvaluationId and traceId', async () => {
     const queryClient = new QueryClient();
 
     render(
@@ -71,7 +71,7 @@ describe('ModelTraceExplorerOSSNotebookRenderer', () => {
       </IntlProvider>,
     );
 
-    const link = await screen.findByRole('link', { name: /View in MLflow UI/ });
+    const link = await screen.findByRole('link', { name: /View in the Hengjian UI/ });
     const href = link.getAttribute('href') ?? '';
 
     // The traces page selects a trace via the `traceId` query param; without it the link

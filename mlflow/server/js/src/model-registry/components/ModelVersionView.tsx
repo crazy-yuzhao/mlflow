@@ -94,7 +94,7 @@ export class ModelVersionViewImpl extends React.Component<ModelVersionViewImplPr
   sharedTaggingUIEnabled = shouldUseSharedTaggingUI();
 
   componentDidMount() {
-    const pageTitle = `${this.props.modelName} v${this.props.modelVersion.version} - MLflow Model`;
+    const pageTitle = `${this.props.modelName} v${this.props.modelVersion.version} - Hengjian Model`;
     Utils.updatePageTitle(pageTitle);
   }
 

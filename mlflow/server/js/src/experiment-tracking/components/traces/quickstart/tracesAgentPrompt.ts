@@ -1,6 +1,6 @@
 export const buildInstrumentPrompt = (
   experimentName: string,
-): string => `Add MLflow tracing to my app. Target experiment: ${experimentName}.
+): string => `Add tracing to my app. Target experiment: ${experimentName}.
 
 1. Add \`mlflow\` as a dependency.
 2. Set the tracking URI to match the project: read \`MLFLOW_TRACKING_URI\` or ask me. Apply via env or \`mlflow.set_tracking_uri()\`.
@@ -11,7 +11,7 @@ Infer the package manager, entry point, and framework from the repo. If you hit 
 
 export const buildInstrumentAssistantPrompt = (
   experimentName: string,
-): string => `Help me add MLflow tracing to my app. Target experiment: ${experimentName}.
+): string => `Help me add tracing to my app. Target experiment: ${experimentName}.
 
 Walk me through the minimal setup: adding \`mlflow\` as a dependency, wiring the tracking URI, and the right \`autolog()\` or instrumentation call.
 

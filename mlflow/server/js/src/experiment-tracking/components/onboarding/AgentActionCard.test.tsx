@@ -67,19 +67,19 @@ describe('AgentActionCard', () => {
     expect(screen.getByText('Get help with X')).toBeInTheDocument();
   });
 
-  it('renders the MLflow assistant tab with a sparkle icon', () => {
+  it('renders the Hengjian assistant tab with a sparkle icon', () => {
     renderCard();
-    const assistantTab = screen.getByRole('tab', { name: /MLflow assistant/ });
+    const assistantTab = screen.getByRole('tab', { name: /Hengjian assistant/ });
     expect(assistantTab).toBeInTheDocument();
     // Sparkle should be inside the assistant trigger (only one in the card now).
     expect(screen.getByTestId('assistant-sparkle-icon')).toBeInTheDocument();
   });
 
-  it('hides the MLflow assistant tab when assistant is not available', () => {
+  it('hides the Hengjian assistant tab when assistant is not available', () => {
     mockCanUseAssistant = false;
     renderCard();
     // Trigger (and its icon) gone...
-    expect(screen.queryByRole('tab', { name: /MLflow assistant/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('tab', { name: /Hengjian assistant/ })).not.toBeInTheDocument();
     expect(screen.queryByTestId('assistant-sparkle-icon')).not.toBeInTheDocument();
     // ...and the Tab.Content too — the "Open assistant" button must not be in the DOM either.
     expect(screen.queryByText('Open assistant')).not.toBeInTheDocument();
@@ -107,7 +107,7 @@ describe('AgentActionCard', () => {
     const user = userEvent.setup({ pointerEventsCheck: 0 });
     renderCard();
 
-    await user.click(screen.getByRole('tab', { name: /MLflow assistant/ }));
+    await user.click(screen.getByRole('tab', { name: /Hengjian assistant/ }));
     await user.click(screen.getByRole('button', { name: /Open assistant/ }));
 
     expect(mockOpenPanel).toHaveBeenCalledTimes(1);
@@ -120,7 +120,7 @@ describe('AgentActionCard', () => {
     const user = userEvent.setup({ pointerEventsCheck: 0 });
     renderCard();
 
-    await user.click(screen.getByRole('tab', { name: /MLflow assistant/ }));
+    await user.click(screen.getByRole('tab', { name: /Hengjian assistant/ }));
     await user.click(screen.getByRole('button', { name: /Open assistant/ }));
 
     expect(mockOpenPanel).toHaveBeenCalledTimes(1);
@@ -134,7 +134,7 @@ describe('AgentActionCard', () => {
     });
 
     const tabs = screen.getAllByRole('tab').map((t) => t.textContent?.trim() ?? '');
-    expect(tabs).toEqual(['Copy for coding agent', 'MLflow assistant', 'Manual setup']);
+    expect(tabs).toEqual(['Copy for coding agent', 'Hengjian assistant', 'Manual setup']);
 
     // Content is revealed only once the tab is selected.
     expect(screen.queryByText('MANUAL_TAB_BODY')).not.toBeInTheDocument();

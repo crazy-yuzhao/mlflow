@@ -305,7 +305,7 @@ const ConnectStep = ({
     if (language === 'typescript') {
       return (
         <FormattedMessage
-          defaultMessage="Install and initialize the MLflow TypeScript SDK"
+          defaultMessage="Install and initialize the TypeScript SDK"
           description="Step 1 title for TypeScript traces onboarding"
         />
       );
@@ -322,7 +322,7 @@ const ConnectStep = ({
     if (language === 'python') {
       return (
         <FormattedMessage
-          defaultMessage="Configure your Python environment to send traces to this MLflow server."
+          defaultMessage="Configure your Python environment to send traces to this server."
           description="Step 1 description for Python traces onboarding"
         />
       );
@@ -330,7 +330,7 @@ const ConnectStep = ({
     if (language === 'typescript') {
       return (
         <FormattedMessage
-          defaultMessage="Install the <a>MLflow tracing SDK</a> for TypeScript using npm, then initialize it in your application."
+          defaultMessage="Install the <a>tracing SDK</a> for TypeScript using npm, then initialize it in your application."
           description="Step 1 description for TypeScript traces onboarding"
           values={{
             a: (text: string) => (
@@ -348,7 +348,7 @@ const ConnectStep = ({
     }
     return (
       <FormattedMessage
-        defaultMessage="Point the OTLP exporter at this MLflow server by setting these environment variables. See the <a>OpenTelemetry export docs</a> for the full reference."
+        defaultMessage="Point the OTLP exporter at this server by setting these environment variables. See the <a>OpenTelemetry export docs</a> for the full reference."
         description="Step 1 description for OpenTelemetry traces onboarding"
         values={{
           a: (text: string) => (
@@ -453,7 +453,7 @@ const InstrumentStep = ({
   } else {
     description = (
       <FormattedMessage
-        defaultMessage="Install the OpenTelemetry SDK and instrument your application. Spans will be exported to MLflow via OTLP using the env vars set above."
+        defaultMessage="Install the OpenTelemetry SDK and instrument your application. Spans will be exported to this server via OTLP using the env vars set above."
         description="Step 2 description for OpenTelemetry traces onboarding"
       />
     );
@@ -564,7 +564,7 @@ const VerifyStep = ({ theme }: { theme: ReturnType<typeof useDesignSystemTheme>[
       title={<FormattedMessage defaultMessage="View your traces" description="Step 3 title for traces onboarding" />}
       description={
         <FormattedMessage
-          defaultMessage="Run your application and traces will appear here automatically. For more information, visit the <a>MLflow Tracing documentation</a>."
+          defaultMessage="Run your application and traces will appear here automatically. For more information, visit the <a>tracing documentation</a>."
           description="Step 3 description for traces onboarding"
           values={{
             a: (text: string) => (

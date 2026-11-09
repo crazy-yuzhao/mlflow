@@ -134,7 +134,7 @@ const COLUMN_TOOLTIPS = {
   },
   [RUN_NAME_COLUMN_ID]: {
     description: defineMessage({
-      defaultMessage: 'Associated MLflow Run if the trace was generated within an MLflow run context',
+      defaultMessage: 'Associated run if the trace was generated within a run context',
       description: 'Tooltip description for the Run Name column in the traces table',
     }),
   },

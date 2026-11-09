@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, type ReactNode } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import {
   Button,
   Typography,
@@ -90,9 +90,8 @@ export const AssistantSettingsForm = ({
   backLabel = 'Back',
 }: AssistantSettingsFormProps) => {
   const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
   const { isLocalServer } = useAssistant();
-  // How the server restricts its server-wide settings for this caller, used in the notes below.
-  const serverSettingsRestriction = isLocalServer ? 'by an administrator' : 'from the MLflow server host';
   const { config, isLoading: isLoadingConfig, refetch: refetchConfig } = useAssistantConfigQuery();
   // Read from the same config the form saves against, so a save never drops settings the caller
   // is allowed to keep (e.g. an admin's full access).
@@ -264,7 +263,7 @@ export const AssistantSettingsForm = ({
                 >
                   <Typography.Text>
                     <FormattedMessage
-                      defaultMessage="Execute MLflow CLI (required)"
+                      defaultMessage="Execute CLI (required)"
                       description="Assistant permission to run the MLflow command-line tool"
                     />
                   </Typography.Text>
@@ -272,7 +271,11 @@ export const AssistantSettingsForm = ({
                 <Tooltip
                   componentId="mlflow.assistant.setup.project.perm_mlflow_cli_tooltip"
                   disableHoverableContent={false}
-                  content="Allow running MLflow commands to fetch traces, runs, and experiment data. This is required for the assistant to work properly."
+                  content={intl.formatMessage({
+                    defaultMessage:
+                      'Allow running CLI commands to fetch traces, runs, and experiment data. This is required for the assistant to work properly.',
+                    description: 'Tooltip for the required assistant CLI permission',
+                  })}
                 >
                   <QuestionMarkIcon
                     css={{ color: theme.colors.actionPrimaryBackgroundDefault, fontSize: 14, cursor: 'help' }}
@@ -291,7 +294,7 @@ export const AssistantSettingsForm = ({
                 >
                   <Typography.Text>
                     <FormattedMessage
-                      defaultMessage="Read MLflow doc"
+                      defaultMessage="Read documentation"
                       description="Assistant permission to read MLflow documentation"
                     />
                   </Typography.Text>
@@ -299,7 +302,11 @@ export const AssistantSettingsForm = ({
                 <Tooltip
                   componentId="mlflow.assistant.setup.project.perm_read_docs_tooltip"
                   disableHoverableContent={false}
-                  content="Allow fetching content from mlflow.org documentation to get the latest information about MLflow and make accurate suggestions."
+                  content={intl.formatMessage({
+                    defaultMessage:
+                      'Allow fetching documentation so the assistant can use current product information and make accurate suggestions.',
+                    description: 'Tooltip for the assistant permission to read documentation',
+                  })}
                 >
                   <QuestionMarkIcon
                     css={{ color: theme.colors.actionPrimaryBackgroundDefault, fontSize: 14, cursor: 'help' }}
@@ -352,8 +359,20 @@ export const AssistantSettingsForm = ({
                   componentId="mlflow.assistant.setup.project.perm_full_tooltip"
                   content={
                     canEditServerSettings
-                      ? 'Bypass all permission checks. Use with caution.'
-                      : `Full access can only be enabled ${serverSettingsRestriction}.`
+                      ? intl.formatMessage({
+                          defaultMessage: 'Bypass all permission checks. Use with caution.',
+                          description: 'Tooltip for the assistant full-access permission',
+                        })
+                      : isLocalServer
+                        ? intl.formatMessage({
+                            defaultMessage: 'Full access can only be enabled by an administrator.',
+                            description:
+                              'Tooltip when assistant full access cannot be edited by a non-admin on the server host',
+                          })
+                        : intl.formatMessage({
+                            defaultMessage: 'Full access can only be enabled from the server host.',
+                            description: 'Tooltip when assistant full access cannot be edited from a remote client',
+                          })
                   }
                 >
                   <QuestionMarkIcon
@@ -376,8 +395,17 @@ export const AssistantSettingsForm = ({
 
             {!canEditServerSettings ? (
               <InfoNote>
-                Project paths point at the MLflow server host&apos;s filesystem and can only be configured{' '}
-                {serverSettingsRestriction}.
+                {isLocalServer ? (
+                  <FormattedMessage
+                    defaultMessage="Project paths point at this server host's filesystem and can only be configured by an administrator."
+                    description="Note when assistant project paths cannot be edited by a non-admin on the server host"
+                  />
+                ) : (
+                  <FormattedMessage
+                    defaultMessage="Project paths point at this server host's filesystem and can only be configured from the server host."
+                    description="Note when assistant project paths cannot be edited from a remote client"
+                  />
+                )}
               </InfoNote>
             ) : experimentId ? (
               <Input
@@ -407,21 +435,36 @@ export const AssistantSettingsForm = ({
                 Skills Location
               </Typography.Text>
               <Typography.Text color="secondary" css={{ display: 'block', marginBottom: theme.spacing.md }}>
-                Extend the assistant with specialized MLflow workflows. See{' '}
-                <Typography.Link
-                  componentId="mlflow.assistant.setup.project.skills_link"
-                  href="https://github.com/mlflow/skills"
-                  target="_blank"
-                >
-                  MLflow Skills
-                </Typography.Link>{' '}
-                to find list of skills to be installed.
+                <FormattedMessage
+                  defaultMessage="Extend the assistant with specialized workflows. See <link>skills</link> for a list of skills to install."
+                  description="Assistant settings help text for installing skills"
+                  values={{
+                    link: (chunks) => (
+                      <Typography.Link
+                        componentId="mlflow.assistant.setup.project.skills_link"
+                        href="https://github.com/mlflow/skills"
+                        target="_blank"
+                      >
+                        {chunks}
+                      </Typography.Link>
+                    ),
+                  }}
+                />
               </Typography.Text>
 
               {!canEditServerSettings ? (
                 <InfoNote>
-                  Skills are installed on the MLflow server host&apos;s filesystem and can only be configured{' '}
-                  {serverSettingsRestriction}.
+                  {isLocalServer ? (
+                    <FormattedMessage
+                      defaultMessage="Skills are installed on this server host's filesystem and can only be configured by an administrator."
+                      description="Note when assistant skills cannot be edited by a non-admin on the server host"
+                    />
+                  ) : (
+                    <FormattedMessage
+                      defaultMessage="Skills are installed on this server host's filesystem and can only be configured from the server host."
+                      description="Note when assistant skills cannot be edited from a remote client"
+                    />
+                  )}
                 </InfoNote>
               ) : (
                 <Radio.Group
