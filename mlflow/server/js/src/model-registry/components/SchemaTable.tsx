@@ -126,8 +126,7 @@ const SchemaTableRow = ({ schemaData }: { schemaData?: (ColumnSpec | TensorSpec)
       <TableRow>
         <TableCell>
           <FormattedMessage
-            defaultMessage="No schema. See <link>MLflow docs</link> for how to include
-                     input and output schema with your model."
+            defaultMessage="No schema. See the <link>docs</link> for how to include input and output schema with your model."
             description="Text for schema table when no schema exists in the model version
                      page"
             values={{

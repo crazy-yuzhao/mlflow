@@ -33,8 +33,8 @@ export const ASSISTANT_PROVIDERS: AssistantProvider[] = [
   },
   {
     id: 'mlflow_gateway',
-    name: 'MLflow AI Gateway',
-    description: 'AI assistant backed by an MLflow AI Gateway deployment. Routes to any configured chat endpoint.',
+    name: 'Hengjian AI Gateway',
+    description: 'AI assistant backed by the AI Gateway. Routes to any configured chat endpoint.',
     logo: MLflowGatewayLogo,
     available: true,
   },

@@ -720,7 +720,7 @@ function NoArtifactView({ useAutoHeight }: { useAutoHeight?: boolean }) {
         }
         description={
           <FormattedMessage
-            defaultMessage="Use the log artifact APIs to store file outputs from MLflow runs."
+            defaultMessage="Use the log artifact APIs to store file outputs from runs."
             description="Information in the empty state explaining how one could log artifacts output files for the experiment runs"
           />
         }

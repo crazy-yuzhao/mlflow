@@ -123,7 +123,7 @@ const ScorersDigestTooltipContent = ({ scorersDigest }: { scorersDigest: EvalRun
   if (!scorersDigest.digest) {
     return (
       <FormattedMessage
-        defaultMessage="No scorers digest. MLflow could not read any scorer in this run."
+        defaultMessage="No scorers digest. No scorer in this run could be read."
         description="Tooltip on the eval run scorers heading when no scorer definition could be hashed"
       />
     );
@@ -140,7 +140,7 @@ const ScorersDigestTooltipContent = ({ scorersDigest }: { scorersDigest: EvalRun
       <span>
         {scorersDigest.coverage === 'partial' ? (
           <FormattedMessage
-            defaultMessage="A fingerprint of {hashed} of {total} scorers in this run. MLflow could not read the others."
+            defaultMessage="A fingerprint of {hashed} of {total} scorers in this run. The others could not be read."
             description="Eval run detail: the scorers digest covers only the scorers whose definition could be hashed"
             values={{ hashed: scorersDigest.hashed, total: scorersDigest.total }}
           />

@@ -60,7 +60,7 @@ const evaluatePromptTableValueUnified =
     // recently. Display relevant error in this scenario.
     const gatewayRoute = getState().modelGateway.modelGatewayRoutes[`${routeType}:${routeName}`];
     if (!gatewayRoute) {
-      const errorMessage = `MLflow deployment endpoint ${routeName} does not exist anymore!`;
+      const errorMessage = `Deployment endpoint ${routeName} does not exist anymore!`;
       Utils.logErrorAndNotifyUser(errorMessage);
       throw new Error(errorMessage);
     }

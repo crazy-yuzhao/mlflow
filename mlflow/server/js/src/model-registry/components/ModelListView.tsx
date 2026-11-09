@@ -115,7 +115,7 @@ export class ModelListViewImpl extends React.Component<ModelListViewImplProps, M
   }
 
   componentDidMount() {
-    const pageTitle = 'MLflow Models';
+    const pageTitle = 'Hengjian Models';
     Utils.updatePageTitle(pageTitle);
   }
 

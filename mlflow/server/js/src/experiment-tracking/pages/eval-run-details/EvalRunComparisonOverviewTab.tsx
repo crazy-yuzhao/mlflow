@@ -25,7 +25,7 @@ export interface EvalRunComparisonOverviewTabProps extends UseEvalRunComparisonD
 /** Refers to runs by ID only: run names are user-controlled and the Assistant can look the runs up itself. */
 export const buildEvalRunComparisonAssistantPrompt = (experimentId: string, snapshot: EvalRunComparisonSnapshot) =>
   [
-    `Compare the selected MLflow evaluation runs for experiment ${experimentId}.`,
+    `Compare the selected evaluation runs for experiment ${experimentId}.`,
     ...snapshot.runs.map(
       (run, index) => `${index === 0 ? 'Baseline' : `Comparison run ${index}`} ID: ${JSON.stringify(run.runUuid)}`,
     ),

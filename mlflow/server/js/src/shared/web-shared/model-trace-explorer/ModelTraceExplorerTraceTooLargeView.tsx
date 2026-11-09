@@ -52,7 +52,7 @@ export const ModelTraceExplorerTraceTooLargeView = ({
           </Button>
           <span>
             <FormattedMessage
-              defaultMessage="Alternatively, you can interact with this trace via the MLflow Python SDK, using the {code} function. For more information, please check the {documentation_link}."
+              defaultMessage="Alternatively, you can interact with this trace via the Python SDK, using the {code} function. For more information, please check the {documentation_link}."
               description="Body text for when a trace is too large to display"
               values={{
                 code: <Typography.Text code>mlflow.get_trace()</Typography.Text>,
@@ -64,7 +64,7 @@ export const ModelTraceExplorerTraceTooLargeView = ({
                     componentId="shared.model-trace-explorer.trace-too-large.documentation-link"
                   >
                     <FormattedMessage
-                      defaultMessage="MLflow API documentation"
+                      defaultMessage="API documentation"
                       description="Link to the MLflow API documentation for the Trace object"
                     />
                   </Typography.Link>

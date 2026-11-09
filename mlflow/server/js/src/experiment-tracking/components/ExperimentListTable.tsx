@@ -278,7 +278,7 @@ const ExperimentListTableCell: ExperimentTableColumnDef['cell'] = ({ row: { orig
         >
           <Tag componentId="mlflow.experiment_list.demo_badge" color="turquoise">
             <FormattedMessage
-              defaultMessage="MLflow Demo Experiment"
+              defaultMessage="Hengjian Demo Experiment"
               description="Badge label for the demo experiment in the experiments list"
             />
           </Tag>
@@ -288,7 +288,7 @@ const ExperimentListTableCell: ExperimentTableColumnDef['cell'] = ({ row: { orig
           disableHoverableContent={false}
           content={
             <FormattedMessage
-              defaultMessage="A demo experiment to quickly explore MLflow's core features with sample pre-generated data. You can clean up demo resources from Settings."
+              defaultMessage="A demo experiment to quickly explore this platform's core features with sample pre-generated data. You can clean up demo resources from Settings."
               description="Tooltip explaining the demo experiment in the experiments list"
             />
           }

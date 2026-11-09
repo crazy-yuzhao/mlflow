@@ -227,7 +227,7 @@ export const GenAIOverviewPromptBox = ({
               chartContext
                 ? contextualComposerLabel
                 : intl.formatMessage({
-                    defaultMessage: 'Ask MLflow about this agent',
+                    defaultMessage: 'Ask Hengjian about this agent',
                     description: 'Overview assistant input label',
                   })
             }

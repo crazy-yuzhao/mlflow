@@ -219,10 +219,6 @@
     "defaultMessage": "Max",
     "description": "Column title for the column displaying the maximum metric values for a metric"
   },
-  "+iRLlh": {
-    "defaultMessage": "No scorers digest. MLflow could not read any scorer in this run.",
-    "description": "Tooltip on the eval run scorers heading when no scorer definition could be hashed"
-  },
   "+jTk/P": {
     "defaultMessage": "Show less",
     "description": "MCP server package show less env vars button"
@@ -263,10 +259,6 @@
     "defaultMessage": "Params",
     "description": "Label for parameters shown on a parallel coordinates chart"
   },
-  "+o0xUA": {
-    "defaultMessage": "An error occurred while attempting to fetch trace data (ID: {traceId}). Please ensure that the MLflow tracking server is running, and that the trace data exists. Error details:",
-    "description": "An error message explaining that an error occurred while fetching trace data"
-  },
   "+pqOTO": {
     "defaultMessage": "Streamable HTTP",
     "description": "MCP registry streamable HTTP transport option"
@@ -278,10 +270,6 @@
   "+tURAJ": {
     "defaultMessage": "Cancel",
     "description": "Button text for canceling evaluation"
-  },
-  "+uJ+jl": {
-    "defaultMessage": "The {provider} API key can only be added from the MLflow server host. Pick another provider below.",
-    "description": "Inline assistant API key prompt shown to a remote user, who cannot add API keys"
   },
   "+w9a+1": {
     "defaultMessage": "Open runs in this group in the new tab",
@@ -406,6 +394,10 @@
   "/HiAE5": {
     "defaultMessage": "Search prompts by name",
     "description": "Placeholder for filtering prompts by name"
+  },
+  "/HsyA6": {
+    "defaultMessage": "A demo experiment to quickly explore this platform's core features with sample pre-generated data. You can clean up demo resources from Settings.",
+    "description": "Tooltip explaining the demo experiment in the experiments list"
   },
   "/IyEFR": {
     "defaultMessage": "Trace",
@@ -547,6 +539,10 @@
     "defaultMessage": "Models loading",
     "description": "Label for a loading spinner when table containing models is being loaded"
   },
+  "/hnDBI": {
+    "defaultMessage": "Hengjian collects usage data to improve the product. To confirm your preferences, please visit the settings page in the navigation sidebar. To learn more about what data is collected, please visit the <documentation>documentation</documentation>.",
+    "description": "Telemetry alert description"
+  },
   "/icjNP": {
     "defaultMessage": "Logged in as <strong>{username}</strong>",
     "description": "Subtitle showing the currently authenticated username"
@@ -666,10 +662,6 @@
   "02j3U1": {
     "defaultMessage": "Columns",
     "description": "Display menu item opening the evaluation-runs column-visibility submenu"
-  },
-  "033qfw": {
-    "defaultMessage": "Select a framework and follow the instructions to log traces with MLflow.",
-    "description": "Helper text shown at the top of the log traces drawer"
   },
   "050N3C": {
     "defaultMessage": "Evaluate and improve the quality, cost, latency of your GenAI app",
@@ -799,10 +791,6 @@
     "defaultMessage": "All time",
     "description": "Date range preset in the evaluation runs filters"
   },
-  "0T1I+b": {
-    "defaultMessage": "MLflow documentation",
-    "description": "Link to tracing documentation"
-  },
   "0U1OTy": {
     "defaultMessage": "A draft is passed over whenever any active version exists. A draft can always be reached by an explicit version pin or an alias.",
     "description": "Hint for the initial skill version status"
@@ -895,6 +883,10 @@
     "defaultMessage": "Active",
     "description": "Linked model dropdown option to show active experiment runs"
   },
+  "0pdQco": {
+    "defaultMessage": "Hengjian AI Gateway",
+    "description": "Display name for the assistant provider backed by the AI Gateway"
+  },
   "0phUi0": {
     "defaultMessage": "Copy link to trace",
     "description": "Tooltip for the share trace button"
@@ -910,6 +902,10 @@
   "0r2ub6": {
     "defaultMessage": "Overview",
     "description": "Label for the overview tab in the MLflow experiment navbar"
+  },
+  "0rryIl": {
+    "defaultMessage": "Send your first trace to Hengjian in just a minute",
+    "description": "First trace onboarding title"
   },
   "0skVwM": {
     "defaultMessage": "No endpoints found",
@@ -958,6 +954,10 @@
   "1/M8+x": {
     "defaultMessage": "X-axis:",
     "description": "Label text for x-axis in scatter plot comparison in MLflow"
+  },
+  "1/bG6F": {
+    "defaultMessage": "Install the OpenTelemetry SDK and instrument your application. Spans will be exported to this server via OTLP using the env vars set above.",
+    "description": "Step 2 description for OpenTelemetry traces onboarding"
   },
   "128VYg": {
     "defaultMessage": "User",
@@ -1011,10 +1011,6 @@
     "defaultMessage": "Launch Demo",
     "description": "Demo banner launch button"
   },
-  "1Buj/Q": {
-    "defaultMessage": "Alternatively, you can interact with this trace via the MLflow Python SDK, using the {code} function. For more information, please check the {documentation_link}.",
-    "description": "Body text for when a trace is too large to display"
-  },
   "1CPknH": {
     "defaultMessage": "When the trace was created",
     "description": "Tooltip description for the Request Time column in the traces table"
@@ -1038,6 +1034,10 @@
   "1GK4PO": {
     "defaultMessage": "Continue",
     "description": "Button that continues to the next step"
+  },
+  "1GnT5x": {
+    "defaultMessage": "The AI Gateway requires additional dependencies installed on the tracking server (not client machines):",
+    "description": "AI Gateway setup guide > Step 1 description"
   },
   "1HAiNw": {
     "defaultMessage": "Comparison run",
@@ -1246,10 +1246,6 @@
   "1uSCDX": {
     "defaultMessage": "{count, plural, one {# improved comparison group} other {# improved comparison groups}} compared with baseline",
     "description": "Count of matched session summaries or standalone traces that improved against baseline"
-  },
-  "1v3p5x": {
-    "defaultMessage": "This MLflow server is not configured to run scheduled detection. It needs a SQL backend store, job execution and periodic tasks enabled, and a job execution engine that can run scheduled detection.",
-    "description": "Experiment issues tab > Tooltip explaining the scheduled-detection control is disabled because the server cannot run a schedule"
   },
   "1wfVV5": {
     "defaultMessage": "Currently sorted by",
@@ -1507,6 +1503,10 @@
     "defaultMessage": "We couldn't find any models matching your search criteria. Try changing your search filters.",
     "description": "Empty state message displayed when all models are filtered out in the logged models list page"
   },
+  "2eymtl": {
+    "defaultMessage": "Comparing {runs} runs",
+    "description": "Page title for the compare runs page"
+  },
   "2f2qeb": {
     "defaultMessage": "Type",
     "description": "Text for type column in schema table in model version page"
@@ -1534,6 +1534,10 @@
   "2igs1f": {
     "defaultMessage": "Compare",
     "description": "Compare evaluation runs action"
+  },
+  "2ihQuw": {
+    "defaultMessage": "Hengjian documentation",
+    "description": "Link to MLflow documentation"
   },
   "2ikLTU": {
     "defaultMessage": "Type a message",
@@ -1574,10 +1578,6 @@
   "2p4Fkk": {
     "defaultMessage": "Group traces by session",
     "description": "Tooltip for the group by session button in the V4 traces table toolbar"
-  },
-  "2p9R6I": {
-    "defaultMessage": "Run this from your project's Git repository to connect to MLflow and launch your coding agent to add tracing. Have Claude Code, Codex, or OpenCode installed first.",
-    "description": "Description above the MLflow setup wizard terminal command in the agent action card"
   },
   "2pEWG3": {
     "defaultMessage": "Select a version to view details.",
@@ -1671,6 +1671,10 @@
     "defaultMessage": "Step 2: Run the judge",
     "description": "Step 2 title for custom code judge creation"
   },
+  "36/KfC": {
+    "defaultMessage": "API documentation",
+    "description": "Link to the MLflow API documentation for the Trace object"
+  },
   "36g3aR": {
     "defaultMessage": "Edit",
     "description": "Text for the edit button next to the description section title on\n             the model view page"
@@ -1763,6 +1767,10 @@
     "defaultMessage": "Download data",
     "description": "String for the download csv button to download metrics from this run offline in a CSV format"
   },
+  "3U7QV7": {
+    "defaultMessage": "Install the <a>tracing SDK</a> for TypeScript using npm, then initialize it in your application.",
+    "description": "Step 1 description for TypeScript traces onboarding"
+  },
   "3UVNhz": {
     "defaultMessage": "Make this user an admin",
     "description": "Switch label for granting administrator status to a new user"
@@ -1774,10 +1782,6 @@
   "3VcYyV": {
     "defaultMessage": "Views",
     "description": "Label for the saved views dropdown button in the experiment header"
-  },
-  "3X52Jw": {
-    "defaultMessage": "This tab displays all the traces logged to this logged model. MLflow supports automatic tracing for many popular generative AI frameworks. Follow the steps below to log your first trace. For more information about MLflow Tracing, visit the <a>MLflow documentation</a>.",
-    "description": "Message that explains the function of the 'Traces' tab in logged model page. This message is followed by a tutorial explaining how to get started with MLflow Tracing."
   },
   "3XHCuw": {
     "defaultMessage": "Use workspace settings",
@@ -1811,17 +1815,13 @@
     "defaultMessage": "{count} of {total, plural, one {# session} other {# sessions}}",
     "description": "Traces table footer when grouped by session, showing how many sessions are loaded out of the total"
   },
-  "3geT+I": {
-    "defaultMessage": "Use the log artifact APIs to store file outputs from MLflow runs.",
-    "description": "Information in the empty state explaining how one could log artifacts output files for the experiment runs"
-  },
   "3ghmTo": {
     "defaultMessage": "Recent",
     "description": "Recent searches section"
   },
-  "3h/dM6": {
-    "defaultMessage": "Set up MLflow AI Gateway",
-    "description": "AI Gateway setup guide > Main title"
+  "3gyXhE": {
+    "defaultMessage": "Opens the Hengjian assistant in the browser with a suggested prompt.",
+    "description": "Description above the MLflow assistant button in the agent action card"
   },
   "3h0Wuc": {
     "defaultMessage": "{count, plural, one {# comparison row} other {# comparison rows}}",
@@ -1910,10 +1910,6 @@
   "42O0S4": {
     "defaultMessage": "Clear all demo data",
     "description": "Clear demo data button"
-  },
-  "43FXJM": {
-    "defaultMessage": "Updating Assistant settings is not allowed for a remote MLflow server. Contact your server admin to update the settings.",
-    "description": "Tooltip explaining that Assistant settings cannot be changed from a remote client"
   },
   "44CqAo": {
     "defaultMessage": "Claude Code",
@@ -2067,10 +2063,6 @@
     "defaultMessage": "Scatter Plot",
     "description": "Tab text for scatter plot on the model comparison page"
   },
-  "4NyhOm": {
-    "defaultMessage": "View in MLflow UI",
-    "description": "Link to the MLflow UI for an alternate view of the current trace"
-  },
   "4OcdLd": {
     "defaultMessage": "This version",
     "description": "Model registry > model version alias select > Indicator for alias of selected version"
@@ -2122,10 +2114,6 @@
   "4UrSLV": {
     "defaultMessage": "Session assessments",
     "description": "Title for the session-level assessments pane"
-  },
-  "4V8wtm": {
-    "defaultMessage": "After your script runs, open the MLflow UI to review the recorded traces.",
-    "description": "Introductory text for viewing traces in the MLflow UI"
   },
   "4WDX3k": {
     "defaultMessage": "Success",
@@ -2315,6 +2303,10 @@
     "defaultMessage": "Click to pin the run",
     "description": "A tooltip for the pin icon button in the runs chart tooltip next to the not pinned run"
   },
+  "5A+ifR": {
+    "defaultMessage": "Hengjian Assistant needs to be configured on the server host before remote clients can use it. Ask your server administrator to open this server locally and complete Assistant setup.",
+    "description": "Message explaining that Assistant setup must be completed locally by a server admin"
+  },
   "5AiU0Q": {
     "defaultMessage": "Create your first prompt",
     "description": "Title for the empty state on the prompts list page"
@@ -2334,6 +2326,10 @@
   "5DuosT": {
     "defaultMessage": "{status, select, SCHEDULED {Scheduled} FAILED {Failed} FINISHED {Finished} RUNNING {Running} KILLED {Killed} other {Unknown}}",
     "description": "Human-readable status of an evaluation run"
+  },
+  "5DxL8z": {
+    "defaultMessage": "No scorers digest. No scorer in this run could be read.",
+    "description": "Tooltip on the eval run scorers heading when no scorer definition could be hashed"
   },
   "5GCYzy": {
     "defaultMessage": "Experiment Runs - Databricks",
@@ -2382,10 +2378,6 @@
   "5PlfiT": {
     "defaultMessage": "This request exceeds the maximum queries per second limit. Please wait and try again.",
     "description": "Too many requests (HTTP STATUS 429) generic error message"
-  },
-  "5PnvCO": {
-    "defaultMessage": "Specify a source and name below to register a skill to MLflow, or {apiLink}",
-    "description": "Intro for the skill registration dialog"
   },
   "5RW80w": {
     "defaultMessage": "No evaluation runs in this time range",
@@ -2599,10 +2591,6 @@
     "defaultMessage": "Edit workspace",
     "description": "Aria label for edit workspace button in workspaces table"
   },
-  "62puUb": {
-    "defaultMessage": "Run your application and traces will appear here automatically. For more information, visit the <a>MLflow Tracing documentation</a>.",
-    "description": "Step 3 description for traces onboarding"
-  },
   "64SfR8": {
     "defaultMessage": "enter a model identifier",
     "description": "Link text to switch to direct model identifier input"
@@ -2791,9 +2779,9 @@
     "defaultMessage": "Delete traces",
     "description": "Title for the V4 traces bulk-delete confirmation modal"
   },
-  "6cm996": {
-    "defaultMessage": "The AI Gateway requires additional dependencies installed on the MLflow tracking server (not client machines):",
-    "description": "AI Gateway setup guide > Step 1 description"
+  "6cBt7N": {
+    "defaultMessage": "Hengjian MCP server",
+    "description": "Home page news card title one"
   },
   "6csnxr": {
     "defaultMessage": "Delete",
@@ -2919,10 +2907,6 @@
     "defaultMessage": "Illustration of traces being analyzed for issues",
     "description": "Alt text for the issue detection illustration"
   },
-  "7/puMc": {
-    "defaultMessage": "Let's improve your agent with MLflow",
-    "description": "GenAI overview title"
-  },
   "7/urtn": {
     "defaultMessage": "Automatically log traces for LangChain or LangGraph invocations by calling the {code} function. For example:",
     "description": "Description of how to log traces for the LangChain/LangGraph package using MLflow autologging. This message is followed by a code example."
@@ -3023,10 +3007,6 @@
     "defaultMessage": "View full trace",
     "description": "Button to view a full trace within a chat session"
   },
-  "7FcqHP": {
-    "defaultMessage": "Configure your Python environment to send traces to this MLflow server.",
-    "description": "Step 1 description for Python traces onboarding"
-  },
   "7FvLl2": {
     "defaultMessage": "Ignore outliers",
     "description": "Runs charts > line chart > ignore outliers > label"
@@ -3058,6 +3038,10 @@
   "7L4kuw": {
     "defaultMessage": "Key",
     "description": "Label for the key input in the traces filter"
+  },
+  "7LUkof": {
+    "defaultMessage": "Full access can only be enabled by an administrator.",
+    "description": "Tooltip when assistant full access cannot be edited by a non-admin on the server host"
   },
   "7MRrPu": {
     "defaultMessage": "Configure how the model handles your messages, tools, and structured responses.",
@@ -3110,10 +3094,6 @@
   "7PqwjP": {
     "defaultMessage": "Grid view",
     "description": "Aria label for grid view toggle"
-  },
-  "7RNlsx": {
-    "defaultMessage": "MLflow API documentation",
-    "description": "Link to the MLflow API documentation for the Trace object"
   },
   "7S/ozs": {
     "defaultMessage": "Context sufficient",
@@ -3250,6 +3230,10 @@
   "7rcrX6": {
     "defaultMessage": "Description",
     "description": "MCP compare description heading"
+  },
+  "7riDPh": {
+    "defaultMessage": "After your script runs, open this UI to review the recorded traces.",
+    "description": "Introductory text for viewing traces in the MLflow UI"
   },
   "7ritzC": {
     "defaultMessage": "Optional. Define a JSON schema for structured LLM responses.",
@@ -3575,6 +3559,10 @@
     "defaultMessage": "Clear filters",
     "description": "Usage overview > clear metrics filters button"
   },
+  "8p4Xpb": {
+    "defaultMessage": "Hengjian Demo Experiment",
+    "description": "Badge label for the demo experiment in the experiments list"
+  },
   "8qJt7/": {
     "defaultMessage": "Experimental",
     "description": "Experimental badge shown for features which are experimental"
@@ -3583,13 +3571,13 @@
     "defaultMessage": "Set up human review for your traces",
     "description": "Review queue: empty state title when no queues exist"
   },
-  "8sCMmZ": {
-    "defaultMessage": "3. Access the MLflow UI",
-    "description": "Section title explaining how to access traces in the MLflow UI"
-  },
   "8tU+ow": {
     "defaultMessage": "Comparison runs",
     "description": "Accessible name for the comparison run selector"
+  },
+  "8umokt": {
+    "defaultMessage": "Configure your Python environment to send traces to this server.",
+    "description": "Step 1 description for Python traces onboarding"
   },
   "8v0vur": {
     "defaultMessage": "Archive after: {retention}",
@@ -3775,10 +3763,6 @@
     "defaultMessage": "Delete",
     "description": "Experiments page list, delete bulk experiments modal primary button"
   },
-  "9KN9aU": {
-    "defaultMessage": "Read MLflow doc",
-    "description": "Assistant permission to read MLflow documentation"
-  },
   "9KXBFn": {
     "defaultMessage": "Tags",
     "description": "Row group title for tags of runs on the experiment compare runs page"
@@ -3863,10 +3847,6 @@
     "defaultMessage": "Install and run this MCP server on your local machine using a package manager.",
     "description": "Help text for MCP server packages subsection"
   },
-  "9ZHB3D": {
-    "defaultMessage": "MLflow runs:",
-    "description": "A label for the associated MLflow runs in the prompt details page"
-  },
   "9ZavTe": {
     "defaultMessage": "4. Monitor",
     "description": "Monitor step"
@@ -3902,10 +3882,6 @@
   "9g0sMx": {
     "defaultMessage": "Show change from baseline",
     "description": "Runs charts > components > config > RunsChartsConfigureDifferenceChart > Show change from baseline toggle"
-  },
-  "9gQk+t": {
-    "defaultMessage": "Manage and version prompts using MLflow's Prompt Registry. <link>Learn more</link>",
-    "description": "Subtitle for the empty state on the prompts list page"
   },
   "9hhQv6": {
     "defaultMessage": "Issue detection run history",
@@ -4059,6 +4035,10 @@
     "defaultMessage": "Failed",
     "description": "Fail status pill in the regression-test detail"
   },
+  "A8fliX": {
+    "defaultMessage": "Hengjian assistant",
+    "description": "Tab label for the in-UI MLflow assistant path in the agent action card"
+  },
   "A9zAcE": {
     "defaultMessage": "This folder has no SKILL.md at its top level.",
     "description": "Error when a selected skill folder has no SKILL.md"
@@ -4175,6 +4155,10 @@
     "defaultMessage": "Last 30 days",
     "description": "Date range preset in the evaluation runs filters"
   },
+  "ASfOoA": {
+    "defaultMessage": "No digest was recorded. This version's files are stored on this server, so its content does not change.",
+    "description": "Tooltip for a missing digest on an uploaded skill version"
+  },
   "AVeqtn": {
     "defaultMessage": "Enter default artifact root URI",
     "description": "Placeholder for workspace artifact root input"
@@ -4186,10 +4170,6 @@
   "AX7L9r": {
     "defaultMessage": "Error",
     "description": "Error assessment status in the evaluations table."
-  },
-  "AXxmFE": {
-    "defaultMessage": "Send your first trace to MLflow in just a minute",
-    "description": "First trace onboarding title"
   },
   "AaDw3+": {
     "defaultMessage": "Turn display settings",
@@ -4539,10 +4519,6 @@
     "defaultMessage": "You have <strong>{unsyncedDataEntriesCount}</strong> unsaved evaluated {unsyncedDataEntriesCount, plural, =1 {value} other {values}}. Click \"Save\" button or press {keyCombination} keys to synchronize the artifact data.",
     "description": "Experiment page > artifact compare view > prompt lab artifact synchronization > pending changes indicator"
   },
-  "BXkADi": {
-    "defaultMessage": "Install the OpenTelemetry SDK and instrument your application. Spans will be exported to MLflow via OTLP using the env vars set above.",
-    "description": "Step 2 description for OpenTelemetry traces onboarding"
-  },
   "BY1k4W": {
     "defaultMessage": "Original logged model: {originalModelLink}",
     "description": "Tooltip text with link to the original logged model"
@@ -4662,6 +4638,10 @@
   "BqdT/j": {
     "defaultMessage": "Dismiss stale issue detection reminder",
     "description": "Accessible label for dismissing stale issue detection guidance on the overview"
+  },
+  "Bql+OF": {
+    "defaultMessage": "Read documentation",
+    "description": "Assistant permission to read MLflow documentation"
   },
   "BrMzik": {
     "defaultMessage": "Add Tag",
@@ -4887,10 +4867,6 @@
     "defaultMessage": "Error",
     "description": "Traces table state badge label for an errored trace"
   },
-  "CWlqGc": {
-    "defaultMessage": "Issue detection is not enabled for this MLflow server. Ask an administrator to restart the server with MLFLOW_ENABLE_AI_GATEWAY=true.",
-    "description": "Analyze overview description shown when issue detection is unavailable"
-  },
   "CWy3KV": {
     "defaultMessage": "Select one or more users",
     "description": "Placeholder for choosing users to assign"
@@ -5071,6 +5047,10 @@
     "defaultMessage": "Evidence",
     "description": "Experiment issues tab > Issue detail > Evidence section heading"
   },
+  "D65Pm/": {
+    "defaultMessage": "Specify a source and name below to register a skill on this server, or {apiLink}",
+    "description": "Intro for the skill registration dialog"
+  },
   "D6gLbL": {
     "defaultMessage": "Enter workspace description",
     "description": "Placeholder for workspace description input"
@@ -5118,6 +5098,10 @@
   "DEGkua": {
     "defaultMessage": "Filter by active status",
     "description": "Aria label for Skill Registry active status filter toggle"
+  },
+  "DEkRdE": {
+    "defaultMessage": "Associated run if the trace was generated within a run context",
+    "description": "Tooltip description for the Run Name column in the traces table"
   },
   "DHFf28": {
     "defaultMessage": "Or {enterManually}",
@@ -5411,6 +5395,10 @@
     "defaultMessage": "Compare",
     "description": "Compare button on run detail page"
   },
+  "EDxtsK": {
+    "defaultMessage": "Hengjian artifacts",
+    "description": "Skill source label for content stored on this server"
+  },
   "EE/OnY": {
     "defaultMessage": "How a reviewer sees the question",
     "description": "Review question preview panel header subtitle"
@@ -5427,6 +5415,10 @@
     "defaultMessage": "Last year",
     "description": "Option for the start select dropdown to filter runs since the last 1 year"
   },
+  "EJ51re": {
+    "defaultMessage": "Skills are installed on this server host's filesystem and can only be configured by an administrator.",
+    "description": "Note when assistant skills cannot be edited by a non-admin on the server host"
+  },
   "EK5JxG": {
     "defaultMessage": "Parameters",
     "description": "Field name text for parameters table in the model comparison page"
@@ -5442,6 +5434,10 @@
   "ELI1bm": {
     "defaultMessage": "{reviewed} of {total} reviewed ({percentage}%)",
     "description": "Review focused view: queue progress summary"
+  },
+  "ELmo41": {
+    "defaultMessage": "Filter applies to the first trace in each session. Only run on sessions where the first trace matches this filter; leave blank to run on all. Uses the {link}.",
+    "description": "Hint text for filter string input for session-level scorers"
   },
   "EN0lUA": {
     "defaultMessage": "Columns",
@@ -5467,6 +5463,10 @@
     "defaultMessage": "Select the traces to evaluate.",
     "description": "Description for the trace selection section in the run evaluation modal"
   },
+  "ES/zEY": {
+    "defaultMessage": "For local development, this server uses a default passphrase. For production deployments, server administrators must set a secure encryption passphrase on the tracking server before starting it:",
+    "description": "AI Gateway setup guide > Step 3 description"
+  },
   "ES952j": {
     "defaultMessage": "Not a number ({metricKey})",
     "description": "Label indicating \"not-a-number\" used as a hover text in a plot UI element"
@@ -5482,6 +5482,10 @@
   "ET2qrH": {
     "defaultMessage": "The Python SDK reads the skill locally, so it can infer the name and record a digest.",
     "description": "Explanation of the skill registration Python example"
+  },
+  "EUFHZG": {
+    "defaultMessage": "Install the client:",
+    "description": "Instruction for installing MLflow from mlflow-3 branch in log MLflow 3 models"
   },
   "EUf1+6": {
     "defaultMessage": "Cancelling discards the analysis done so far. Any issues already recorded are kept.",
@@ -5631,6 +5635,10 @@
     "defaultMessage": "{dimension}: {value}",
     "description": "Experiment issues tab > Active filter chip showing a dimension and its selected value"
   },
+  "F7ruq6": {
+    "defaultMessage": "Runs:",
+    "description": "A label for the associated MLflow runs in the prompt details page"
+  },
   "F87bfl": {
     "defaultMessage": "Enable usage tracking",
     "description": "Switch that turns endpoint usage tracking on or off"
@@ -5727,6 +5735,10 @@
     "defaultMessage": "Filter by access endpoint availability",
     "description": "Aria label for access endpoint filter toggle"
   },
+  "FT1Jp4": {
+    "defaultMessage": "Extend the assistant with specialized workflows. See <link>skills</link> for a list of skills to install.",
+    "description": "Assistant settings help text for installing skills"
+  },
   "FTx+Hi": {
     "defaultMessage": "(baseline)",
     "description": "A label displayed next to baseline version in the prompt versions comparison view"
@@ -5819,10 +5831,6 @@
     "defaultMessage": "Clear All",
     "description": "String for the clear button to clear any selected parameters and metrics"
   },
-  "FedDjX": {
-    "defaultMessage": "1. Install MLflow with GenAI extras on the server",
-    "description": "AI Gateway setup guide > Step 1 title"
-  },
   "Fg/zU/": {
     "defaultMessage": "GenAI apps & agents",
     "description": "A short label for custom experiments focused on generative AI app and agent development"
@@ -5850,10 +5858,6 @@
   "FijsAB": {
     "defaultMessage": "Endpoint URL:",
     "description": "MCP registry endpoint modal endpoint label"
-  },
-  "Fj1MKc": {
-    "defaultMessage": "{provider} needs an API key. Paste it once and MLflow saves it securely in AI Gateway for all future runs.",
-    "description": "Explanation of the API key step in the issue detection modal"
   },
   "Fk4w6k": {
     "defaultMessage": "Status",
@@ -6259,6 +6263,10 @@
     "defaultMessage": "Reject requests",
     "description": "Budget action that rejects requests when the budget is exceeded"
   },
+  "Gu/RRZ": {
+    "defaultMessage": "Logged model",
+    "description": "Heading text for mlflow model artifact"
+  },
   "Gxl8pl": {
     "defaultMessage": "Version",
     "description": "Label for the version picker on the playground prompt-registry modal"
@@ -6318,6 +6326,10 @@
   "H7JwOl": {
     "defaultMessage": "Delete version",
     "description": "A label for a button to delete prompt version on the prompt details page"
+  },
+  "H7QbTz": {
+    "defaultMessage": "Alternatively, you can interact with this trace via the Python SDK, using the {code} function. For more information, please check the {documentation_link}.",
+    "description": "Body text for when a trace is too large to display"
   },
   "H8TeZX": {
     "defaultMessage": "Currently assigned users are pre-filled. Remove a user to unassign; use the form below to assign more.",
@@ -6731,6 +6743,10 @@
     "defaultMessage": "Comparing {numRuns} Runs from {numExperiments} Experiments",
     "description": "Breadcrumb title for compare runs page with multiple experiments"
   },
+  "IFJFWv": {
+    "defaultMessage": "Start tracing your agent with one command to send traces to Hengjian.",
+    "description": "Tracing quick setup explanation"
+  },
   "IFJQom": {
     "defaultMessage": "{count, plural, one {# question} other {# questions}} selected",
     "description": "Create review queue: questions dropdown selected-count summary"
@@ -6766,10 +6782,6 @@
   "IMAf09": {
     "defaultMessage": "No limit",
     "description": "Text question: max-length input placeholder when unbounded"
-  },
-  "IMEGsC": {
-    "defaultMessage": "Associated MLflow Run if the trace was generated within an MLflow run context",
-    "description": "Tooltip description for the Run Name column in the traces table"
   },
   "IMkDgM": {
     "defaultMessage": "Experiments",
@@ -6855,6 +6867,10 @@
     "defaultMessage": "Sort: Created",
     "description": "Button for sorting evaluation runs by creation date"
   },
+  "IbK55l": {
+    "defaultMessage": "You can evaluate your GenAI applications using scorers. Scorers compute quality metrics like relevance, correctness, and custom assessments. Copy the code snippet below to run an evaluation, or visit the documentation for a more in-depth example.",
+    "description": "Empty state description for the quality tab in overview page"
+  },
   "Icmmrm": {
     "defaultMessage": "{baseline} → {current}",
     "description": "Baseline trace's numeric scorer value followed by this run's value, in the hover card of a comparison delta pill"
@@ -6935,6 +6951,10 @@
     "defaultMessage": "Enter password",
     "description": "Placeholder for a password field"
   },
+  "Iof89n": {
+    "defaultMessage": "The provider's CLI is not installed on this server. Install it, or switch to another provider.",
+    "description": "Callout shown when the assistant provider CLI is missing"
+  },
   "IqAVzN": {
     "defaultMessage": "Aliases",
     "description": "MCP registry endpoint modal aliases group label"
@@ -6999,10 +7019,6 @@
     "defaultMessage": "Create Guardrail",
     "description": "Title for create guardrail modal"
   },
-  "J2Lytp": {
-    "defaultMessage": "{provider} needs an API key. Paste it once and MLflow saves it securely in AI Gateway, where every scheduled run reads it.",
-    "description": "Experiment issues tab > Schedule modal explanation of the API key step"
-  },
   "J2XCE/": {
     "defaultMessage": "Specify sequences that signal the model to stop generating text.",
     "description": "Experiment page > prompt lab > stop parameter help text"
@@ -7062,6 +7078,10 @@
   "JGQ5B2": {
     "defaultMessage": "Add",
     "description": "Model registry > model version table > metadata column > 'add' button label"
+  },
+  "JIEKsx": {
+    "defaultMessage": "This tab displays all the traces logged to this logged model. Automatic tracing is available for many popular generative AI frameworks. Follow the steps below to log your first trace. For more information about tracing, visit the <a>documentation</a>.",
+    "description": "Message that explains the function of the 'Traces' tab in logged model page. This message is followed by a tutorial explaining how to get started with MLflow Tracing."
   },
   "JJ43Fa": {
     "defaultMessage": "Error",
@@ -7170,6 +7190,10 @@
   "JYz7tl": {
     "defaultMessage": "Failed to load MCP server",
     "description": "MCP server detail page error title"
+  },
+  "Jaa3el": {
+    "defaultMessage": "{provider} needs an API key. Paste it once and this server saves it securely in AI Gateway for all future runs.",
+    "description": "Explanation of the API key step in the issue detection modal"
   },
   "JaanQY": {
     "defaultMessage": "Tools",
@@ -7406,6 +7430,10 @@
   "KGMbzq": {
     "defaultMessage": "Commit message:",
     "description": "A label for the commit message in the prompt details page"
+  },
+  "KGvmCX": {
+    "defaultMessage": "Run this from your project's Git repository to connect to this server and launch your coding agent to add tracing. Have Claude Code, Codex, or OpenCode installed first.",
+    "description": "Description above the MLflow setup wizard terminal command in the agent action card"
   },
   "KHC1o8": {
     "defaultMessage": "Files",
@@ -7891,6 +7919,10 @@
     "defaultMessage": "Download as SVG",
     "description": "Experiment page > compare runs tab > chart header > download as SVG option"
   },
+  "LjCdGz": {
+    "defaultMessage": "Skills are installed on this server host's filesystem and can only be configured from the server host.",
+    "description": "Note when assistant skills cannot be edited from a remote client"
+  },
   "LjeQn8": {
     "defaultMessage": "This experiment's issue detection settings could not be refreshed, so this run uses the last ones loaded. Reopen this dialog to try again.",
     "description": "Warning in the issue detection modal shown when the saved detection settings could not be refreshed and the previously loaded ones are used"
@@ -7915,6 +7947,10 @@
     "defaultMessage": "Mark as reviewed",
     "description": "Evaluation review > assessments > mark as reviewed button"
   },
+  "LtoVdo": {
+    "defaultMessage": "Manage and version prompts using the prompt registry. <link>Learn more</link>",
+    "description": "Subtitle for the empty state on the prompts list page"
+  },
   "Lu4EPb": {
     "defaultMessage": "Key",
     "description": "Placeholder for a trace tag filter key"
@@ -7926,10 +7962,6 @@
   "LuOEnE": {
     "defaultMessage": "Add",
     "description": "Categorical add-option button"
-  },
-  "LvPrhT": {
-    "defaultMessage": "Install the MLflow AI skill from https://github.com/mlflow/skills and use it to add tracing to this application following MLflow best practices. Configure tracing to use MLflow tracking server {serverUrl} and experiment ID {experimentId}. Run one traced operation and confirm the trace reaches the experiment. Do not create a new experiment or write credentials into the repository.",
-    "description": "Coding agent prompt for setting up tracing"
   },
   "LvcRxz": {
     "defaultMessage": "Delete version",
@@ -8182,10 +8214,6 @@
   "MUUYWZ": {
     "defaultMessage": "Created at",
     "description": "Label for the creation timestamp of a logged model on the logged model details page"
-  },
-  "MUrZoz": {
-    "defaultMessage": "The provider's CLI is not installed on the MLflow server. Install it, or switch to another provider.",
-    "description": "Callout shown when the assistant provider CLI is missing"
   },
   "MVXvKf": {
     "defaultMessage": "Create skill",
@@ -8619,6 +8647,10 @@
     "defaultMessage": "Gateway Endpoint Details",
     "description": "Sidebar title for endpoint details panel"
   },
+  "Ni0CAL": {
+    "defaultMessage": "Install the AI skill from https://github.com/mlflow/skills and use it to add tracing to this application. Configure tracing to use tracking server {serverUrl} and experiment ID {experimentId}. Run one traced operation and confirm the trace reaches the experiment. Do not create a new experiment or write credentials into the repository.",
+    "description": "Coding agent prompt for setting up tracing"
+  },
   "NiSPrL": {
     "defaultMessage": "Model metrics",
     "description": "Run page > Overview > Metrics table > Model charts section > title"
@@ -8651,10 +8683,6 @@
     "defaultMessage": "Failed to load permissions",
     "description": "Alert title shown when the roles query fails on the permissions section"
   },
-  "NnO0Lz": {
-    "defaultMessage": "MLflow allows you to evaluate your GenAI applications using scorers. Scorers compute quality metrics like relevance, correctness, and custom assessments. Copy the code snippet below to run an evaluation, or visit the documentation for a more in-depth example.",
-    "description": "Empty state description for the quality tab in overview page"
-  },
   "Nnsm0p": {
     "defaultMessage": "All runs in this experiment have been filtered. Change or clear filters to view runs.",
     "description": "Empty state description text for experiment runs page when all runs have been filtered out"
@@ -8679,6 +8707,10 @@
     "defaultMessage": "Off",
     "description": "Runs charts > line chart > display points > off setting label"
   },
+  "Nu99ry": {
+    "defaultMessage": "Let's improve your agent with Hengjian",
+    "description": "GenAI overview title"
+  },
   "NuiASG": {
     "defaultMessage": "Run",
     "description": "Accessible header for run information comparison row labels"
@@ -8699,10 +8731,6 @@
     "defaultMessage": "Table settings",
     "description": "Run view > artifact view > logged table > table settings tooltip"
   },
-  "O+/hDQ": {
-    "defaultMessage": "For local development, MLflow uses a default passphrase. For production deployments, server administrators must set a secure encryption passphrase on the tracking server before starting it:",
-    "description": "AI Gateway setup guide > Step 3 description"
-  },
   "O+D3l/": {
     "defaultMessage": "Pattern",
     "description": "Column header for a staged role permission resource pattern"
@@ -8718,6 +8746,10 @@
   "O/9Cgn": {
     "defaultMessage": "Copy pull command",
     "description": "Aria label for copying the Skill pull command"
+  },
+  "O/Gfj4": {
+    "defaultMessage": "Full access can only be enabled from the server host.",
+    "description": "Tooltip when assistant full access cannot be edited from a remote client"
   },
   "O1K7/e": {
     "defaultMessage": "Feedback",
@@ -8798,10 +8830,6 @@
   "OCeqU8": {
     "defaultMessage": "Add endpoint",
     "description": "Button to add an access endpoint"
-  },
-  "OCpkAU": {
-    "defaultMessage": "The AI Gateway requires a SQL-based backend store (SQLite, PostgreSQL, MySQL, or MSSQL) to persist credentials securely. Start the MLflow server with a database URI:",
-    "description": "AI Gateway setup guide > Step 2 description"
   },
   "OE1pkY": {
     "defaultMessage": "Loading monitoring trend",
@@ -9079,10 +9107,6 @@
     "defaultMessage": "Passed",
     "description": "Pass status pill in the regression-test detail"
   },
-  "P05k8c": {
-    "defaultMessage": "Your key is stored in MLflow LLM Connections on this server.",
-    "description": "Note in the inline assistant API key prompt about how the key is stored"
-  },
   "P0Y/ks": {
     "defaultMessage": "Workspace Manager",
     "description": "Admin page title shown when the URL is scoped to a single workspace via ?workspace=…"
@@ -9098,6 +9122,10 @@
   "P2cheJ": {
     "defaultMessage": "No new direct permissions.",
     "description": "Empty state when no direct permissions will be granted"
+  },
+  "P2rNkr": {
+    "defaultMessage": "Explore this platform's core features with pre-populated sample data including traces, evaluations, and prompts.",
+    "description": "Demo banner description"
   },
   "P31kXd": {
     "defaultMessage": "Cost breakdown",
@@ -9255,10 +9283,6 @@
     "defaultMessage": "Clear selection",
     "description": "Clear model selection"
   },
-  "PYGkI3": {
-    "defaultMessage": "Install the <a>MLflow tracing SDK</a> for TypeScript using npm, then initialize it in your application.",
-    "description": "Step 1 description for TypeScript traces onboarding"
-  },
   "PYuJCs": {
     "defaultMessage": "Edit",
     "description": "Group label for the trace-editing bulk actions in the V4 traces toolbar"
@@ -9410,10 +9434,6 @@
   "Pzyy1j": {
     "defaultMessage": "Transport",
     "description": "Package transport label"
-  },
-  "Q+OKZQ": {
-    "defaultMessage": "Execute MLflow CLI (required)",
-    "description": "Assistant permission to run the MLflow command-line tool"
   },
   "Q/QcTS": {
     "defaultMessage": "Save",
@@ -9599,10 +9619,6 @@
     "defaultMessage": "Expand run details",
     "description": "Footer control to expand the evaluation run sidebar"
   },
-  "QXh0hV": {
-    "defaultMessage": "MLflow Trace UI",
-    "description": "Title of the trace viewer embedded in a notebook"
-  },
   "QYLyqS": {
     "defaultMessage": "Scorers",
     "description": "Group evaluation runs by the scorer definitions they used"
@@ -9742,6 +9758,10 @@
   "R/4/8G": {
     "defaultMessage": "Metric",
     "description": "Label for the metric column in the logged model details metrics table"
+  },
+  "R0dsh5": {
+    "defaultMessage": "The deployment returned the following error: \"{errorMessage}\"",
+    "description": "Experiment page > MLflow deployment error message"
   },
   "R1FeSE": {
     "defaultMessage": "Advanced settings (optional)",
@@ -9999,6 +10019,10 @@
     "defaultMessage": "Create",
     "description": "Create review queue: confirm button"
   },
+  "Rp7+OY": {
+    "defaultMessage": "{provider} needs an API key. Paste it once and this server saves it securely in AI Gateway, where every scheduled run reads it.",
+    "description": "Experiment issues tab > Schedule modal explanation of the API key step"
+  },
   "RpxR8e": {
     "defaultMessage": "Custom LLM-as-a-judge ({llmCount})",
     "description": "Label for custom LLM judge type filter option"
@@ -10103,14 +10127,6 @@
     "defaultMessage": "Optional. Override where archived trace payloads are stored for this workspace. Leave blank to use the server default.",
     "description": "Hint for workspace trace archival location field"
   },
-  "S9zlYt": {
-    "defaultMessage": "A fingerprint of {hashed} of {total} scorers in this run. MLflow could not read the others.",
-    "description": "Eval run detail: the scorers digest covers only the scorers whose definition could be hashed"
-  },
-  "SAFAXp": {
-    "defaultMessage": "Only run on traces matching this filter; leave blank to run on all. Uses MLflow {link}.",
-    "description": "Hint text for filter string input"
-  },
   "SAXxAc": {
     "defaultMessage": "Stage",
     "description": "Guardrail stage label"
@@ -10130,6 +10146,10 @@
   "SCYMXw": {
     "defaultMessage": "Cancel",
     "description": "Cancel button text for creating model in the model registry"
+  },
+  "SF8601": {
+    "defaultMessage": "The Issues tab requires this server to use SQL storage.",
+    "description": "Experiment Issues unavailable on unsupported storage"
   },
   "SFfu70": {
     "defaultMessage": "Select a version",
@@ -10255,6 +10275,10 @@
     "defaultMessage": "Copy share link",
     "description": "Label for the button that copies a saved view share link"
   },
+  "SaUFs5": {
+    "defaultMessage": "Invocations",
+    "description": "Unified API variant: MLflow Invocations"
+  },
   "Sb+wLa": {
     "defaultMessage": "Model configuration stores the LLM settings associated with this prompt.",
     "description": "Help text explaining model configuration purpose"
@@ -10366,10 +10390,6 @@
   "SzJCjR": {
     "defaultMessage": "Sort descending",
     "description": "Menu option to sort a column descending in the evaluation runs table header"
-  },
-  "SzapEm": {
-    "defaultMessage": "Your models will appear here once you log them using newest version of MLflow. <link>Learn more</link>.",
-    "description": "Placeholder for empty models table on the logged models list page"
   },
   "SzvvXl": {
     "defaultMessage": "Failed to submit",
@@ -10771,9 +10791,9 @@
     "defaultMessage": "Registered prompts",
     "description": "Run page > Overview > Run prompts section label"
   },
-  "UEDu0c": {
-    "defaultMessage": "MLflow UI automatically fetches metric histories for active runs and updates the metrics plot with a {interval} second interval.",
-    "description": "Helpful tooltip message to explain the automatic metrics plot update"
+  "UDnj+E": {
+    "defaultMessage": "Your key is stored in LLM Connections on this server.",
+    "description": "Note in the inline assistant API key prompt about how the key is stored"
   },
   "UEZlh7": {
     "defaultMessage": "issues",
@@ -10786,6 +10806,10 @@
   "UGAKJp": {
     "defaultMessage": "X-axis:",
     "description": "Label text for x-axis in contour plot comparison in MLflow"
+  },
+  "UGpJ1J": {
+    "defaultMessage": "1. Install GenAI extras on the server",
+    "description": "AI Gateway setup guide > Step 1 title"
   },
   "UGqg24": {
     "defaultMessage": "Error",
@@ -10826,6 +10850,18 @@
   "ULljUX": {
     "defaultMessage": "Filter: {filterString}",
     "description": "Filter display for scorer"
+  },
+  "UMHkP7": {
+    "defaultMessage": "Point the OTLP exporter at this server by setting these environment variables. See the <a>OpenTelemetry export docs</a> for the full reference.",
+    "description": "Step 1 description for OpenTelemetry traces onboarding"
+  },
+  "UMS15R": {
+    "defaultMessage": "You can associate traces with users and chat sessions. This is useful for analyzing multi-turn conversations, enabling you to inspect what happened at each step. Copy the code snippet below to generate a sample trace, or visit the documentation for a more in-depth example.",
+    "description": "Empty state description for the chat sessions table"
+  },
+  "UN16h7": {
+    "defaultMessage": "Hengjian Assistant is not available from this client. Ask your server administrator to enable remote access if you need to use it remotely.",
+    "description": "Message explaining that the Assistant is blocked by the server's remote-access settings"
   },
   "UOhcg0": {
     "defaultMessage": "{count, number} traces scored",
@@ -10999,6 +11035,10 @@
     "defaultMessage": "Registered models",
     "description": "Header title for the registered models column in the logged model list table"
   },
+  "Utfjna": {
+    "defaultMessage": "Project paths point at this server host's filesystem and can only be configured by an administrator.",
+    "description": "Note when assistant project paths cannot be edited by a non-admin on the server host"
+  },
   "Uu1RtY": {
     "defaultMessage": "Version:",
     "description": "MCP compare metadata version label"
@@ -11018,6 +11058,10 @@
   "UxY4Fm": {
     "defaultMessage": "Icons could not be saved",
     "description": "Error notification when updating MCP server icons fails"
+  },
+  "UxngN1": {
+    "defaultMessage": "Bypass all permission checks. Use with caution.",
+    "description": "Tooltip for the assistant full-access permission"
   },
   "UzZf+2": {
     "defaultMessage": "Add chart",
@@ -11067,10 +11111,6 @@
     "defaultMessage": "Actions for dataset {name}",
     "description": "Aria label for the per-row actions dropdown trigger on the V2 evaluation datasets list"
   },
-  "V5cjvM": {
-    "defaultMessage": "Copy your MLflow models to another registered model for simple model promotion across environments. For more mature production-grade setups, we recommend setting up automated model training workflows to produce models in controlled environments. <link>Learn more</link>",
-    "description": "Model registry > OSS Promote model modal > description paragraph body"
-  },
   "V6AwxC": {
     "defaultMessage": "Run judges",
     "description": "Button text for running multiple judges from the run evaluation modal"
@@ -11090,10 +11130,6 @@
   "VBD7lM": {
     "defaultMessage": "Evaluate",
     "description": "Button that evaluates a prompt cell"
-  },
-  "VBhmhO": {
-    "defaultMessage": "Explore MLflow's core features with pre-populated sample data including traces, evaluations, and prompts.",
-    "description": "Demo banner description"
   },
   "VDf1X1": {
     "defaultMessage": "Quality Summary",
@@ -11367,10 +11403,6 @@
     "defaultMessage": "Detection priorities",
     "description": "Issue detection settings modal > Detection priorities field label"
   },
-  "VqSjYH": {
-    "defaultMessage": "MLflow documentation",
-    "description": "AI Gateway setup guide > Documentation link text"
-  },
   "Vr3kiI": {
     "defaultMessage": "JSON",
     "description": "Label for the JSON render mode dropdown item in the model trace explorer inputs/outputs section"
@@ -11391,6 +11423,10 @@
     "defaultMessage": "Select at least one question. A queue with no questions can't be reviewed.",
     "description": "Queue settings: validation shown when no questions are selected"
   },
+  "VteNkN": {
+    "defaultMessage": "Hengjian Trace UI",
+    "description": "Title of the trace viewer embedded in a notebook"
+  },
   "VuCIj8": {
     "defaultMessage": "Couldn't check whether this name is already registered: {reason} Try again.",
     "description": "Error when the skill name availability check fails before registration"
@@ -11406,10 +11442,6 @@
   "VyeENd": {
     "defaultMessage": "Description",
     "description": "Label for a description field"
-  },
-  "W+aLXo": {
-    "defaultMessage": "Manage webhooks to receive HTTP notifications when events occur in MLflow.",
-    "description": "Webhooks settings section description"
   },
   "W0PKNU": {
     "defaultMessage": "Model registry",
@@ -11559,6 +11591,10 @@
     "defaultMessage": "Failed to update workspace. Please try again.",
     "description": "Generic error message for edit workspace modal"
   },
+  "WL+z5Y": {
+    "defaultMessage": "Use the Python client to register an MCP server from a URL:",
+    "description": "Instruction text for Python-based MCP server registration"
+  },
   "WLolH+": {
     "defaultMessage": "Delete access endpoint",
     "description": "Aria label for delete access endpoint button"
@@ -11603,6 +11639,10 @@
     "defaultMessage": "Options",
     "description": "Label for categorical options input"
   },
+  "WXP4Aq": {
+    "defaultMessage": "Issue detection is not enabled for this server. Ask an administrator to restart the server with MLFLOW_ENABLE_AI_GATEWAY=true.",
+    "description": "Analyze overview description shown when issue detection is unavailable"
+  },
   "WXbDNv": {
     "defaultMessage": "Tags",
     "description": "Header for the dataset record tags column"
@@ -11630,10 +11670,6 @@
   "WcHytj": {
     "defaultMessage": "Total Cost",
     "description": "Subtitle for the cost over time chart total"
-  },
-  "Wd8Tga": {
-    "defaultMessage": "No schema. See <link>MLflow docs</link> for how to include input and output schema with your model.",
-    "description": "Text for schema table when no schema exists in the model version\n                     page"
   },
   "WdRwf9": {
     "defaultMessage": "Remove filter {filter}",
@@ -12239,10 +12275,6 @@
     "defaultMessage": "Register model",
     "description": "Button text to register the model for deployment"
   },
-  "YQrlk4": {
-    "defaultMessage": "Your browser reads the folder and uploads it. MLflow stores the content.",
-    "description": "Explanation of the local skill folder upload flow"
-  },
   "YRBURU": {
     "defaultMessage": "Sort: {sortBy}",
     "description": "Label for the filter button in the logged model list page. sortBy is the name of the column by which the table is currently sorted."
@@ -12554,10 +12586,6 @@
   "ZQpc2w": {
     "defaultMessage": "Enter dataset name",
     "description": "Dataset name placeholder"
-  },
-  "ZRUzaz": {
-    "defaultMessage": "Install MLflow 3:",
-    "description": "Instruction for installing MLflow from mlflow-3 branch in log MLflow 3 models"
   },
   "ZSmd/j": {
     "defaultMessage": "Session comparison {sessionId}",
@@ -12915,6 +12943,10 @@
     "defaultMessage": "Please select metric",
     "description": "Placeholder text where one can select metrics from the list of available metrics to render on the graph"
   },
+  "aYnc3m": {
+    "defaultMessage": "The UI automatically fetches metric histories for active runs and updates the metrics plot with a {interval} second interval.",
+    "description": "Helpful tooltip message to explain the automatic metrics plot update"
+  },
   "aZKtr2": {
     "defaultMessage": "Field",
     "description": "Usage overview > filter row > field column label"
@@ -12967,6 +12999,10 @@
     "defaultMessage": "Issues",
     "description": "Column label for the traces table issues column"
   },
+  "afkwQE": {
+    "defaultMessage": "Manage webhooks to receive HTTP notifications when events occur on this server.",
+    "description": "Webhooks settings section description"
+  },
   "agq01I": {
     "defaultMessage": "Create Gateway endpoint",
     "description": "Option to create a new AI Gateway endpoint"
@@ -12994,6 +13030,10 @@
   "ap1Vrw": {
     "defaultMessage": "tag name",
     "description": "Accessible name for the tag name input"
+  },
+  "apPoqa": {
+    "defaultMessage": "JSON body for the invocations API. Use \"messages\" for chat or \"input\" for embeddings.",
+    "description": "Request body tooltip for unified MLflow Invocations API"
   },
   "aqMseN": {
     "defaultMessage": "Manage prompt updates and collaborate across teams.",
@@ -13119,6 +13159,10 @@
     "defaultMessage": "Add \"{label}\"",
     "description": "Evaluation review > assessments > add new custom value element"
   },
+  "bCtdSx": {
+    "defaultMessage": "Your models will appear here once you log them with the latest client. <link>Learn more</link>.",
+    "description": "Placeholder for empty models table on the logged models list page"
+  },
   "bDtS96": {
     "defaultMessage": "Created:",
     "description": "Endpoint expanded created label"
@@ -13219,6 +13263,10 @@
     "defaultMessage": "Create",
     "description": "Gateway > Endpoints list > Create endpoint button"
   },
+  "bWwCa0": {
+    "defaultMessage": "View in the Hengjian UI",
+    "description": "Link to the MLflow UI for an alternate view of the current trace"
+  },
   "bXA79t": {
     "defaultMessage": "On",
     "description": "Runs charts > line chart > ignore outliers > on setting label"
@@ -13230,10 +13278,6 @@
   "bZdMSj": {
     "defaultMessage": "Ungrouped",
     "description": "Label for the group of logged models that are not grouped by any source run"
-  },
-  "ba7/ni": {
-    "defaultMessage": "A demo experiment to quickly explore MLflow's core features with sample pre-generated data. You can clean up demo resources from Settings.",
-    "description": "Tooltip explaining the demo experiment in the experiments list"
   },
   "bbffwW": {
     "defaultMessage": "Y-axis scale",
@@ -13278,6 +13322,10 @@
   "biGssA": {
     "defaultMessage": "Assessments",
     "description": "Section label for assessment columns in the traces table column selector"
+  },
+  "bjeubn": {
+    "defaultMessage": "Set up the AI Gateway",
+    "description": "AI Gateway setup guide > Main title"
   },
   "bjoGjg": {
     "defaultMessage": "Last hour",
@@ -13374,10 +13422,6 @@
   "c+3yBY": {
     "defaultMessage": "View traces for this period",
     "description": "Link text to navigate to traces tab filtered by the selected time period"
-  },
-  "c0ljd6": {
-    "defaultMessage": "MLflow documentation",
-    "description": "Link to MLflow documentation"
   },
   "c0slEY": {
     "defaultMessage": "Click into an individual run to see all models associated with it",
@@ -13719,6 +13763,10 @@
     "defaultMessage": "The delta with baseline run is {delta} percentage points.",
     "description": "Percentage-point difference in a comparison run rate summary"
   },
+  "d29IVD": {
+    "defaultMessage": "Allow fetching documentation so the assistant can use current product information and make accurate suggestions.",
+    "description": "Tooltip for the assistant permission to read documentation"
+  },
   "d2ZU/7": {
     "defaultMessage": "secret",
     "description": "MCP server package env var secret badge"
@@ -13762,6 +13810,10 @@
   "d72zLS": {
     "defaultMessage": "Toggle session grouping",
     "description": "Tooltip for the group by session button in the traces table toolbar"
+  },
+  "d86n1l": {
+    "defaultMessage": "Receive HTTP notifications when events occur on this server.",
+    "description": "Settings content section subtitle for webhooks"
   },
   "d8CXjO": {
     "defaultMessage": "Digest",
@@ -14035,10 +14087,6 @@
     "defaultMessage": "User",
     "description": "Traces table user column name"
   },
-  "dyvGJw": {
-    "defaultMessage": "MLflow Assistant needs to be configured on the MLflow server host before remote clients can use it. Ask your server administrator to open MLflow locally and complete Assistant setup.",
-    "description": "Message explaining that Assistant setup must be completed locally by a server admin"
-  },
   "dzIz7c": {
     "defaultMessage": "Name can only contain letters, numbers, underscores, hyphens, and dots. Spaces and special characters are not allowed.",
     "description": "Error message for invalid endpoint name format"
@@ -14255,6 +14303,10 @@
     "defaultMessage": "All changes saved",
     "description": "Status text shown in the dataset record drawer after a successful save"
   },
+  "eW8f/C": {
+    "defaultMessage": "Ask Hengjian about this agent",
+    "description": "Overview assistant input label"
+  },
   "eWm+AG": {
     "defaultMessage": "Remove model",
     "description": "Tooltip for remove traffic split model button"
@@ -14342,10 +14394,6 @@
   "emuySK": {
     "defaultMessage": "Issue not found in this experiment",
     "description": "Experiment Issue missing selection error"
-  },
-  "en7FHE": {
-    "defaultMessage": "A Gateway endpoint routes your agent calls to any AI model, with built-in usage tracking through MLflow Tracing, budget controls, and more.",
-    "description": "Gateway > Endpoints > Quick start description explaining what an endpoint is and how to get started"
   },
   "enbaUC": {
     "defaultMessage": "Z → A",
@@ -14438,6 +14486,10 @@
   "f0MCzt": {
     "defaultMessage": "Mark resolved",
     "description": "Experiment issue resolve action"
+  },
+  "f0lmVq": {
+    "defaultMessage": "Hengjian documentation",
+    "description": "Link to tracing documentation"
   },
   "f3Ck6m": {
     "defaultMessage": "Total tokens",
@@ -14566,6 +14618,10 @@
   "fUwLyA": {
     "defaultMessage": "Sample judge output",
     "description": "Title for sample judge output panel"
+  },
+  "fVUsdP": {
+    "defaultMessage": "Hengjian documentation",
+    "description": "AI Gateway setup guide > Documentation link text"
   },
   "fWPlO9": {
     "defaultMessage": "About this logged model",
@@ -14827,10 +14883,6 @@
     "defaultMessage": "(this grant applies to the role's workspace)",
     "description": "Hint that a workspace permission applies to the role's own workspace"
   },
-  "gBORqQ": {
-    "defaultMessage": "MLflow Assistant is not available from this client. Ask your MLflow server administrator to enable remote access if you need to use it remotely.",
-    "description": "Message explaining that the Assistant is blocked by the server's remote-access settings"
-  },
   "gC2Kxm": {
     "defaultMessage": "Give instructions to the model. Use '{{ }}' or the \"Add new variable\" button to add variables to your prompt.",
     "description": "Experiment page > new run modal > prompt template input hint"
@@ -14842,10 +14894,6 @@
   "gCQwvN": {
     "defaultMessage": "Delete",
     "description": "Manage review questions: confirm delete"
-  },
-  "gEKaYI": {
-    "defaultMessage": "Use the MLflow Python client to register an MCP server from a URL:",
-    "description": "Instruction text for Python-based MCP server registration"
   },
   "gF1WQp": {
     "defaultMessage": "Add message",
@@ -14895,13 +14943,13 @@
     "defaultMessage": "{count} roles selected",
     "description": "Summary shown when more than one role is selected"
   },
-  "gMX8Zp": {
-    "defaultMessage": "MLflow assistant",
-    "description": "Tab label for the in-UI MLflow assistant path in the agent action card"
-  },
   "gMflIB": {
     "defaultMessage": "Reset to defaults",
     "description": "Button in the experiment runs table column selector that resets column visibility, order and width back to defaults"
+  },
+  "gNnxjz": {
+    "defaultMessage": "Allow running CLI commands to fetch traces, runs, and experiment data. This is required for the assistant to work properly.",
+    "description": "Tooltip for the required assistant CLI permission"
   },
   "gOH/XL": {
     "defaultMessage": "No additional metadata is available for this dataset.",
@@ -14994,10 +15042,6 @@
   "gYOuKs": {
     "defaultMessage": "Rationale",
     "description": "Label for the rationale of an expectation assessment"
-  },
-  "gYlgfM": {
-    "defaultMessage": "MLflow Invocations",
-    "description": "Unified API variant: MLflow Invocations"
   },
   "gYxt54": {
     "defaultMessage": "Could not refresh trace",
@@ -15439,10 +15483,6 @@
     "defaultMessage": "Close",
     "description": "Button that closes the assistant panel"
   },
-  "hkXDZn": {
-    "defaultMessage": "MLflow allows you associate traces with users and chat sessions. This is useful for analyzing multi-turn conversations, enabling you to inspect what happened at each step. Copy the code snippet below to generate a sample trace, or visit the documentation for a more in-depth example.",
-    "description": "Empty state description for the chat sessions table"
-  },
   "hl/0KK": {
     "defaultMessage": "Tag key",
     "description": "Placeholder for the tag-key input in the traces filter"
@@ -15631,13 +15671,13 @@
     "defaultMessage": "Stop sequences: {stopSequences}",
     "description": "Experiment page > artifact compare view > run column header prompt metadata > stop sequences parameter"
   },
-  "iCXQQS": {
-    "defaultMessage": "MLflow Tracing UI",
-    "description": "Screenshot of the MLflow tracing user interface"
-  },
   "iCdWsS": {
     "defaultMessage": "Adheres to guidelines",
     "description": "Evaluation results > conversational guidelines assessment > positive value label. Displayed if the assistant adheres to guidelines throughout the conversation."
+  },
+  "iCzg2e": {
+    "defaultMessage": "An error occurred while attempting to fetch trace data (ID: {traceId}). Please ensure that the tracking server is running, and that the trace data exists. Error details:",
+    "description": "An error message explaining that an error occurred while fetching trace data"
   },
   "iDpAK8": {
     "defaultMessage": "Add tags",
@@ -16007,10 +16047,6 @@
     "defaultMessage": "Clear",
     "description": "Button that resets an unsaved permission draft"
   },
-  "j6buGr": {
-    "defaultMessage": "Start tracing your agent with one command to send traces to MLflow.",
-    "description": "Tracing quick setup explanation"
-  },
   "j6ijji": {
     "defaultMessage": "Are you sure you want to delete this access endpoint? This action cannot be undone.",
     "description": "Access endpoint delete confirmation message"
@@ -16046,10 +16082,6 @@
   "j8+BJX": {
     "defaultMessage": "Metrics",
     "description": "Tooltip for the metric icon in the evaluation runs chart"
-  },
-  "jClVwe": {
-    "defaultMessage": "Point the OTLP exporter at this MLflow server by setting these environment variables. See the <a>OpenTelemetry export docs</a> for the full reference.",
-    "description": "Step 1 description for OpenTelemetry traces onboarding"
   },
   "jEOQQ/": {
     "defaultMessage": "Session",
@@ -16211,10 +16243,6 @@
     "defaultMessage": "Add a filter",
     "description": "Idle trace search placeholder"
   },
-  "ji3A2G": {
-    "defaultMessage": "Install and initialize the MLflow TypeScript SDK",
-    "description": "Step 1 title for TypeScript traces onboarding"
-  },
   "jiIft9": {
     "defaultMessage": "Settings",
     "description": "Sidebar link for settings page"
@@ -16290,6 +16318,10 @@
   "jueuhC": {
     "defaultMessage": "This file is stored but too large to preview here. Pull the skill to read it.",
     "description": "Skill file preview message for a large file"
+  },
+  "jusv4V": {
+    "defaultMessage": "Native invocations API for model calls. Supports seamless model switching and advanced routing.",
+    "description": "MLflow invocations API description"
   },
   "jvLj7U": {
     "defaultMessage": "Removing version tags requires the Manage permission on this skill.",
@@ -16434,10 +16466,6 @@
   "kICSro": {
     "defaultMessage": "JSON body for the {providerName} API. This payload is sent directly to the provider in its native format.",
     "description": "Request body tooltip for passthrough provider"
-  },
-  "kIESP/": {
-    "defaultMessage": "Filter applies to the first trace in each session. Only run on sessions where the first trace matches this filter; leave blank to run on all. Uses MLflow {link}.",
-    "description": "Hint text for filter string input for session-level scorers"
   },
   "kISFMR": {
     "defaultMessage": "Run",
@@ -16619,10 +16647,6 @@
     "defaultMessage": "Get Link",
     "description": "Title text for get-link modal"
   },
-  "kuXdsk": {
-    "defaultMessage": "Ask MLflow about this agent",
-    "description": "Overview assistant input label"
-  },
   "kwXUSF": {
     "defaultMessage": "Search MCP servers by name",
     "description": "Placeholder for MCP server search filter input"
@@ -16638,6 +16662,10 @@
   "l+5Myp": {
     "defaultMessage": "Select all runs",
     "description": "Accessible label for the select-all checkbox in the evaluation runs table header"
+  },
+  "l+R4Hv": {
+    "defaultMessage": "No schema. See the <link>docs</link> for how to include input and output schema with your model.",
+    "description": "Text for schema table when no schema exists in the model version\n                     page"
   },
   "l/+0SR": {
     "defaultMessage": "Last modified",
@@ -16670,6 +16698,10 @@
   "lAX0eA": {
     "defaultMessage": "Failed to load session",
     "description": "Title shown in the V4 session drawer when the session fails to load"
+  },
+  "lAd0qr": {
+    "defaultMessage": "Connect your coding assistants and AI applications to Hengjian and automatically analyze your experiments and traces.",
+    "description": "Home page news card description for the MCP server"
   },
   "lCQfQM": {
     "defaultMessage": "Agent response <highlight>violated policy</highlight>",
@@ -16923,6 +16955,10 @@
     "defaultMessage": "You do not have permission to view skills.",
     "description": "Description for Skill Registry permission-denied state"
   },
+  "ltKiVk": {
+    "defaultMessage": "3. Open the UI",
+    "description": "Section title explaining how to access traces in the MLflow UI"
+  },
   "ltqNpe": {
     "defaultMessage": "Creation time",
     "description": "Label for the creation time column in the logged model list page"
@@ -17131,6 +17167,10 @@
     "defaultMessage": "Name:",
     "description": "Label for the prompt name field"
   },
+  "mVlkcI": {
+    "defaultMessage": "This server is not configured to run scheduled detection. It needs a SQL backend store, job execution and periodic tasks enabled, and a job execution engine that can run scheduled detection.",
+    "description": "Experiment issues tab > Tooltip explaining the scheduled-detection control is disabled because the server cannot run a schedule"
+  },
   "mW3Ql9": {
     "defaultMessage": "Clear selection",
     "description": "Clear-selection button in the V2 dataset records inline bulk-selection group"
@@ -17162,6 +17202,10 @@
   "mZtok7": {
     "defaultMessage": "Linked prompts",
     "description": "Label for the linked prompts view tab in the model trace explorer"
+  },
+  "maZOxB": {
+    "defaultMessage": "Your browser reads the folder and uploads it. This server stores the content.",
+    "description": "Explanation of the local skill folder upload flow"
   },
   "mba0x8": {
     "defaultMessage": "Step 1: Define your judge function",
@@ -17503,6 +17547,10 @@
     "defaultMessage": "Agents-as-a-judge",
     "description": "Home page news card title three"
   },
+  "nS29sY": {
+    "defaultMessage": "The {provider} API key can only be added from the server host. Pick another provider below.",
+    "description": "Inline assistant API key prompt shown to a remote user, who cannot add API keys"
+  },
   "nSbbT5": {
     "defaultMessage": "Submit",
     "description": "Review focused view: submit answers and mark the trace complete"
@@ -17687,10 +17735,6 @@
     "defaultMessage": "MCP",
     "description": "Sidebar link for MCP tab"
   },
-  "nyHcAz": {
-    "defaultMessage": "MLflow deployment returned the following error: \"{errorMessage}\"",
-    "description": "Experiment page > MLflow deployment error message"
-  },
   "o/CZUv": {
     "defaultMessage": "Medium",
     "description": "Experiment issues tab > Medium severity label"
@@ -17763,6 +17807,10 @@
     "defaultMessage": "Evaluation runs",
     "description": "Evaluation run count in a selected overview chart range"
   },
+  "oEFzQS": {
+    "defaultMessage": "Hengjian Tracing UI",
+    "description": "Screenshot of the MLflow tracing user interface"
+  },
   "oH2nPk": {
     "defaultMessage": "Please ensure you have a webhook configured to receive budget alert events. You can create one in the 'Budget alert webhooks' section on this page.",
     "description": "Info message when alert action is selected for budget policy"
@@ -17798,6 +17846,10 @@
   "oLcvO7": {
     "defaultMessage": "Create skill",
     "description": "Skill Registry empty state call to action"
+  },
+  "oLnhGT": {
+    "defaultMessage": "Copy your models to another registered model for simple model promotion across environments. For more mature production-grade setups, we recommend setting up automated model training workflows to produce models in controlled environments. <link>Learn more</link>",
+    "description": "Model registry > OSS Promote model modal > description paragraph body"
   },
   "oM+XmM": {
     "defaultMessage": "Column options for {column}",
@@ -17963,10 +18015,6 @@
     "defaultMessage": "Copy setup command",
     "description": "Accessible label for the button that copies the tracing setup command"
   },
-  "ot8KVZ": {
-    "defaultMessage": "MLflow Demo Experiment",
-    "description": "Badge label for the demo experiment in the experiments list"
-  },
   "otRalM": {
     "defaultMessage": "Datasets",
     "description": "Region label for the V2 evaluation datasets table — wraps the table and pagination"
@@ -17982,6 +18030,10 @@
   "ovufhb": {
     "defaultMessage": "The selected run has {childRunCount, plural, one {# child run} other {# child runs}}. Delete this run alone or all {totalRunsWithChildren}?",
     "description": "Prompt asking whether to delete a run by itself or with its child runs"
+  },
+  "ow7tOU": {
+    "defaultMessage": "Install and initialize the TypeScript SDK",
+    "description": "Step 1 title for TypeScript traces onboarding"
   },
   "owr9l2": {
     "defaultMessage": "No group by columns selected",
@@ -18531,10 +18583,6 @@
     "defaultMessage": "Block",
     "description": "Block action title"
   },
-  "qc+sQc": {
-    "defaultMessage": "No digest was recorded. This version's files are stored in MLflow, so its content does not change.",
-    "description": "Tooltip for a missing digest on an uploaded skill version"
-  },
   "qcO5RW": {
     "defaultMessage": "Select an owner",
     "description": "Review queue: owner dropdown placeholder"
@@ -18546,6 +18594,10 @@
   "qcc9H7": {
     "defaultMessage": "Total tokens",
     "description": "Eval run stat: total tokens used"
+  },
+  "qcugqO": {
+    "defaultMessage": "Use the log artifact APIs to store file outputs from runs.",
+    "description": "Information in the empty state explaining how one could log artifacts output files for the experiment runs"
   },
   "qdYCbk": {
     "defaultMessage": "Copied to clipboard",
@@ -18626,10 +18678,6 @@
   "quxZB8": {
     "defaultMessage": "Create version",
     "description": "Button for creating a new genai model version"
-  },
-  "qvEOHi": {
-    "defaultMessage": "MLflow collects usage data to improve the product. To confirm your preferences, please visit the settings page in the navigation sidebar. To learn more about what data is collected, please visit the <documentation>documentation</documentation>.",
-    "description": "Telemetry alert description"
   },
   "qwSqlQ": {
     "defaultMessage": "Rationale (optional)",
@@ -18991,6 +19039,10 @@
     "defaultMessage": "Stage transition",
     "description": "Title for a model version stage transition modal"
   },
+  "rxv1ub": {
+    "defaultMessage": "Project paths point at this server host's filesystem and can only be configured from the server host.",
+    "description": "Note when assistant project paths cannot be edited from a remote client"
+  },
   "rytnce": {
     "defaultMessage": "Copy experiment id",
     "description": "Copy tooltip to copy experiment id from experiment runs table header"
@@ -19026,10 +19078,6 @@
   "s35HDG": {
     "defaultMessage": "Used by {runNames} {hasMore, select, true {and other runs} other {}}",
     "description": "Experiment page > artifact compare view > label indicating which runs are using particular input field"
-  },
-  "s3t5pu": {
-    "defaultMessage": "Hide low-severity spans. Each span gets a level based on its type. Spans with an exception event are promoted to Error. Spans recorded before MLflow 3.13 don't carry a level and are treated as Debug. <link>Learn more</link>.",
-    "description": "Tooltip explaining the minimum log level filter, including the autolog default mapping, exception-bump rule, and pre-3.13 backwards-compat note."
   },
   "s3vONV": {
     "defaultMessage": "{count, plural, one {# API key is} other {# API keys are}} currently in use by endpoints. Deleting will require attaching different keys to continue using those endpoints.",
@@ -19155,6 +19203,10 @@
     "defaultMessage": "Key must be unique",
     "description": "Error message for unique key in tag assignment modal"
   },
+  "sLMSgT": {
+    "defaultMessage": "Execute CLI (required)",
+    "description": "Assistant permission to run the MLflow command-line tool"
+  },
   "sLhmy7": {
     "defaultMessage": "New run",
     "description": "Experiment page > new run modal > modal title"
@@ -19222,10 +19274,6 @@
   "sYKPid": {
     "defaultMessage": "Description",
     "description": "Roles table description header"
-  },
-  "sYkXR1": {
-    "defaultMessage": "JSON body for the MLflow Invocations API. Use \"messages\" for chat or \"input\" for embeddings.",
-    "description": "Request body tooltip for unified MLflow Invocations API"
   },
   "saHb/5": {
     "defaultMessage": "Found {issueCount, plural, =0 {no issues} one {1 issue} other {# issues}} across {traceCount, plural, one {1 trace} other {# traces}}.",
@@ -19386,6 +19434,10 @@
   "t4yUI0": {
     "defaultMessage": "Conversational role adherence",
     "description": "LLM template option"
+  },
+  "t7QjHM": {
+    "defaultMessage": "Hide low-severity spans. Each span gets a level based on its type. Spans with an exception event are promoted to Error. Spans recorded before version 3.13 don't carry a level and are treated as Debug. <link>Learn more</link>.",
+    "description": "Tooltip explaining the minimum log level filter, including the autolog default mapping, exception-bump rule, and pre-3.13 backwards-compat note."
   },
   "t7XeYe": {
     "defaultMessage": "Cancel",
@@ -19603,10 +19655,6 @@
     "defaultMessage": "Something went wrong while loading traces.",
     "description": "Generic fallback description for the V4 traces load-error surfaces"
   },
-  "tv0qk9": {
-    "defaultMessage": "Native MLflow API for model invocations. Supports seamless model switching and advanced routing.",
-    "description": "MLflow invocations API description"
-  },
   "tvvhyy": {
     "defaultMessage": "{direction} {delta}{unit}",
     "description": "Change from the previous monitoring score shown in the overview"
@@ -19823,10 +19871,6 @@
     "defaultMessage": "Or browse all providers and models →",
     "description": "Gateway > Quick start > Link to create endpoint with full model selection"
   },
-  "ufamzi": {
-    "defaultMessage": "Comparing {runs} MLflow Runs",
-    "description": "Page title for the compare runs page"
-  },
   "ufumOZ": {
     "defaultMessage": "Add aliases",
     "description": "Tooltip for the button that adds model version aliases"
@@ -19866,10 +19910,6 @@
   "up3dAE": {
     "defaultMessage": "Keep a comparison row when one trace matches all filters and the search.",
     "description": "Comparison filter semantics shown in the filter builder"
-  },
-  "up3hbr": {
-    "defaultMessage": "Receive HTTP notifications when events occur in MLflow.",
-    "description": "Settings content section subtitle for webhooks"
   },
   "uq6CTI": {
     "defaultMessage": "No profile available",
@@ -20002,6 +20042,10 @@
   "vCZkhL": {
     "defaultMessage": "The directory holding SKILL.md. Leave blank if it is at the root.",
     "description": "Hint for the skill source subpath field"
+  },
+  "vD1jI9": {
+    "defaultMessage": "Access state-of-the-art prompt optimization algorithms such as MIPROv2 and GEPA through the prompt registry.",
+    "description": "Home page news card description for prompt optimization"
   },
   "vDAb7C": {
     "defaultMessage": "Auto-create experiment",
@@ -20539,6 +20583,10 @@
     "defaultMessage": "Columns",
     "description": "Aria label for the eval-runs columns button"
   },
+  "wmXY+y": {
+    "defaultMessage": "Updating Assistant settings is not allowed for a remote server. Contact your server admin to update the settings.",
+    "description": "Tooltip explaining that Assistant settings cannot be changed from a remote client"
+  },
   "womPSY": {
     "defaultMessage": "Session",
     "description": "Column label for session"
@@ -20622,10 +20670,6 @@
   "x+qOh2": {
     "defaultMessage": "Views",
     "description": "Label for the saved views dropdown in the traces toolbar"
-  },
-  "x/YJtF": {
-    "defaultMessage": "MLflow MCP server",
-    "description": "Home page news card title one"
   },
   "x03ytD": {
     "defaultMessage": "e.g., END, ###, STOP",
@@ -20987,9 +21031,17 @@
     "defaultMessage": "Prompt Caching",
     "description": "Filter option for prompt caching support"
   },
+  "xzWM4B": {
+    "defaultMessage": "Only run on traces matching this filter; leave blank to run on all. Uses the {link}.",
+    "description": "Hint text for filter string input"
+  },
   "xzaUeL": {
     "defaultMessage": "Errors",
     "description": "Trace execution errors row in evaluation run configuration comparison"
+  },
+  "y1XYTJ": {
+    "defaultMessage": "The AI Gateway requires a SQL-based backend store (SQLite, PostgreSQL, MySQL, or MSSQL) to persist credentials securely. Start the server with a database URI:",
+    "description": "AI Gateway setup guide > Step 2 description"
   },
   "y2oQyU": {
     "defaultMessage": "Model name",
@@ -21030,6 +21082,10 @@
   "y8O4PM": {
     "defaultMessage": "Retrieval Groundedness",
     "description": "LLM template option"
+  },
+  "y8bcTN": {
+    "defaultMessage": "Hengjian chat completions",
+    "description": "Starter code tab for the chat completions API"
   },
   "yAuDRt": {
     "defaultMessage": "Evaluation is not possible because values for the following inputs cannot be determined: {missingParamList}. Add input columns to the \"group by\" settings or use \"Add row\" button to define new parameter set.",
@@ -21203,10 +21259,6 @@
     "defaultMessage": "Retiring this version rather than withdrawing it? Deprecate it instead — a deprecated version still resolves for anything that pins it, so consumers keep working.",
     "description": "Hint that deprecating a skill version is less disruptive than deleting it"
   },
-  "ylLjh0": {
-    "defaultMessage": "Opens the MLflow assistant in the browser with a suggested prompt.",
-    "description": "Description above the MLflow assistant button in the agent action card"
-  },
   "yltiK8": {
     "defaultMessage": "No prompts match your search",
     "description": "No search results message for linked prompts table on logged model details page"
@@ -21263,6 +21315,10 @@
     "defaultMessage": "Output for the trace",
     "description": "Description for outputs variable"
   },
+  "yz8lXQ": {
+    "defaultMessage": "A fingerprint of {hashed} of {total} scorers in this run. The others could not be read.",
+    "description": "Eval run detail: the scorers digest covers only the scorers whose definition could be hashed"
+  },
   "yzf17M": {
     "defaultMessage": "Some assessments are hidden by your time range filter: \"{filterLabel}\".",
     "description": "Message shown when assessments are hidden by time filter"
@@ -21303,10 +21359,6 @@
     "defaultMessage": "Could not render this view for the current trace: {error}",
     "description": "Inline error shown when a saved custom view fails to render for the open trace"
   },
-  "z2Gyuw": {
-    "defaultMessage": "MLflow Model",
-    "description": "Heading text for mlflow model artifact"
-  },
   "z3xE99": {
     "defaultMessage": "No roles",
     "description": "Empty state title for roles table"
@@ -21330,6 +21382,10 @@
   "z55yPh": {
     "defaultMessage": "Status",
     "description": "Aria label for the initial skill version status"
+  },
+  "z5TumE": {
+    "defaultMessage": "Select a framework and follow the instructions to log traces.",
+    "description": "Helper text shown at the top of the log traces drawer"
   },
   "z6K3IC": {
     "defaultMessage": "Create an AI Gateway endpoint in AI Gateway → Endpoints tab to reuse it here",
@@ -21390,6 +21446,10 @@
   "zDdLvE": {
     "defaultMessage": "Select questions",
     "description": "Review queue: questions dropdown placeholder"
+  },
+  "zDrxka": {
+    "defaultMessage": "A Gateway endpoint routes your agent calls to any AI model, with built-in usage tracking through tracing, budget controls, and more.",
+    "description": "Gateway > Endpoints > Quick start description explaining what an endpoint is and how to get started"
   },
   "zE5aGj": {
     "defaultMessage": "Guidelines",
@@ -21487,6 +21547,10 @@
     "defaultMessage": "Metrics",
     "description": "Header for metric columns in the evaluation runs table column configuration"
   },
+  "zbB6bt": {
+    "defaultMessage": "Run your application and traces will appear here automatically. For more information, visit the <a>tracing documentation</a>.",
+    "description": "Step 3 description for traces onboarding"
+  },
   "zc/Ask": {
     "defaultMessage": "Dataset",
     "description": "Dataset field in the evaluation runs filter"
@@ -21510,10 +21574,6 @@
   "zd+Duc": {
     "defaultMessage": "{runName}, {assessment}: {value}",
     "description": "Accessible label for one run and assessment bar in the eval-runs chart"
-  },
-  "zdGTig": {
-    "defaultMessage": "The Issues tab requires an MLflow server with SQL storage.",
-    "description": "Experiment Issues unavailable on unsupported storage"
   },
   "zdYXP8": {
     "defaultMessage": "Parent run",

@@ -30,7 +30,7 @@ export const PromptsListEmptyState = ({ onCreatePrompt }: { onCreatePrompt: () =
         css={{ textAlign: 'center', maxWidth: 520, marginBottom: theme.spacing.lg * 2 }}
       >
         <FormattedMessage
-          defaultMessage="Manage and version prompts using MLflow's Prompt Registry. <link>Learn more</link>"
+          defaultMessage="Manage and version prompts using the prompt registry. <link>Learn more</link>"
           description="Subtitle for the empty state on the prompts list page"
           values={{
             link: (content: any) => (

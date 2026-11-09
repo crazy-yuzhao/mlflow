@@ -108,7 +108,7 @@ export class ModelViewImpl extends React.Component<ModelViewImplProps, ModelView
 
   componentDidMount() {
     // @ts-expect-error TS(2532): Object is possibly 'undefined'.
-    const pageTitle = `${this.props.model.name} - MLflow Model`;
+    const pageTitle = `${this.props.model.name} - Hengjian Model`;
     Utils.updatePageTitle(pageTitle);
   }
 

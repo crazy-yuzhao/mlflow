@@ -760,7 +760,7 @@ export const ExperimentIssuesScheduleControl = ({ experimentId }: ExperimentIssu
     // wrong on a server that has all three and is turned down for its job execution engine.
     const disabledReason = intl.formatMessage({
       defaultMessage:
-        'This MLflow server is not configured to run scheduled detection. It needs a SQL backend store, job execution and periodic tasks enabled, and a job execution engine that can run scheduled detection.',
+        'This server is not configured to run scheduled detection. It needs a SQL backend store, job execution and periodic tasks enabled, and a job execution engine that can run scheduled detection.',
       description:
         'Experiment issues tab > Tooltip explaining the scheduled-detection control is disabled because the server cannot run a schedule',
     });
@@ -1147,7 +1147,7 @@ export const ExperimentIssuesScheduleControl = ({ experimentId }: ExperimentIssu
                 {intl.formatMessage(
                   {
                     defaultMessage:
-                      '{provider} needs an API key. Paste it once and MLflow saves it securely in AI Gateway, where every scheduled run reads it.',
+                      '{provider} needs an API key. Paste it once and this server saves it securely in AI Gateway, where every scheduled run reads it.',
                     description: 'Experiment issues tab > Schedule modal explanation of the API key step',
                   },
                   { provider: selectedProviderName },

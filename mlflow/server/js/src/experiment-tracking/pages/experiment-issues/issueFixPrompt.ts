@@ -8,9 +8,9 @@ const ISSUE_DETAILS_TAG = 'issue_details';
 
 // "Agent" alone would mean both the coding agent the prompt addresses and the developer's agent it
 // fixes, so the prompt calls the coding agent "you" and the other "the developer's agent".
-const FIX_PROMPT_INTRO = `MLflow issue detection found a problem in the developer's agent, from traces that agent logged to an MLflow experiment. You are a coding agent working in the agent's repository. Find the cause of the issue below and carry the fix through end to end: don't stop at proposing a fix or describing one.
+const FIX_PROMPT_INTRO = `Issue detection found a problem in the developer's agent, from traces that agent logged to an experiment. You are a coding agent working in the agent's repository. Find the cause of the issue below and carry the fix through end to end: don't stop at proposing a fix or describing one.
 
-Use the mlflow-agent-improvement skill. If the MLflow skills aren't installed, install them from https://github.com/mlflow/skills first. Inspect the affected traces and the code before changing anything.
+Use the mlflow-agent-improvement skill. If those skills aren't installed, install them from https://github.com/mlflow/skills first. Inspect the affected traces and the code before changing anything.
 
 Don't push or open a pull request until the developer has reviewed your change and asks you to.`;
 
@@ -105,7 +105,7 @@ ${issue.source_run_id ? `Detection run ID: ${issue.source_run_id}\n` : ''}${issu
     ...traceIdLines(traceIds, totalTraceCount, hasMoreTraces),
   ])}
 
-To read the issue's traces, use the MLflow CLI on this machine with \`MLFLOW_TRACKING_URI\` set to \`${trackingUri}\`${workspaceSetup}. \`mlflow traces search --experiment-id ${experimentId} --filter-string "issue.id = '${issue.issue_id}'" --no-include-spans\` lists the traces the issue affects, and each of those traces carries an issue assessment named ${issue.issue_id} with the evidence. The \`mlflow-trace-analysis\` and \`mlflow-trace-retrieval\` skills cover reading them.
+To read the issue's traces, use the CLI on this machine with \`MLFLOW_TRACKING_URI\` set to \`${trackingUri}\`${workspaceSetup}. \`mlflow traces search --experiment-id ${experimentId} --filter-string "issue.id = '${issue.issue_id}'" --no-include-spans\` lists the traces the issue affects, and each of those traces carries an issue assessment named ${issue.issue_id} with the evidence. The \`mlflow-trace-analysis\` and \`mlflow-trace-retrieval\` skills cover reading them.
 
 ${FIX_PROMPT_OUTRO}`;
 };

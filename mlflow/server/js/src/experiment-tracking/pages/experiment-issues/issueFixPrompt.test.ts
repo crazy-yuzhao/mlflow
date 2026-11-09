@@ -48,7 +48,7 @@ describe('buildIssueFixPrompt', () => {
     const prompt = buildIssueFixPrompt('1', makeIssue(), ISSUE_URL, { traceIds: ['tr-1'] });
 
     expect(prompt.split('\n')[0]).toBe(
-      "MLflow issue detection found a problem in the developer's agent, from traces that agent logged to an MLflow experiment. You are a coding agent working in the agent's repository. Find the cause of the issue below and carry the fix through end to end: don't stop at proposing a fix or describing one.",
+      "Issue detection found a problem in the developer's agent, from traces that agent logged to an experiment. You are a coding agent working in the agent's repository. Find the cause of the issue below and carry the fix through end to end: don't stop at proposing a fix or describing one.",
     );
     expect(prompt).not.toContain('connected');
     expect(prompt).toContain(
@@ -63,7 +63,7 @@ describe('buildIssueFixPrompt', () => {
 
     expect(prompt).toContain(`\n\nIssue URL: ${ISSUE_URL}\nExperiment ID: 1\n`);
     expect(prompt).toContain(
-      'use the MLflow CLI on this machine with `MLFLOW_TRACKING_URI` set to `https://mlflow.example`. ',
+      'use the CLI on this machine with `MLFLOW_TRACKING_URI` set to `https://mlflow.example`. ',
     );
     // A server without workspaces rejects any workspace header, so with none active it goes unmentioned.
     expect(prompt).not.toContain('MLFLOW_WORKSPACE');

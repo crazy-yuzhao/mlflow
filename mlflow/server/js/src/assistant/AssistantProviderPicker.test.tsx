@@ -63,7 +63,7 @@ const renderPicker = ({
   providers = [
     providerInfo({ name: 'claude_code', display_name: 'Claude Code' }),
     providerInfo({ name: 'codex', display_name: 'OpenAI Codex' }),
-    providerInfo({ name: 'mlflow_gateway', display_name: 'MLflow AI Gateway' }),
+    providerInfo({ name: 'mlflow_gateway', display_name: 'Hengjian AI Gateway' }),
   ],
   gatewayVendorOptions = { openai: ['gpt-5.5', 'gpt-5-mini'] },
   onSelect = jest.fn(),
@@ -128,7 +128,7 @@ describe('AssistantProviderPicker', () => {
     expect(screen.getByText('Local providers')).toBeInTheDocument();
     expect(screen.getByText('Codex CLI')).toBeInTheDocument();
     expect(screen.getByText('Gateway endpoints')).toBeInTheDocument();
-    expect(screen.getByText('MLflow AI Gateway')).toBeInTheDocument();
+    expect(screen.getByText('Hengjian AI Gateway')).toBeInTheDocument();
     expect(screen.queryByText('OpenAI Codex')).not.toBeInTheDocument();
     expectProviderChecked('Claude Code');
     expectProviderUnchecked('OpenAI');
@@ -178,9 +178,9 @@ describe('AssistantProviderPicker', () => {
     });
 
     await user.click(screen.getByRole('button', { name: 'Change assistant provider' }));
-    expectProviderChecked('MLflow AI Gateway');
+    expectProviderChecked('Hengjian AI Gateway');
 
-    await user.hover(getMenuItemByText('MLflow AI Gateway'));
+    await user.hover(getMenuItemByText('Hengjian AI Gateway'));
     expect(await screen.findByText('custom-openai-endpoint')).toBeInTheDocument();
     expectProviderChecked('custom-openai-endpoint');
   });
@@ -196,7 +196,7 @@ describe('AssistantProviderPicker', () => {
     await user.click(screen.getByRole('button', { name: 'Change assistant provider' }));
     expect(await screen.findByText('Anthropic')).toBeInTheDocument();
 
-    await user.hover(screen.getByText('MLflow AI Gateway'));
+    await user.hover(screen.getByText('Hengjian AI Gateway'));
     expect(await screen.findByText('custom-anthropic-endpoint')).toBeInTheDocument();
     expect(screen.queryByText('mlflow-assistant-anthropic')).not.toBeInTheDocument();
   });
@@ -254,7 +254,7 @@ describe('AssistantProviderPicker', () => {
 
   test.each([
     ['openai', 'OpenAI'],
-    ['xai', 'MLflow AI Gateway'],
+    ['xai', 'Hengjian AI Gateway'],
   ])('shows %s gateway endpoint as %s', (modelProvider, label) => {
     renderPicker({
       provider: resolvedProvider({

@@ -180,7 +180,7 @@ const WebhooksSettings = ({
             <Typography.Text color="secondary">
               {description ?? (
                 <FormattedMessage
-                  defaultMessage="Manage webhooks to receive HTTP notifications when events occur in MLflow."
+                  defaultMessage="Manage webhooks to receive HTTP notifications when events occur on this server."
                   description="Webhooks settings section description"
                 />
               )}

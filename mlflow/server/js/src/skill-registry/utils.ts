@@ -65,7 +65,7 @@ export const formatSkillSourceLabel = (sourceType?: SkillSourceType | null): str
     case 'zip':
       return 'ZIP archive';
     case 'mlflow':
-      return 'MLflow artifacts';
+      return 'Hengjian artifacts';
     default:
       return '';
   }

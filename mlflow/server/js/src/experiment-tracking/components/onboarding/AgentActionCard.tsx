@@ -131,7 +131,7 @@ export const AgentActionCard = ({
               <span css={{ display: 'inline-flex', alignItems: 'center', gap: theme.spacing.xs }}>
                 <AssistantSparkleIcon isHovered={false} iconSize={14} />
                 <FormattedMessage
-                  defaultMessage="MLflow assistant"
+                  defaultMessage="Hengjian assistant"
                   description="Tab label for the in-UI MLflow assistant path in the agent action card"
                 />
               </span>
@@ -148,7 +148,7 @@ export const AgentActionCard = ({
           <Tabs.Content value="agent-setup" css={{ paddingTop: 0 }}>
             <Typography.Text color="secondary" css={{ fontSize: 13, display: 'block', marginBottom: theme.spacing.sm }}>
               <FormattedMessage
-                defaultMessage="Run this from your project's Git repository to connect to MLflow and launch your coding agent to add tracing. Have Claude Code, Codex, or OpenCode installed first."
+                defaultMessage="Run this from your project's Git repository to connect to this server and launch your coding agent to add tracing. Have Claude Code, Codex, or OpenCode installed first."
                 description="Description above the MLflow setup wizard terminal command in the agent action card"
               />
             </Typography.Text>
@@ -281,7 +281,7 @@ export const AgentActionCard = ({
           <Tabs.Content value="assistant" css={{ paddingTop: 0 }}>
             <Typography.Text color="secondary" css={{ fontSize: 13, display: 'block', marginBottom: theme.spacing.sm }}>
               <FormattedMessage
-                defaultMessage="Opens the MLflow assistant in the browser with a suggested prompt."
+                defaultMessage="Opens the Hengjian assistant in the browser with a suggested prompt."
                 description="Description above the MLflow assistant button in the agent action card"
               />
             </Typography.Text>

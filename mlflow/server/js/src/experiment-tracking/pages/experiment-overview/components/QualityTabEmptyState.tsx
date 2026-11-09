@@ -105,7 +105,7 @@ export const QualityTabEmptyState = ({ hasAssessmentsOutsideTimeRange = false }:
       </Typography.Title>
       <Typography.Paragraph color="secondary" css={{ maxWidth: 600 }}>
         <FormattedMessage
-          defaultMessage="MLflow allows you to evaluate your GenAI applications using scorers. Scorers compute quality metrics like relevance, correctness, and custom assessments. Copy the code snippet below to run an evaluation, or visit the documentation for a more in-depth example."
+          defaultMessage="You can evaluate your GenAI applications using scorers. Scorers compute quality metrics like relevance, correctness, and custom assessments. Copy the code snippet below to run an evaluation, or visit the documentation for a more in-depth example."
           description="Empty state description for the quality tab in overview page"
         />
         <Typography.Link

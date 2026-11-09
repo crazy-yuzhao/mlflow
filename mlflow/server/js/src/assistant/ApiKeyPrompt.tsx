@@ -96,7 +96,7 @@ export const ApiKeyPrompt = ({
             />
           ) : (
             <FormattedMessage
-              defaultMessage="The {provider} API key can only be added from the MLflow server host. Pick another provider below."
+              defaultMessage="The {provider} API key can only be added from the server host. Pick another provider below."
               description="Inline assistant API key prompt shown to a remote user, who cannot add API keys"
               values={{ provider: providerName }}
             />
@@ -129,7 +129,7 @@ export const ApiKeyPrompt = ({
 
       <Typography.Text color="secondary" css={{ fontSize: theme.typography.fontSizeSm - 1 }}>
         <FormattedMessage
-          defaultMessage="Your key is stored in MLflow LLM Connections on this server."
+          defaultMessage="Your key is stored in LLM Connections on this server."
           description="Note in the inline assistant API key prompt about how the key is stored"
         />
       </Typography.Text>

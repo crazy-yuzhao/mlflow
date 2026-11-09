@@ -466,7 +466,7 @@ const RegisterSkillDialog = ({ onClose, skill, sourceVersion, onRegistered }: Re
               />
             ) : (
               <FormattedMessage
-                defaultMessage="Specify a source and name below to register a skill to MLflow, or {apiLink}"
+                defaultMessage="Specify a source and name below to register a skill on this server, or {apiLink}"
                 description="Intro for the skill registration dialog"
                 values={{ apiLink }}
               />
@@ -534,7 +534,7 @@ const RegisterSkillDialog = ({ onClose, skill, sourceVersion, onRegistered }: Re
                     />
                     <Typography.Text color="secondary">
                       <FormattedMessage
-                        defaultMessage="Your browser reads the folder and uploads it. MLflow stores the content."
+                        defaultMessage="Your browser reads the folder and uploads it. This server stores the content."
                         description="Explanation of the local skill folder upload flow"
                       />
                     </Typography.Text>

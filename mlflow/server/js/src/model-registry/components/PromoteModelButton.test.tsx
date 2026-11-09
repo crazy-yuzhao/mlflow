@@ -75,7 +75,7 @@ describe('PromoteModelButton', () => {
     renderComponent();
     const buttonElement = screen.getByRole('button', { name: 'Promote model' });
     await user.click(buttonElement);
-    const modalElement = screen.getByText(/Copy your MLflow models/);
+    const modalElement = screen.getByText(/Copy your models/);
     expect(modalElement).toBeInTheDocument();
     expect(modalElement).toBeVisible();
   });
@@ -88,7 +88,7 @@ describe('PromoteModelButton', () => {
     await user.click(buttonElement);
     const cancelButtonElement = screen.getByRole('button', { name: 'Cancel' });
     await user.click(cancelButtonElement);
-    const modalElement = screen.getByText(/Copy your MLflow models/);
+    const modalElement = screen.getByText(/Copy your models/);
     expect(modalElement).toBeInTheDocument();
     expect(modalElement).not.toBeVisible();
   });

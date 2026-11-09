@@ -344,7 +344,7 @@ export const EndpointUsageModal = ({ open, onClose, endpointName, baseUrl }: End
                 >
                   <SegmentedControlButton value="mlflow-invocations">
                     <FormattedMessage
-                      defaultMessage="MLflow Invocations"
+                      defaultMessage="Invocations"
                       description="Unified API variant: MLflow Invocations"
                     />
                   </SegmentedControlButton>
@@ -360,7 +360,7 @@ export const EndpointUsageModal = ({ open, onClose, endpointName, baseUrl }: End
               {tryItUnifiedVariant === 'mlflow-invocations' && (
                 <Typography.Text color="secondary" css={{ display: 'block', marginBottom: theme.spacing.sm }}>
                   <FormattedMessage
-                    defaultMessage="Native MLflow API for model invocations. Supports seamless model switching and advanced routing."
+                    defaultMessage="Native invocations API for model calls. Supports seamless model switching and advanced routing."
                     description="MLflow invocations API description"
                   />
                 </Typography.Text>
@@ -405,7 +405,7 @@ export const EndpointUsageModal = ({ open, onClose, endpointName, baseUrl }: End
                       />
                     ) : (
                       <FormattedMessage
-                        defaultMessage='JSON body for the MLflow Invocations API. Use "messages" for chat or "input" for embeddings.'
+                        defaultMessage='JSON body for the invocations API. Use "messages" for chat or "input" for embeddings.'
                         description="Request body tooltip for unified MLflow Invocations API"
                       />
                     )

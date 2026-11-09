@@ -49,7 +49,7 @@ describe('ApiKeyPrompt', () => {
     mockCanEditServerSettings = false;
     renderPrompt();
 
-    expect(screen.getByText(/can only be added from the MLflow server host/)).toBeInTheDocument();
+    expect(screen.getByText(/can only be added from the server host/)).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Continue' })).not.toBeInTheDocument();
   });
 });

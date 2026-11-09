@@ -287,7 +287,7 @@ describe('RunDetailsSidebar evaluation lineage', () => {
 
     await user.hover(screen.getByText('Scorers (1)'));
     expect(await screen.findByRole('tooltip')).toHaveTextContent(
-      'A fingerprint of 1 of 3 scorers in this run. MLflow could not read the others.',
+      'A fingerprint of 1 of 3 scorers in this run. The others could not be read.',
     );
   });
 
@@ -300,7 +300,7 @@ describe('RunDetailsSidebar evaluation lineage', () => {
 
     await user.hover(screen.getByText('Scorers (1)'));
     expect(await screen.findByRole('tooltip')).toHaveTextContent(
-      'No scorers digest. MLflow could not read any scorer in this run.',
+      'No scorers digest. No scorer in this run could be read.',
     );
   });
 

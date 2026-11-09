@@ -362,7 +362,7 @@ const RecoverableErrorCallout = ({
     case AssistantErrorCode.CliNotInstalled:
       message = (
         <FormattedMessage
-          defaultMessage="The provider's CLI is not installed on the MLflow server. Install it, or switch to another provider."
+          defaultMessage="The provider's CLI is not installed on this server. Install it, or switch to another provider."
           description="Callout shown when the assistant provider CLI is missing"
         />
       );
@@ -630,7 +630,12 @@ const ChatPanelContent = ({ onOpenSettings }: { onOpenSettings: () => void }) =>
                 (activeProvider.name === GATEWAY_PROVIDER_ID && activeProvider.model_provider
                   ? getLlmProviderDisplay(activeProvider.model_provider)?.name
                   : undefined) ??
-                getAssistantProvider(activeProvider.name)?.name ??
+                (activeProvider.name === GATEWAY_PROVIDER_ID
+                  ? intl.formatMessage({
+                      defaultMessage: 'Hengjian AI Gateway',
+                      description: 'Display name for the assistant provider backed by the AI Gateway',
+                    })
+                  : getAssistantProvider(activeProvider.name)?.name) ??
                 activeProvider.name
               }
               gatewayVendor={
@@ -842,7 +847,7 @@ const RemoteServerMessage = ({ onClose }: { onClose: () => void }) => {
         }}
       >
         <FormattedMessage
-          defaultMessage="MLflow Assistant is not available from this client. Ask your MLflow server administrator to enable remote access if you need to use it remotely."
+          defaultMessage="Hengjian Assistant is not available from this client. Ask your server administrator to enable remote access if you need to use it remotely."
           description="Message explaining that the Assistant is blocked by the server's remote-access settings"
         />
       </Typography.Text>
@@ -889,7 +894,7 @@ const RemoteSetupRequiredMessage = ({ onClose }: { onClose: () => void }) => {
         }}
       >
         <FormattedMessage
-          defaultMessage="MLflow Assistant needs to be configured on the MLflow server host before remote clients can use it. Ask your server administrator to open MLflow locally and complete Assistant setup."
+          defaultMessage="Hengjian Assistant needs to be configured on the server host before remote clients can use it. Ask your server administrator to open this server locally and complete Assistant setup."
           description="Message explaining that Assistant setup must be completed locally by a server admin"
         />
       </Typography.Text>
@@ -1055,7 +1060,7 @@ export const AssistantChatPanel = () => {
                       })
                     : intl.formatMessage({
                         defaultMessage:
-                          'Updating Assistant settings is not allowed for a remote MLflow server. ' +
+                          'Updating Assistant settings is not allowed for a remote server. ' +
                           'Contact your server admin to update the settings.',
                         description:
                           'Tooltip explaining that Assistant settings cannot be changed from a remote client',

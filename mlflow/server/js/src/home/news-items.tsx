@@ -5,9 +5,13 @@ import type { HomeNewsItemDefinition } from './types';
 export const homeNewsItems: HomeNewsItemDefinition[] = [
   {
     id: 'mlflow-mcp-server',
-    title: <FormattedMessage defaultMessage="MLflow MCP server" description="Home page news card title one" />,
-    description:
-      'Connect your coding assistants and AI applications to MLflow and automatically analyze your experiments and traces.',
+    title: <FormattedMessage defaultMessage="Hengjian MCP server" description="Home page news card title one" />,
+    description: (
+      <FormattedMessage
+        defaultMessage="Connect your coding assistants and AI applications to Hengjian and automatically analyze your experiments and traces."
+        description="Home page news card description for the MCP server"
+      />
+    ),
     link: 'https://mlflow.org/docs/latest/genai/mcp/index.html',
     componentId: 'mlflow.home.news.auto_tune_llm_judge',
     thumbnail: {
@@ -21,8 +25,12 @@ export const homeNewsItems: HomeNewsItemDefinition[] = [
   {
     id: 'optimize-prompts',
     title: <FormattedMessage defaultMessage="Optimize prompts" description="Home page news card title two" />,
-    description:
-      'Access the state-of-the-art prompt optimization algorithms such as MIPROv2, GEPA, through MLflow Prompt Registry.',
+    description: (
+      <FormattedMessage
+        defaultMessage="Access state-of-the-art prompt optimization algorithms such as MIPROv2 and GEPA through the prompt registry."
+        description="Home page news card description for prompt optimization"
+      />
+    ),
     link: 'https://mlflow.org/docs/latest/genai/prompt-registry/optimize-prompts',
     componentId: 'mlflow.home.news.optimize_prompts',
     thumbnail: {

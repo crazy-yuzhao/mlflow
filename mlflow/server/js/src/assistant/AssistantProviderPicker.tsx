@@ -199,11 +199,17 @@ const ProviderMenu = ({
   const intl = useIntl();
   const meta = getAssistantProvider(provider.name);
   const llmVendor = provider.model_provider ? getLlmProviderDisplay(provider.model_provider) : undefined;
+  const gatewayLabel = intl.formatMessage({
+    defaultMessage: 'Hengjian AI Gateway',
+    description: 'Display name for the assistant provider backed by the AI Gateway',
+  });
+  const namedProviderLabel = (id: string, fallback: string) =>
+    id === GATEWAY_PROVIDER_ID ? gatewayLabel : providerMenuLabel(id, fallback);
   const label = provider.model_provider
     ? llmVendor
       ? gatewayVendorMenuLabel(provider.model_provider)
-      : (meta?.name ?? provider.name)
-    : providerMenuLabel(provider.name, meta?.name ?? provider.name);
+      : namedProviderLabel(provider.name, meta?.name ?? provider.name)
+    : namedProviderLabel(provider.name, meta?.name ?? provider.name);
   const logo = llmVendor?.logo ?? meta?.logo;
   const ProviderIcon = llmVendor ? undefined : meta?.icon;
   const gatewayProvider = providers.find((candidate) => candidate.name === GATEWAY_PROVIDER_ID);
@@ -304,7 +310,7 @@ const ProviderMenu = ({
             </DropdownMenu.Label>
             {standardProviders.map((candidate) => {
               const candidateMeta = getAssistantProvider(candidate.name);
-              const candidateLabel = providerMenuLabel(candidate.name, candidateMeta?.name ?? candidate.display_name);
+              const candidateLabel = namedProviderLabel(candidate.name, candidateMeta?.name ?? candidate.display_name);
               const isSelected = provider.name === candidate.name;
 
               return (
@@ -339,7 +345,10 @@ const ProviderMenu = ({
               <DropdownMenu.SubTrigger>
                 {providerItemContent(
                   gatewayProvider,
-                  getAssistantProvider(gatewayProvider.name)?.name ?? gatewayProvider.display_name,
+                  namedProviderLabel(
+                    gatewayProvider.name,
+                    getAssistantProvider(gatewayProvider.name)?.name ?? gatewayProvider.display_name,
+                  ),
                   provider.name === GATEWAY_PROVIDER_ID && !provider.model_provider,
                 )}
               </DropdownMenu.SubTrigger>

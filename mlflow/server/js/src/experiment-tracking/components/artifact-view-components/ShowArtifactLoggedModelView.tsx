@@ -389,7 +389,7 @@ mlflow.models.predict(
               style={{ marginTop: 16, marginBottom: 16, marginLeft: 16 }}
             >
               <Title level={2}>
-                <FormattedMessage defaultMessage="MLflow Model" description="Heading text for mlflow model artifact" />
+                <FormattedMessage defaultMessage="Logged model" description="Heading text for mlflow model artifact" />
               </Title>
               {this.state.flavor === 'pyfunc' ? (
                 <FormattedMessage

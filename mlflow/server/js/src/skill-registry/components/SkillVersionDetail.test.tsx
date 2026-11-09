@@ -119,7 +119,7 @@ describe('SkillVersionDetail', () => {
     [{ digest: null, source_type: 'git' as const, ref: 'main' }, /This version points at main; if that is a branch/],
     [{ digest: null, source_type: 'git' as const, ref: null }, /points at the repository's default branch/],
     [{ digest: null, source_type: 'git' as const, ref: '0123abcd' }, /pulls aren't checked against the content/],
-    [{ digest: null, source_type: 'mlflow' as const }, /files are stored in MLflow/],
+    [{ digest: null, source_type: 'mlflow' as const }, /files are stored on this server/],
   ])('explains the content digest for %p', async (overrides, expected) => {
     renderDetail({ version: createMockSkillVersion(overrides) });
     await userEvent.hover(screen.getByLabelText('About the content digest'));

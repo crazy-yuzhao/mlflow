@@ -25,7 +25,7 @@ export const PromptVersionRuns = ({
     <>
       <Typography.Text bold>
         <FormattedMessage
-          defaultMessage="MLflow runs:"
+          defaultMessage="Runs:"
           description="A label for the associated MLflow runs in the prompt details page"
         />
       </Typography.Text>

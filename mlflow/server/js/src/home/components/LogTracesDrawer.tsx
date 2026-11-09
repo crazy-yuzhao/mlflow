@@ -115,7 +115,7 @@ const getConfigureExperimentSnippet = (workspace?: string | null) => {
 
 # Specify the tracking server URI, e.g. http://localhost:5000
 mlflow.set_tracking_uri("http://<tracking-server-host>:<port>")
-${workspaceLine}# If the experiment with the name "traces-quickstart" doesn't exist, MLflow will create it
+${workspaceLine}# If the experiment with the name "traces-quickstart" doesn't exist, it will be created
 mlflow.set_experiment("traces-quickstart")`;
 };
 
@@ -170,7 +170,7 @@ export const LogTracesDrawer = () => {
       >
         <Typography.Text color="secondary">
           <FormattedMessage
-            defaultMessage="Select a framework and follow the instructions to log traces with MLflow."
+            defaultMessage="Select a framework and follow the instructions to log traces."
             description="Helper text shown at the top of the log traces drawer"
           />
         </Typography.Text>
@@ -332,13 +332,13 @@ export const LogTracesDrawer = () => {
             >
               <Typography.Title level={4} css={{ margin: 0 }}>
                 <FormattedMessage
-                  defaultMessage="3. Access the MLflow UI"
+                  defaultMessage="3. Open the UI"
                   description="Section title explaining how to access traces in the MLflow UI"
                 />
               </Typography.Title>
               <Typography.Text color="secondary" css={{ margin: 0 }}>
                 <FormattedMessage
-                  defaultMessage="After your script runs, open the MLflow UI to review the recorded traces."
+                  defaultMessage="After your script runs, open this UI to review the recorded traces."
                   description="Introductory text for viewing traces in the MLflow UI"
                 />
                 <Spacer size="sm" />
@@ -408,7 +408,7 @@ export const LogTracesDrawer = () => {
                         css={{ display: 'inline-flex', gap: theme.spacing.xs, alignItems: 'center' }}
                       >
                         <FormattedMessage
-                          defaultMessage="MLflow documentation"
+                          defaultMessage="Hengjian documentation"
                           description="Link to tracing documentation"
                         />
                         <NewWindowIcon css={{ fontSize: 14 }} />

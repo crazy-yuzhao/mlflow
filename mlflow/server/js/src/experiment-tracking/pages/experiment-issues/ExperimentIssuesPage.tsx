@@ -463,7 +463,7 @@ const ExperimentIssuesPage = () => {
         <Empty
           description={
             <FormattedMessage
-              defaultMessage="The Issues tab requires an MLflow server with SQL storage."
+              defaultMessage="The Issues tab requires this server to use SQL storage."
               description="Experiment Issues unavailable on unsupported storage"
             />
           }

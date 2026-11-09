@@ -390,7 +390,7 @@ export const IssueDetectionModal: React.FC<IssueDetectionModalProps> = ({
       <div css={{ display: 'flex', alignItems: 'center', gap: theme.spacing.sm }}>
         <Typography.Text color="secondary">
           <FormattedMessage
-            defaultMessage="{provider} needs an API key. Paste it once and MLflow saves it securely in AI Gateway for all future runs."
+            defaultMessage="{provider} needs an API key. Paste it once and this server saves it securely in AI Gateway for all future runs."
             description="Explanation of the API key step in the issue detection modal"
             values={{ provider: selectedDirectOption?.name ?? selection?.provider }}
           />

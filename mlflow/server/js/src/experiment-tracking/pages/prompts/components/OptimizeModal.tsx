@@ -104,7 +104,10 @@ print(f"The new prompt URI: {result.optimized_prompts[0].uri}")`;
                   target="_blank"
                   href="https://mlflow.org/docs/latest/genai/prompt-registry/optimize-prompts/"
                 >
-                  <FormattedMessage defaultMessage="MLflow documentation" description="Link to MLflow documentation" />
+                  <FormattedMessage
+                    defaultMessage="Hengjian documentation"
+                    description="Link to MLflow documentation"
+                  />
                 </Typography.Link>
               ),
             }}

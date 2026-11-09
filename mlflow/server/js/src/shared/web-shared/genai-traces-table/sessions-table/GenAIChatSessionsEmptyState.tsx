@@ -39,7 +39,7 @@ export const GenAIChatSessionsEmptyState = () => {
       </Typography.Title>
       <Typography.Paragraph color="secondary" css={{ maxWidth: 600 }}>
         <FormattedMessage
-          defaultMessage="MLflow allows you associate traces with users and chat sessions. This is useful for analyzing multi-turn conversations, enabling you to inspect what happened at each step. Copy the code snippet below to generate a sample trace, or visit the documentation for a more in-depth example."
+          defaultMessage="You can associate traces with users and chat sessions. This is useful for analyzing multi-turn conversations, enabling you to inspect what happened at each step. Copy the code snippet below to generate a sample trace, or visit the documentation for a more in-depth example."
           description="Empty state description for the chat sessions table"
         />
         <Typography.Link
