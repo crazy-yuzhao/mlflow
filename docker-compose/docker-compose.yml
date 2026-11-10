@@ -1,3 +1,9 @@
+# Local development stack. `docker compose up` in this directory loads this
+# file only: official image, named volumes, and published Postgres/RustFS
+# ports. Production is the standalone docker-compose.prod.yml. Do not pass
+# both files, and do not copy the production file to
+# docker-compose.override.yml (Compose auto-loads that name).
+
 volumes:
   pgdata:
   storage-data:
