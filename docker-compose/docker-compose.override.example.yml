@@ -1,5 +1,6 @@
-# Optional compose override. Docker Compose loads `docker-compose.override.yml`
-# automatically, so copy this file only when you want the fork image:
+# Optional local override. Docker Compose loads `docker-compose.override.yml`
+# automatically, so copy this file only when you want the fork image for a
+# local `docker compose up`:
 #
 #   # from the repository root
 #   docker build -f docker-compose/Dockerfile.fork -t mlflow-fork:local .
@@ -8,6 +9,11 @@
 # The main docker-compose.yml stays the source of truth for Postgres, RustFS,
 # the bucket, basic auth, and workspaces. This file only swaps the server image
 # so the Chinese UI branding from this fork is what the browser loads.
+#
+# Do not use this file for a server deploy, and do not commit
+# `docker-compose.override.yml`. Production is
+# `docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d`
+# (see README, "在服务器上部署").
 services:
   mlflow:
     image: mlflow-fork:local

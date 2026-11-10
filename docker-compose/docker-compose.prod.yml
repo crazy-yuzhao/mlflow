@@ -1,0 +1,42 @@
+# Production overlay for a Linux server. Compose does not load this file on its
+# own (the auto-loaded name is docker-compose.override.yml — do not copy this
+# there). From this directory, after `.env` exists:
+#
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# Replaces the named volumes and published ports from docker-compose.yml.
+# Postgres and RustFS stay on the compose network only. The server image is
+# the local fork build (`mlflow-fork:local`), which includes this branch's UI.
+
+services:
+  postgres:
+    restart: unless-stopped
+    ports: !reset []
+    volumes: !override
+      - "${MLFLOW_DATA_DIR:-/data/mlflow_data}/postgres:/var/lib/postgresql/data"
+
+  storage:
+    restart: unless-stopped
+    ports: !reset []
+    volumes: !override
+      - "${MLFLOW_DATA_DIR:-/data/mlflow_data}/storage:/data"
+
+  # One-shot bucket create. Do not restart it with the long-running services.
+  create-bucket:
+    restart: "no"
+
+  mlflow:
+    image: mlflow-fork:local
+    restart: unless-stopped
+    # ${MLFLOW_BIND_IP} is optional. Unset publishes MLFLOW_PORT on 0.0.0.0.
+    # Set MLFLOW_BIND_IP=127.0.0.1 when a reverse proxy on this host terminates
+    # TLS and the UI should not be reachable from other machines directly.
+    ports: !override
+      - "${MLFLOW_BIND_IP:-0.0.0.0}:${MLFLOW_PORT}:${MLFLOW_PORT}"
+    volumes: !override
+      - "${MLFLOW_DATA_DIR:-/data/mlflow_data}/auth:/mlflow/auth"
+
+# Remove pgdata, storage-data, and authdata from the merged project. Service
+# volumes above are bind mounts; leaving the named volumes declared makes
+# Compose create empty volumes beside the host directories.
+volumes: !override {}
