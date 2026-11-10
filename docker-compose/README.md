@@ -4,6 +4,8 @@ This directory runs **MLflow** locally with a **PostgreSQL** backend store, **Ru
 
 The tracking server is `ghcr.io/mlflow/mlflow`. This fork's server CLI supports `--app-name basic-auth` and `--enable-workspaces` (PostgreSQL tracking and model-registry stores are workspace-capable). The official image does not include this fork's Chinese UI; an optional local image is documented below.
 
+服务器部署见 [在服务器上部署](#在服务器上部署)。`docker-compose.prod.yml` 不会被自动加载，本机只执行 `docker compose up` 时行为不变。
+
 ---
 
 ## Overview
@@ -190,10 +192,10 @@ The UI form is `http://localhost:5000/signup` (admin session required).
 
 With `MLFLOW_AUTH_GRANT_DEFAULT_WORKSPACE_ACCESS=false`, a non-admin does not inherit access to the reserved `default` workspace. Create a workspace, then assign one of the seeded roles. MLflow creates two roles in each new workspace:
 
-| Role    | Grant                      | Use it for                                      |
-| ------- | -------------------------- | ----------------------------------------------- |
-| `user`  | `(workspace, *, USE)`      | Read and use resources                          |
-| `admin` | `(workspace, *, MANAGE)`   | Edit resources and manage roles in that workspace |
+| Role    | Grant                    | Use it for                                        |
+| ------- | ------------------------ | ------------------------------------------------- |
+| `user`  | `(workspace, *, USE)`    | Read and use resources                            |
+| `admin` | `(workspace, *, MANAGE)` | Edit resources and manage roles in that workspace |
 
 Logging runs and metrics needs permission to update. The seeded workspace `admin` role covers that. The platform admin (`admin`) already can.
 
@@ -271,6 +273,118 @@ docker compose down -v
 ```
 
 The next start creates a new admin user from `MLFLOW_AUTH_ADMIN_PASSWORD`.
+
+---
+
+## 在服务器上部署
+
+Linux 服务器上用生产 overlay 跑本 fork（衡鉴界面）。数据放在宿主机目录里，而不是 Compose 具名卷。只发布衡鉴 UI/API 端口。Postgres 和 RustFS 留在 Compose 网络内。
+
+在 `docker-compose/` 目录、`.env` 准备好之后：
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+```
+
+`docker-compose.prod.yml` 不会被自动加载。不要把它复制成 `docker-compose.override.yml`，否则本机的 `docker compose up` 也会改走生产挂载和端口。
+
+### 克隆与镜像
+
+官方 `ghcr.io/mlflow/mlflow` 没有本分支的中文界面。服务器上的 `mlflow` 服务使用本地镜像 `mlflow-fork:local`。
+
+```bash
+git clone -b zh-ui https://github.com/crazy-yuzhao/mlflow.git
+cd mlflow
+docker build -f docker-compose/Dockerfile.fork -t mlflow-fork:local .
+```
+
+UI 构建需要 Node 24 和数 GB 内存。镜像如果在别的机器上构建，用 `docker save` / `docker load` 导入后，标签仍须是 `mlflow-fork:local`。
+
+### 数据目录
+
+默认根路径是 `/data/mlflow_data`，可用 `.env` 里的 `MLFLOW_DATA_DIR` 修改。三个子目录分别绑定进容器：
+
+```text
+/data/mlflow_data/
+├── postgres/   # PostgreSQL → /var/lib/postgresql/data
+├── storage/    # RustFS 对象 → /data
+└── auth/       # basic-auth SQLite 与 ini → /mlflow/auth
+```
+
+```bash
+sudo mkdir -p /data/mlflow_data/{postgres,storage,auth}
+sudo chown 999:999 /data/mlflow_data/postgres
+sudo chown -R 10001:10001 /data/mlflow_data/storage
+sudo chown root:root /data/mlflow_data/auth
+sudo chmod 700 /data/mlflow_data/auth
+```
+
+- 官方 `postgres:15` 镜像的入口进程以 root 启动，初始化数据目录后降到 uid **999**（`postgres`）。先把 `postgres/` 交给 999，避免绑定目录不可写。
+- `rustfs/rustfs:1.0.0-alpha.83` 以 uid/gid **10001** 运行，不会在启动时改宿主目录的属主。`storage/` 必须事先属于 10001，否则对象存储起不来。
+- `Dockerfile.fork` 没有改 `USER`，服务进程是 root，并在启动时写入 `/mlflow/auth/basic_auth.ini`（容器内 `chmod 600`）和 `basic_auth.db`。`auth/` 保持 root 可写即可。
+
+目录不存在时，Docker 会在启动时以 root 把绑定路径创建出来。那样 `storage/` 的属主不是 10001，RustFS 会因权限失败。先执行上面的 `mkdir` 和 `chown`，再 `up`。
+
+`MLFLOW_DATA_DIR` 换路径时，同样建好这三个子目录并改属主。不要用带空格的路径。
+
+### 环境变量
+
+```bash
+cd docker-compose
+cp .env.prod.example .env
+```
+
+`.env` 已被 gitignore。至少换掉这些占位值：
+
+- `MLFLOW_FLASK_SERVER_SECRET_KEY`
+- `MLFLOW_AUTH_ADMIN_PASSWORD`（至少 12 个字符；只在管理员用户还不存在时生效）
+- `POSTGRES_PASSWORD`
+- `AWS_ACCESS_KEY_ID` 和 `AWS_SECRET_ACCESS_KEY`
+
+并确认：
+
+- `MLFLOW_DATA_DIR=/data/mlflow_data`（或你的实际根路径）
+- `MLFLOW_WORKERS=1`。认证库仍是 SQLite 时不要加大 worker，否则会出现 `database is locked`。只有把 `MLFLOW_AUTH_DATABASE_URI` 改到 PostgreSQL 之后才能提高 worker 数。
+- 不要设置 `MLFLOW_WORKSPACE`。它只属于客户端。服务端容器环境里一旦有这个变量，进程会拒绝启动。不要把它写进 `mlflow` 服务的 `environment`。
+
+不要使用 `.env.local`。那是 Mac 开发文件：Compose 里通常只跑 Postgres，服务端跑在宿主机上，路径也是 Mac 路径。Compose 默认只读取项目目录中的 `.env`，不会读取 `.env.local`。不要在服务器上 `cp .env.local .env`，也不要 `docker compose --env-file .env.local`。
+
+从 `.env.dev.example` 复制也可以，但要自己补上 `MLFLOW_DATA_DIR`，并换掉其中的开发口令。生产 overlay 不读取那个示例文件。
+
+### 启动
+
+仍在 `docker-compose/` 目录：
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.prod.yml ps
+docker compose -f docker-compose.yml -f docker-compose.prod.yml logs -f mlflow
+```
+
+后续的 `ps`、`logs`、`down` 都要带上同样的 `-f` 参数，这样项目模型才是生产合并结果。只写 `docker compose` 会回到 `docker-compose.yml`（具名卷，并发布 5432/9000/9001）。
+
+### 数据如何留下来
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.prod.yml down
+```
+
+不要加 `-v`。上面这条命令停掉容器，`/data/mlflow_data` 里的 Postgres 数据、对象和认证库都还在。绑定挂载不依赖具名卷。
+
+`docker compose down -v` 会删除**当前项目模型里的具名卷**。生产 overlay 已经拿掉 `pgdata`、`storage-data`、`authdata`，因此带上这两个 `-f` 时，`-v` 不会删除 `/data/mlflow_data`。它仍然危险：
+
+- 不加生产文件时，`docker compose down -v` 会删掉本机开发用的具名卷。
+- 如果合并结果里还留着具名卷（例如改坏了 overlay），`-v` 会删掉这些卷里的数据。
+
+不要对还装着数据的卷执行 `-v`。备份时直接打包 `/data/mlflow_data`。
+
+### 端口与 HTTPS
+
+生产文件清掉了 Postgres `${PGPORT}`（5432）和 RustFS `9000`/`9001` 的宿主端口映射，不会绑到 `0.0.0.0`。容器之间仍用服务名访问：`postgres:5432`、`http://storage:9000`。不要为了在宿主机上用 `psql` 或 `aws` 把这些端口重新公布到公网。
+
+衡鉴 UI 和 API 只发布 `${MLFLOW_PORT}`（示例为 5000）。在它前面放 HTTPS 反向代理，由代理对外提供 TLS。代理和衡鉴在同一台机器上时，在 `.env` 里设置 `MLFLOW_BIND_IP=127.0.0.1`，UI 就只监听本机。不设置时，端口发布在 `0.0.0.0`。
+
+本机开发文档里用 `http://127.0.0.1:9000` 检查 RustFS 的命令，在这套生产端口下不适用。
 
 ---
 
