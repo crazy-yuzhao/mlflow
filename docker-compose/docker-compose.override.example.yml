@@ -3,7 +3,7 @@
 # local `docker compose up`:
 #
 #   # from the repository root
-#   docker build -f docker-compose/Dockerfile.fork -t mlflow-fork:local .
+#   docker build -f docker-compose/Dockerfile.fork -t hengjian:latest .
 #   cp docker-compose.override.example.yml docker-compose.override.yml
 #
 # The main docker-compose.yml stays the source of truth for Postgres, RustFS,
@@ -16,4 +16,4 @@
 # (see README, "在服务器上部署").
 services:
   mlflow:
-    image: mlflow-fork:local
+    image: hengjian:latest

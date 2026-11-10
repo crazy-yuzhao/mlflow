@@ -2,7 +2,10 @@
 # The default compose file keeps using ghcr.io/mlflow/mlflow and only adds auth.
 #
 # From the repository root:
-#   docker build -f docker-compose/Dockerfile.fork -t mlflow-fork:local .
+#   docker build -f docker-compose/Dockerfile.fork -t hengjian:latest .
+#
+# A Mac (Apple Silicon) build for a typical x86_64 server:
+#   docker build --platform linux/amd64 -f docker-compose/Dockerfile.fork -t hengjian:latest .
 #
 # The UI build needs Node 24 and several gigabytes of RAM. After the image
 # exists, copy docker-compose/docker-compose.override.example.yml to
