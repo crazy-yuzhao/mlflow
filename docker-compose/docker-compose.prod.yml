@@ -34,6 +34,8 @@ services:
     ports: !override
       - "${MLFLOW_BIND_IP:-0.0.0.0}:${MLFLOW_PORT}:${MLFLOW_PORT}"
     volumes: !override
+      # basic_auth.ini, rewritten on each start. Users and permissions are in
+      # PostgreSQL database mlflow_auth, not in a SQLite file on this mount.
       - "${MLFLOW_DATA_DIR:-/data/mlflow_data}/auth:/mlflow/auth"
 
 # Remove pgdata, storage-data, and authdata from the merged project. Service
