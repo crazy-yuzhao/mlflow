@@ -4,7 +4,7 @@ This directory runs **MLflow** locally with a **PostgreSQL** backend store, **Ru
 
 The tracking server is `ghcr.io/mlflow/mlflow`. This fork's server CLI supports `--app-name basic-auth` and `--enable-workspaces` (PostgreSQL tracking and model-registry stores are workspace-capable). The official image does not include this fork's Chinese UI; an optional local image is documented below.
 
-服务器部署见 [在服务器上部署](#在服务器上部署)。`docker-compose.prod.yml` 不会被自动加载，本机只执行 `docker compose up` 时行为不变。
+服务器部署见 [在服务器上部署](#在服务器上部署)。`docker-compose.prod.yml` 是独立的生产 Compose 文件，不会被自动加载。本机只执行 `docker compose up` 时仍使用 `docker-compose.yml`（具名卷、公布 5432/9000/9001、官方镜像），行为不变。
 
 ---
 
@@ -274,21 +274,23 @@ To drop the local Postgres volume, artifacts, and the SQLite auth file:
 docker compose down -v
 ```
 
-The next start creates a new admin user from `MLFLOW_AUTH_ADMIN_PASSWORD`. This removes the local named volumes (`pgdata`, `storage-data`, `authdata`). Production data under `MLFLOW_DATA_DIR` is a different layout; see [在服务器上部署](#在服务器上部署).
+The next start creates a new admin user from `MLFLOW_AUTH_ADMIN_PASSWORD`. This removes the local named volumes (`pgdata`, `storage-data`, `authdata`). Production data under `MLFLOW_DATA_DIR` is a different layout and is not these volumes; see [在服务器上部署](#在服务器上部署). On the server, stop with `docker compose -f docker-compose.prod.yml --env-file .env down` (same `-f` as `up`, and do not add `-v`). `docker compose down -v` without that `-f` still deletes the named volumes from this development file.
 
 ---
 
 ## 在服务器上部署
 
-Linux 服务器上用生产 overlay 跑本 fork（衡鉴界面）。数据放在宿主机目录里，而不是 Compose 具名卷。只发布衡鉴 UI/API 端口。Postgres 和 RustFS 留在 Compose 网络内。
+Linux 服务器上用独立的生产 Compose 文件跑本 fork（衡鉴界面）。`docker-compose.prod.yml` 自己包含 postgres、storage、create-bucket、mlflow 和网络，不需要再叠 `docker-compose.yml`。数据放在宿主机目录里，而不是 Compose 具名卷。只发布衡鉴 UI/API 端口。Postgres 和 RustFS 留在 Compose 网络内。
 
 在 `docker-compose/` 目录、`.env` 准备好之后：
 
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.prod.yml --env-file .env up -d
 ```
 
-`docker-compose.prod.yml` 不会被自动加载。不要把它复制成 `docker-compose.override.yml`，否则本机的 `docker compose up` 也会改走生产挂载和端口。
+不要再加 `-f docker-compose.yml`。以前的 `docker compose -f docker-compose.yml -f docker-compose.prod.yml` 不要再使用：生产文件已经是完整栈，再叠上开发文件会把 Postgres 和 RustFS 的宿主端口（5432、9000、9001）加回来。
+
+`docker-compose.prod.yml` 不会被自动加载。不要把它复制成 `docker-compose.override.yml`，否则本机的 `docker compose up` 会把它和 `docker-compose.yml` 合并，改走生产挂载和端口。
 
 ### 克隆与镜像
 
@@ -366,12 +368,12 @@ cp .env.prod.example .env
 并确认：
 
 - `MLFLOW_DATA_DIR=/data/mlflow_data`（或你的实际根路径）
-- `MLFLOW_WORKERS` 默认是 1，可以改成大于 1。生产环境的认证库是 PostgreSQL 的 `mlflow_auth`，不再是 SQLite，因此不会因为多个 worker 出现 `database is locked`。SQLite 只还作为不带生产 overlay 的本机示例默认。
+- `MLFLOW_WORKERS` 默认是 1，可以改成大于 1。生产环境的认证库是 PostgreSQL 的 `mlflow_auth`，不再是 SQLite，因此不会因为多个 worker 出现 `database is locked`。SQLite 只还作为本机 `docker compose up`（`docker-compose.yml`）的示例默认。
 - 不要设置 `MLFLOW_WORKSPACE`。它只属于客户端。服务端容器环境里一旦有这个变量，进程会拒绝启动。不要把它写进 `mlflow` 服务的 `environment`。
 
 不要使用 `.env.local`。那是 Mac 开发文件：Compose 里通常只跑 Postgres，服务端跑在宿主机上，路径也是 Mac 路径。Compose 默认只读取项目目录中的 `.env`，不会读取 `.env.local`。不要在服务器上 `cp .env.local .env`，也不要 `docker compose --env-file .env.local`。
 
-从 `.env.dev.example` 复制也可以，但要自己补上 `MLFLOW_DATA_DIR`，并换掉其中的开发口令。生产 overlay 不读取那个示例文件。那个示例仍把认证放在 SQLite 上，不要把它的 `MLFLOW_AUTH_DATABASE_URI` 原样用于生产。
+从 `.env.dev.example` 复制也可以，但要自己补上 `MLFLOW_DATA_DIR`，并换掉其中的开发口令。生产文件不读取那个示例文件。那个示例仍把认证放在 SQLite 上，不要把它的 `MLFLOW_AUTH_DATABASE_URI` 原样用于生产。
 
 ### 认证库 `mlflow_auth`
 
@@ -385,7 +387,7 @@ postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${PGPORT}/mlflow_aut
 
 官方 Postgres 镜像只会在首次初始化数据目录时创建 `POSTGRES_DB`。`docker-entrypoint-initdb.d` 也只在那一次运行，所以不能靠它来补 `mlflow_auth`。`mlflow` 在每次启动、Postgres 健康检查通过、并且认证 URI 是 PostgreSQL 时，用 `POSTGRES_USER` / `POSTGRES_PASSWORD` 连到跟踪库，发现没有目标库就执行 `CREATE DATABASE`。库已经存在时直接继续，不会报错。认证 URI 仍是 SQLite 时（本机 `docker compose up` 的示例）会跳过这一步。
 
-`basic_auth.ini` 每次启动仍写到 `/mlflow/auth/basic_auth.ini`。生产 overlay 把 `${MLFLOW_DATA_DIR}/auth` 绑到这个目录，用来留下这份 ini。SQLite 文件不再是用户库。
+`basic_auth.ini` 每次启动仍写到 `/mlflow/auth/basic_auth.ini`。生产文件把 `${MLFLOW_DATA_DIR}/auth` 绑到这个目录，用来留下这份 ini。SQLite 文件不再是用户库。
 
 这是按全新生产部署来的，不会把旧的 `auth/basic_auth.db` 迁进 `mlflow_auth`。已经初始化过的 Postgres 数据目录也会在下次启动时补上 `mlflow_auth`，跟踪库里的实验数据不动。管理员账号仍只在用户还不存在时按 `MLFLOW_AUTH_ADMIN_PASSWORD` 创建。旧 SQLite 里的用户需要重新建立。
 
@@ -394,31 +396,31 @@ postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${PGPORT}/mlflow_aut
 仍在 `docker-compose/` 目录：
 
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-docker compose -f docker-compose.yml -f docker-compose.prod.yml ps
-docker compose -f docker-compose.yml -f docker-compose.prod.yml logs -f mlflow
+docker compose -f docker-compose.prod.yml --env-file .env up -d
+docker compose -f docker-compose.prod.yml --env-file .env ps
+docker compose -f docker-compose.prod.yml --env-file .env logs -f mlflow
 ```
 
-后续的 `ps`、`logs`、`down` 都要带上同样的 `-f` 参数，这样项目模型才是生产合并结果。只写 `docker compose` 会回到 `docker-compose.yml`（具名卷，并发布 5432/9000/9001）。
+后续的 `ps`、`logs`、`down` 都要带上同样的 `-f docker-compose.prod.yml` 和 `--env-file .env`。只写 `docker compose` 会回到 `docker-compose.yml`（具名卷，并发布 5432/9000/9001）。
 
 ### 数据如何留下来
 
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.prod.yml down
+docker compose -f docker-compose.prod.yml --env-file .env down
 ```
 
-不要加 `-v`。上面这条命令停掉容器，`/data/mlflow_data` 里的数据都还在。`postgres/` 里同时有跟踪库和认证库 `mlflow_auth`，`storage/` 是对象，`auth/` 里是 `basic_auth.ini`。绑定挂载不依赖具名卷。
+`down` 必须使用和 `up` 相同的 `-f`。不要加 `-v`。上面这条命令停掉容器，`/data/mlflow_data` 里的数据都还在。`postgres/` 里同时有跟踪库和认证库 `mlflow_auth`，`storage/` 是对象，`auth/` 里是 `basic_auth.ini`。这些是绑定挂载，不依赖具名卷。
 
-`docker compose down -v` 会删除**当前项目模型里的具名卷**。生产 overlay 已经拿掉 `pgdata`、`storage-data`、`authdata`，因此带上这两个 `-f` 时，`-v` 不会删除 `/data/mlflow_data`。它仍然危险：
+`docker compose down -v` 会删除**当前项目模型里的具名卷**。生产文件没有声明 `pgdata`、`storage-data`、`authdata`，因此带上 `-f docker-compose.prod.yml` 时，`-v` 不会删除 `/data/mlflow_data`。它仍然危险：
 
-- 不加生产文件时，`docker compose down -v` 会删掉本机开发用的具名卷。
-- 如果合并结果里还留着具名卷（例如改坏了 overlay），`-v` 会删掉这些卷里的数据。
+- 不加 `-f docker-compose.prod.yml` 时，`docker compose down -v` 使用开发文件 `docker-compose.yml`，会删掉具名卷 `pgdata`、`storage-data`、`authdata`。
+- 在本机开发目录里执行 `docker compose down -v`，丢掉的是那套开发卷里的数据。
 
 不要对还装着数据的卷执行 `-v`。备份时直接打包 `/data/mlflow_data`。用户和权限在 `postgres/` 的 `mlflow_auth` 里，不在 `auth/basic_auth.db`。
 
 ### 端口与 HTTPS
 
-生产文件清掉了 Postgres `${PGPORT}`（5432）和 RustFS `9000`/`9001` 的宿主端口映射，不会绑到 `0.0.0.0`。容器之间仍用服务名访问：`postgres:5432`、`http://storage:9000`。不要为了在宿主机上用 `psql` 或 `aws` 把这些端口重新公布到公网。
+生产文件不发布 Postgres `${PGPORT}`（5432）和 RustFS `9000`/`9001`，不会绑到 `0.0.0.0`。容器之间仍用服务名访问：`postgres:5432`、`http://storage:9000`。不要为了在宿主机上用 `psql` 或 `aws` 把这些端口重新公布到公网。
 
 衡鉴 UI 和 API 只发布 `${MLFLOW_PORT}`（示例为 5000）。在它前面放 HTTPS 反向代理，由代理对外提供 TLS。代理和衡鉴在同一台机器上时，在 `.env` 里设置 `MLFLOW_BIND_IP=127.0.0.1`，UI 就只监听本机。不设置时，端口发布在 `0.0.0.0`。
 

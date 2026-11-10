@@ -1,44 +1,303 @@
-# Production overlay for a Linux server. Compose does not load this file on its
-# own (the auto-loaded name is docker-compose.override.yml — do not copy this
-# there). From this directory, after `.env` exists:
+# Standalone production stack for a Linux server. This file already contains
+# postgres, RustFS (storage), create-bucket, mlflow, and the compose network.
+# It does not merge with docker-compose.yml. Do not pass that file as a
+# second -f.
 #
-#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# From this directory, after `cp .env.prod.example .env` and replacing secrets:
 #
-# Replaces the named volumes and published ports from docker-compose.yml.
-# Postgres and RustFS stay on the compose network only. The server image is
-# `hengjian:latest`, which includes this branch's UI.
+#   docker compose -f docker-compose.prod.yml --env-file .env up -d
+#
+# Stop with the same -f. Do not add -v:
+#
+#   docker compose -f docker-compose.prod.yml --env-file .env down
+#
+# Compose auto-loads only docker-compose.override.yml. Never copy this file
+# there. A plain `docker compose up` must keep using docker-compose.yml
+# (named volumes, published 5432/9000/9001, the official image).
+#
+# Host data (create these and fix ownership before the first up; see README
+# "在服务器上部署"). Default root is /data/mlflow_data:
+#   ${MLFLOW_DATA_DIR:-/data/mlflow_data}/postgres  uid 999 (official postgres:15)
+#   ${MLFLOW_DATA_DIR:-/data/mlflow_data}/storage   uid/gid 10001 (RustFS)
+#   ${MLFLOW_DATA_DIR:-/data/mlflow_data}/auth      root, mode 700
+#     basic_auth.ini is rewritten here on each start. Users live in PostgreSQL
+#     database mlflow_auth, not in a SQLite file on this mount.
+#
+# Only ${MLFLOW_BIND_IP:-0.0.0.0}:${MLFLOW_PORT} is published. Postgres and
+# RustFS stay on the compose network. The server image is hengjian:latest.
 
 services:
   postgres:
+    image: postgres:15
+    container_name: mlflow-postgres
     restart: unless-stopped
-    ports: !reset []
-    volumes: !override
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGPORT: ${PGPORT}
+    volumes:
+      # Official postgres:15 starts as root, initializes the data directory,
+      # then drops to uid 999. chown this host path to 999:999 before up.
       - "${MLFLOW_DATA_DIR:-/data/mlflow_data}/postgres:/var/lib/postgresql/data"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -p ${PGPORT}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   storage:
-    restart: unless-stopped
-    ports: !reset []
-    volumes: !override
+    image: rustfs/rustfs:1.0.0-alpha.83
+    container_name: storage
+    environment:
+      RUSTFS_ADDRESS: :9000
+      RUSTFS_SERVER_DOMAINS: storage:9000
+      RUSTFS_REGION: ${AWS_DEFAULT_REGION:-us-east-1}
+      RUSTFS_ACCESS_KEY: ${AWS_ACCESS_KEY_ID:-s3admin}
+      RUSTFS_SECRET_KEY: ${AWS_SECRET_ACCESS_KEY:-s3admin}
+      RUSTFS_CONSOLE_ENABLE: ${RUSTFS_CONSOLE_ENABLE:-true}
+    volumes:
+      # rustfs/rustfs:1.0.0-alpha.83 runs as uid/gid 10001 and does not chown
+      # the host directory. chown this path to 10001:10001 before up.
       - "${MLFLOW_DATA_DIR:-/data/mlflow_data}/storage:/data"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", 'curl -s http://127.0.0.1:9000/health | grep -q ''"status":"ok"''']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
-  # One-shot bucket create. Do not restart it with the long-running services.
   create-bucket:
+    image: amazon/aws-cli:2.33.25
+    container_name: mlflow-create-bucket
+    depends_on:
+      storage:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+        set -e;
+        echo 'Waiting for S3 gateway getting ready...';
+        if aws --endpoint-url=${MLFLOW_S3_ENDPOINT_URL} s3api head-bucket --bucket ${S3_BUCKET} 2>/dev/null; then
+          echo 'Bucket ${S3_BUCKET} already exists. Skipping creation.';
+        else
+          echo 'Creating bucket ${S3_BUCKET}...';
+          aws --endpoint-url=${MLFLOW_S3_ENDPOINT_URL} s3api create-bucket --bucket ${S3_BUCKET} --region ${AWS_DEFAULT_REGION};
+        fi
+      "
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+      AWS_S3_ADDRESSING_STYLE: path
+      MLFLOW_S3_ENDPOINT_URL: ${MLFLOW_S3_ENDPOINT_URL}
+      S3_BUCKET: ${S3_BUCKET}
+    # One-shot bucket create. Do not restart it with the long-running services.
     restart: "no"
 
   mlflow:
     image: hengjian:latest
+    container_name: mlflow-server
     restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      storage:
+        condition: service_healthy
+      create-bucket:
+        condition: service_completed_successfully
+    volumes:
+      # basic_auth.ini, rewritten on each start. Users and permissions are in
+      # PostgreSQL database mlflow_auth, not in a SQLite file on this mount.
+      # Dockerfile.fork does not set USER, so the server writes this as root.
+      # Keep the host directory root-owned and mode 700.
+      - "${MLFLOW_DATA_DIR:-/data/mlflow_data}/auth:/mlflow/auth"
+    environment:
+      # Backend store URI built from vars
+      MLFLOW_BACKEND_STORE_URI: ${MLFLOW_BACKEND_STORE_URI}
+
+      # S3/RustFS settings
+      MLFLOW_S3_ENDPOINT_URL: ${MLFLOW_S3_ENDPOINT_URL}
+      MLFLOW_ARTIFACTS_DESTINATION: ${MLFLOW_ARTIFACTS_DESTINATION}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+      MLFLOW_S3_IGNORE_TLS: "true"
+
+      # Server host/port
+      MLFLOW_HOST: ${MLFLOW_HOST}
+      MLFLOW_PORT: ${MLFLOW_PORT}
+      MLFLOW_WORKERS: ${MLFLOW_WORKERS:-1}
+
+      # Basic auth. MLFLOW_WORKSPACE is client-only and must stay unset here.
+      MLFLOW_FLASK_SERVER_SECRET_KEY: ${MLFLOW_FLASK_SERVER_SECRET_KEY}
+      MLFLOW_AUTH_ADMIN_USERNAME: ${MLFLOW_AUTH_ADMIN_USERNAME}
+      MLFLOW_AUTH_ADMIN_PASSWORD: ${MLFLOW_AUTH_ADMIN_PASSWORD}
+      MLFLOW_AUTH_CONFIG_PATH: ${MLFLOW_AUTH_CONFIG_PATH}
+      MLFLOW_AUTH_DATABASE_URI: ${MLFLOW_AUTH_DATABASE_URI}
+      MLFLOW_AUTH_DEFAULT_PERMISSION: ${MLFLOW_AUTH_DEFAULT_PERMISSION}
+      MLFLOW_AUTH_GRANT_DEFAULT_WORKSPACE_ACCESS: ${MLFLOW_AUTH_GRANT_DEFAULT_WORKSPACE_ACCESS}
+      MLFLOW_ENABLE_WORKSPACES: "true"
+      # Same credentials as the postgres service. Used only to CREATE DATABASE
+      # for a PostgreSQL auth URI (production: mlflow_auth). SQLite auth ignores
+      # them. Tracking still uses MLFLOW_BACKEND_STORE_URI.
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGPORT: ${PGPORT}
+    command:
+      - /bin/bash
+      - -c
+      - |
+        set -euo pipefail
+        # `mlflow[auth]` extra is Flask-WTF (see pyproject.toml). Install that
+        # package directly so pip does not replace the image's MLflow build.
+        pip install --no-cache-dir "psycopg[binary]" psycopg2-binary boto3 'Flask-WTF<2'
+        # When the auth URI is PostgreSQL, create that database if it is missing
+        # (production: mlflow_auth). This runs on every start, so it also covers
+        # a Postgres volume that was initialized before mlflow_auth existed.
+        # docker-entrypoint-initdb.d only runs on first init. SQLite URIs skip it.
+        python - <<'PY'
+        import os
+        import re
+        from pathlib import Path
+        from urllib.parse import unquote, urlparse
+
+        import psycopg
+        from psycopg import sql
+
+        def required(name: str) -> str:
+            value = os.environ.get(name, "").strip()
+            if not value:
+                raise SystemExit(f"{name} is required. Set it in docker-compose/.env")
+            return value
+
+        def postgres_auth_database_name(uri: str) -> str | None:
+            scheme = uri.split(":", 1)[0].split("+", 1)[0].lower()
+            if scheme not in {"postgresql", "postgres"}:
+                return None
+            without_query = uri.split("?", 1)[0]
+            name = unquote(without_query.rstrip("/").rsplit("/", 1)[-1])
+            if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name):
+                raise SystemExit(
+                    "MLFLOW_AUTH_DATABASE_URI database name must be a simple "
+                    "identifier. Production uses mlflow_auth."
+                )
+            return name
+
+        def ensure_auth_database(auth_uri: str) -> None:
+            auth_db = postgres_auth_database_name(auth_uri)
+            if auth_db is None:
+                print("Auth database URI is not PostgreSQL; skipping database creation.")
+                return
+
+            user = required("POSTGRES_USER")
+            password = os.environ.get("POSTGRES_PASSWORD", "")
+            if not password:
+                raise SystemExit(
+                    "POSTGRES_PASSWORD is required to create the PostgreSQL auth database."
+                )
+            tracking_db = required("POSTGRES_DB")
+            if auth_db == tracking_db:
+                raise SystemExit(
+                    f"Refusing to store auth tables in the tracking database {tracking_db!r}. "
+                    "Point MLFLOW_AUTH_DATABASE_URI at a separate database (mlflow_auth)."
+                )
+
+            parsed = urlparse(auth_uri)
+            host = parsed.hostname or "postgres"
+            try:
+                port = parsed.port or int(os.environ.get("PGPORT", "5432"))
+            except ValueError as exc:
+                raise SystemExit(
+                    f"PGPORT is not an integer: {os.environ.get('PGPORT')!r}"
+                ) from exc
+
+            with psycopg.connect(
+                host=host,
+                port=port,
+                user=user,
+                password=password,
+                dbname=tracking_db,
+                autocommit=True,
+                connect_timeout=10,
+            ) as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        "SELECT 1 FROM pg_database WHERE datname = %s",
+                        (auth_db,),
+                    )
+                    if cur.fetchone():
+                        print(f"PostgreSQL auth database {auth_db} already exists.")
+                        return
+                    try:
+                        cur.execute(
+                            sql.SQL("CREATE DATABASE {}").format(sql.Identifier(auth_db))
+                        )
+                    except psycopg.errors.DuplicateDatabase:
+                        print(f"PostgreSQL auth database {auth_db} already exists.")
+                        return
+            print(f"Created PostgreSQL auth database {auth_db}.")
+
+        password = required("MLFLOW_AUTH_ADMIN_PASSWORD")
+        if len(password) < 12:
+            raise SystemExit(
+                "MLFLOW_AUTH_ADMIN_PASSWORD must be at least 12 characters. "
+                "Replace the placeholder in .env before starting the stack."
+            )
+        required("MLFLOW_FLASK_SERVER_SECRET_KEY")
+        username = os.environ.get("MLFLOW_AUTH_ADMIN_USERNAME", "admin").strip() or "admin"
+        database_uri = required("MLFLOW_AUTH_DATABASE_URI")
+        ensure_auth_database(database_uri)
+        default_permission = os.environ.get("MLFLOW_AUTH_DEFAULT_PERMISSION", "READ").strip() or "READ"
+        grant = (
+            os.environ.get("MLFLOW_AUTH_GRANT_DEFAULT_WORKSPACE_ACCESS", "false").strip() or "false"
+        )
+        path = Path(os.environ.get("MLFLOW_AUTH_CONFIG_PATH", "/mlflow/auth/basic_auth.ini"))
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            "\n".join(
+                [
+                    "[mlflow]",
+                    f"default_permission = {default_permission}",
+                    f"database_uri = {database_uri}",
+                    f"admin_username = {username}",
+                    "authorization_function = mlflow.server.auth:authenticate_request_basic_auth",
+                    f"grant_default_workspace_access = {grant}",
+                    "",
+                ]
+            )
+        )
+        path.chmod(0o600)
+        print(f"Wrote auth config {path} (database {database_uri})")
+        PY
+        exec mlflow server \
+          --backend-store-uri "${MLFLOW_BACKEND_STORE_URI}" \
+          --artifacts-destination "${MLFLOW_ARTIFACTS_DESTINATION}" \
+          --serve-artifacts \
+          --host "${MLFLOW_HOST}" \
+          --port "${MLFLOW_PORT}" \
+          --workers "${MLFLOW_WORKERS}" \
+          --app-name basic-auth \
+          --enable-workspaces
     # ${MLFLOW_BIND_IP} is optional. Unset publishes MLFLOW_PORT on 0.0.0.0.
     # Set MLFLOW_BIND_IP=127.0.0.1 when a reverse proxy on this host terminates
     # TLS and the UI should not be reachable from other machines directly.
-    ports: !override
+    ports:
       - "${MLFLOW_BIND_IP:-0.0.0.0}:${MLFLOW_PORT}:${MLFLOW_PORT}"
-    volumes: !override
-      # basic_auth.ini, rewritten on each start. Users and permissions are in
-      # PostgreSQL database mlflow_auth, not in a SQLite file on this mount.
-      - "${MLFLOW_DATA_DIR:-/data/mlflow_data}/auth:/mlflow/auth"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:${MLFLOW_PORT}/health')",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 90s
 
-# Remove pgdata, storage-data, and authdata from the merged project. Service
-# volumes above are bind mounts; leaving the named volumes declared makes
-# Compose create empty volumes beside the host directories.
-volumes: !override {}
+networks:
+  default:
+    name: mlflow-network

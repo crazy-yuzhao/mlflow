@@ -11,9 +11,10 @@
 # so the Chinese UI branding from this fork is what the browser loads.
 #
 # Do not use this file for a server deploy, and do not commit
-# `docker-compose.override.yml`. Production is
-# `docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d`
-# (see README, "在服务器上部署").
+# `docker-compose.override.yml`. Production is the standalone file
+# `docker compose -f docker-compose.prod.yml --env-file .env up -d`
+# (see README, "在服务器上部署"). Do not copy docker-compose.prod.yml
+# to docker-compose.override.yml.
 services:
   mlflow:
     image: hengjian:latest
