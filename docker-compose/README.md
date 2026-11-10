@@ -280,27 +280,24 @@ The next start creates a new admin user from `MLFLOW_AUTH_ADMIN_PASSWORD`. This 
 
 ## 在服务器上部署
 
-Linux 服务器上用独立的生产 Compose 文件跑本 fork（衡鉴界面）。`docker-compose.prod.yml` 自己包含 postgres、storage、create-bucket、mlflow 和网络，不需要再叠 `docker-compose.yml`。数据放在宿主机目录里，而不是 Compose 具名卷。只发布衡鉴 UI/API 端口。Postgres 和 RustFS 留在 Compose 网络内。
-
-在 `docker-compose/` 目录、`.env` 准备好之后：
-
-```bash
-docker compose -f docker-compose.prod.yml --env-file .env up -d
-```
-
-不要再加 `-f docker-compose.yml`。以前的 `docker compose -f docker-compose.yml -f docker-compose.prod.yml` 不要再使用：生产文件已经是完整栈，再叠上开发文件会把 Postgres 和 RustFS 的宿主端口（5432、9000、9001）加回来。
+Linux 服务器按下面的顺序部署。生产只用独立文件 `docker-compose.prod.yml`（postgres、storage、create-bucket、mlflow 和网络都在这一份里）。数据放在宿主机目录里，而不是 Compose 具名卷。只发布衡鉴 UI/API 端口。Postgres 和 RustFS 留在 Compose 网络内。
 
 `docker-compose.prod.yml` 不会被自动加载。不要把它复制成 `docker-compose.override.yml`，否则本机的 `docker compose up` 会把它和 `docker-compose.yml` 合并，改走生产挂载和端口。
 
-### 克隆与镜像
+### 1. 克隆仓库
+
+```bash
+git clone -b zh-ui https://github.com/crazy-yuzhao/mlflow.git
+cd mlflow
+```
+
+### 2. 准备镜像 `hengjian:latest`
 
 官方 `ghcr.io/mlflow/mlflow` 没有本分支的中文界面。服务器上的 `mlflow` 服务使用镜像 `hengjian:latest`。
 
 在仓库根目录构建。Mac（Apple Silicon）上构建、准备放到常见 x86_64 Linux 服务器上时，加上 `--platform linux/amd64`：
 
 ```bash
-git clone -b zh-ui https://github.com/crazy-yuzhao/mlflow.git
-cd mlflow
 docker build --platform linux/amd64 -f docker-compose/Dockerfile.fork -t hengjian:latest .
 ```
 
@@ -312,7 +309,7 @@ docker build -f docker-compose/Dockerfile.fork -t hengjian:latest .
 
 UI 构建需要 Node 24 和数 GB 内存。
 
-镜像在别的机器上构建时，用 `docker save` / `docker load` 传到服务器。标签是 `hengjian:latest`：
+镜像在别的机器上构建时，服务器上仍要克隆同一分支（Compose 文件不在镜像里）。用 `docker save` / `docker load` 传过去。`docker load` 会保留 `hengjian:latest` 标签：
 
 ```bash
 # 构建机器上
@@ -322,9 +319,7 @@ docker save hengjian:latest | gzip > hengjian-latest.tar.gz
 gunzip -c hengjian-latest.tar.gz | docker load
 ```
 
-`docker load` 会保留镜像里的 `hengjian:latest` 标签。
-
-### 数据目录
+### 3. 准备数据目录
 
 默认根路径是 `/data/mlflow_data`，可用 `.env` 里的 `MLFLOW_DATA_DIR` 修改。三个子目录分别绑定进容器：
 
@@ -347,11 +342,13 @@ sudo chmod 700 /data/mlflow_data/auth
 - `rustfs/rustfs:1.0.0-alpha.83` 以 uid/gid **10001** 运行，不会在启动时改宿主目录的属主。`storage/` 必须事先属于 10001，否则对象存储起不来。
 - `Dockerfile.fork` 没有改 `USER`，服务进程是 root，并在启动时写入 `/mlflow/auth/basic_auth.ini`（容器内 `chmod 600`）。用户和权限写在 PostgreSQL 的 `mlflow_auth` 库里，不再写 `basic_auth.db`。`auth/` 保持 root 可写即可。目录里如果还有旧的 `basic_auth.db`，服务不会读取它。
 
-目录不存在时，Docker 会在启动时以 root 把绑定路径创建出来。那样 `storage/` 的属主不是 10001，RustFS 会因权限失败。先执行上面的 `mkdir` 和 `chown`，再 `up`。
+目录不存在时，Docker 会在启动时以 root 把绑定路径创建出来。那样 `storage/` 的属主不是 10001，RustFS 会因权限失败。先执行上面的 `mkdir` 和 `chown`，再做第 6 步的 `up`。
 
 `MLFLOW_DATA_DIR` 换路径时，同样建好这三个子目录并改属主。不要用带空格的路径。
 
-### 环境变量
+### 4. 配置环境变量
+
+在 `docker-compose/` 目录：
 
 ```bash
 cd docker-compose
@@ -375,7 +372,7 @@ cp .env.prod.example .env
 
 从 `.env.dev.example` 复制也可以，但要自己补上 `MLFLOW_DATA_DIR`，并换掉其中的开发口令。生产文件不读取那个示例文件。那个示例仍把认证放在 SQLite 上，不要把它的 `MLFLOW_AUTH_DATABASE_URI` 原样用于生产。
 
-### 认证库 `mlflow_auth`
+### 5. 认证库 `mlflow_auth`
 
 用户、角色和权限放在独立的 PostgreSQL 数据库 `mlflow_auth` 里。实验跟踪仍在 `POSTGRES_DB`（通常是 `mlflow`）。不要把认证指到跟踪库：认证表里有 `users`、`roles` 这样的名字，和跟踪库混在一起会撞名。
 
@@ -391,9 +388,9 @@ postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${PGPORT}/mlflow_aut
 
 这是按全新生产部署来的，不会把旧的 `auth/basic_auth.db` 迁进 `mlflow_auth`。已经初始化过的 Postgres 数据目录也会在下次启动时补上 `mlflow_auth`，跟踪库里的实验数据不动。管理员账号仍只在用户还不存在时按 `MLFLOW_AUTH_ADMIN_PASSWORD` 创建。旧 SQLite 里的用户需要重新建立。
 
-### 启动
+### 6. 启动
 
-仍在 `docker-compose/` 目录：
+镜像、数据目录和 `.env` 都准备好之后，仍在 `docker-compose/` 目录：
 
 ```bash
 docker compose -f docker-compose.prod.yml --env-file .env up -d
@@ -401,9 +398,13 @@ docker compose -f docker-compose.prod.yml --env-file .env ps
 docker compose -f docker-compose.prod.yml --env-file .env logs -f mlflow
 ```
 
+只要这一份 `-f`。不要再加 `-f docker-compose.yml`，也不要再使用以前的 `docker compose -f docker-compose.yml -f docker-compose.prod.yml`：生产文件已经是完整栈，再叠上开发文件会把 Postgres 和 RustFS 的宿主端口（5432、9000、9001）加回来。
+
 后续的 `ps`、`logs`、`down` 都要带上同样的 `-f docker-compose.prod.yml` 和 `--env-file .env`。只写 `docker compose` 会回到 `docker-compose.yml`（具名卷，并发布 5432/9000/9001）。
 
-### 数据如何留下来
+等到 `mlflow` 健康后，用浏览器打开 `http://<服务器>:5000`（端口以 `MLFLOW_PORT` 为准），用 `.env` 里的管理员账号登录。
+
+### 7. 停止与保留数据
 
 ```bash
 docker compose -f docker-compose.prod.yml --env-file .env down
@@ -418,7 +419,7 @@ docker compose -f docker-compose.prod.yml --env-file .env down
 
 不要对还装着数据的卷执行 `-v`。备份时直接打包 `/data/mlflow_data`。用户和权限在 `postgres/` 的 `mlflow_auth` 里，不在 `auth/basic_auth.db`。
 
-### 端口与 HTTPS
+### 8. 端口与 HTTPS
 
 生产文件不发布 Postgres `${PGPORT}`（5432）和 RustFS `9000`/`9001`，不会绑到 `0.0.0.0`。容器之间仍用服务名访问：`postgres:5432`、`http://storage:9000`。不要为了在宿主机上用 `psql` 或 `aws` 把这些端口重新公布到公网。
 
