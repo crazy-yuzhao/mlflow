@@ -6,7 +6,7 @@
 #
 # Replaces the named volumes and published ports from docker-compose.yml.
 # Postgres and RustFS stay on the compose network only. The server image is
-# the local fork build (`mlflow-fork:local`), which includes this branch's UI.
+# `hengjian:latest`, which includes this branch's UI.
 
 services:
   postgres:
@@ -26,7 +26,7 @@ services:
     restart: "no"
 
   mlflow:
-    image: mlflow-fork:local
+    image: hengjian:latest
     restart: unless-stopped
     # ${MLFLOW_BIND_IP} is optional. Unset publishes MLFLOW_PORT on 0.0.0.0.
     # Set MLFLOW_BIND_IP=127.0.0.1 when a reverse proxy on this host terminates

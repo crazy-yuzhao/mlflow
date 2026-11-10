@@ -250,13 +250,15 @@ The sample model scores `0.75`. The default threshold is `0.5`, so the script re
 
 ```bash
 # repository root; the UI build needs Node 24 and several GB of RAM
-docker build -f docker-compose/Dockerfile.fork -t mlflow-fork:local .
+docker build -f docker-compose/Dockerfile.fork -t hengjian:latest .
 cd docker-compose
 cp docker-compose.override.example.yml docker-compose.override.yml
 docker compose up -d
 ```
 
-The override only replaces `services.mlflow.image`. Postgres, RustFS, basic auth, and workspaces still come from `docker-compose.yml`. Remove `docker-compose.override.yml` to return to the official image.
+The override only replaces `services.mlflow.image` with `hengjian:latest`. Postgres, RustFS, basic auth, and workspaces still come from `docker-compose.yml`. Remove `docker-compose.override.yml` to return to the official image.
+
+On a Mac (Apple Silicon) this command builds a native image for local `docker compose up`. A build that will run on a typical x86_64 server needs `--platform linux/amd64`, then `docker save` / `docker load` (see [在服务器上部署](#在服务器上部署)).
 
 ---
 
@@ -290,15 +292,35 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 
 ### 克隆与镜像
 
-官方 `ghcr.io/mlflow/mlflow` 没有本分支的中文界面。服务器上的 `mlflow` 服务使用本地镜像 `mlflow-fork:local`。
+官方 `ghcr.io/mlflow/mlflow` 没有本分支的中文界面。服务器上的 `mlflow` 服务使用镜像 `hengjian:latest`。
+
+在仓库根目录构建。Mac（Apple Silicon）上构建、准备放到常见 x86_64 Linux 服务器上时，加上 `--platform linux/amd64`：
 
 ```bash
 git clone -b zh-ui https://github.com/crazy-yuzhao/mlflow.git
 cd mlflow
-docker build -f docker-compose/Dockerfile.fork -t mlflow-fork:local .
+docker build --platform linux/amd64 -f docker-compose/Dockerfile.fork -t hengjian:latest .
 ```
 
-UI 构建需要 Node 24 和数 GB 内存。镜像如果在别的机器上构建，用 `docker save` / `docker load` 导入后，标签仍须是 `mlflow-fork:local`。
+在 x86_64 机器上构建时使用：
+
+```bash
+docker build -f docker-compose/Dockerfile.fork -t hengjian:latest .
+```
+
+UI 构建需要 Node 24 和数 GB 内存。
+
+镜像在别的机器上构建时，用 `docker save` / `docker load` 传到服务器。标签是 `hengjian:latest`：
+
+```bash
+# 构建机器上
+docker save hengjian:latest | gzip > hengjian-latest.tar.gz
+
+# 服务器上
+gunzip -c hengjian-latest.tar.gz | docker load
+```
+
+`docker load` 会保留镜像里的 `hengjian:latest` 标签。
 
 ### 数据目录
 
