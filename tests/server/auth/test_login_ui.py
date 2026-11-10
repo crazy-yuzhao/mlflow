@@ -51,6 +51,8 @@ _PAGE_COPY = (
     "忘记密码？",
     "请输入密码",
     "7 天内保持登录",
+    "HENGJIAN · AGENT QUALITY SYSTEM",
+    "由衡鉴实验追踪能力驱动",
     "登录衡鉴工作台",
     "使用企业 SSO 登录",
     "企业 SSO 入口待接入",
@@ -67,7 +69,8 @@ _PAGE_COPY_EN = (
     "Overall quality score",
     "Task success rate",
     "Factual accuracy",
-    "Powered by MLflow experiment tracking",
+    "HENGJIAN · AGENT QUALITY SYSTEM",
+    "Powered by Hengjian experiment tracking",
     "Sign in to the workspace",
     "Account",
     "Work email or username",
@@ -478,6 +481,8 @@ def test_render_login_page_applies_lang_and_theme():
     for text in _PAGE_COPY_EN:
         assert text in html
     assert "登录工作台" not in html
+    assert "MLflow" not in html
+    assert "MLFLOW" not in html
     assert 'name="username"' in html
     assert 'value="/version"' in html
 
@@ -498,6 +503,10 @@ def test_render_login_page_applies_lang_and_theme():
     with app.test_request_context("/login?lang=zh", headers={"Cookie": f"{UI_LANG_COOKIE}=en"}):
         html = render_login_page(csrf_token="token")
     assert "登录工作台" in html
+    assert "由衡鉴实验追踪能力驱动" in html
+    assert "HENGJIAN · AGENT QUALITY SYSTEM" in html
+    assert "MLflow" not in html
+    assert "MLFLOW" not in html
     assert 'data-theme="light"' in html
     assert 'class="theme-light"' in html
     assert 'class="pref-code">ZH<' in html
