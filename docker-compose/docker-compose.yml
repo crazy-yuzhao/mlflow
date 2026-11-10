@@ -1,7 +1,9 @@
 volumes:
   pgdata:
   storage-data:
-  # SQLite basic-auth database (users, roles). Sits next to pgdata.
+  # basic_auth.ini, plus the SQLite user store when MLFLOW_AUTH_DATABASE_URI
+  # is sqlite (the non-production example). Production stores users in
+  # PostgreSQL database mlflow_auth; see docker-compose.prod.yml.
   authdata:
 
 services:
@@ -110,6 +112,13 @@ services:
       MLFLOW_AUTH_DEFAULT_PERMISSION: ${MLFLOW_AUTH_DEFAULT_PERMISSION}
       MLFLOW_AUTH_GRANT_DEFAULT_WORKSPACE_ACCESS: ${MLFLOW_AUTH_GRANT_DEFAULT_WORKSPACE_ACCESS}
       MLFLOW_ENABLE_WORKSPACES: "true"
+      # Same credentials as the postgres service. Used only to CREATE DATABASE
+      # for a PostgreSQL auth URI (production: mlflow_auth). SQLite auth ignores
+      # them. Tracking still uses MLFLOW_BACKEND_STORE_URI.
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGPORT: ${PGPORT}
     command:
       - /bin/bash
       - -c
@@ -118,15 +127,91 @@ services:
         # `mlflow[auth]` extra is Flask-WTF (see pyproject.toml). Install that
         # package directly so pip does not replace the image's MLflow build.
         pip install --no-cache-dir "psycopg[binary]" psycopg2-binary boto3 'Flask-WTF<2'
+        # When the auth URI is PostgreSQL, create that database if it is missing
+        # (production: mlflow_auth). This runs on every start, so it also covers
+        # a Postgres volume that was initialized before mlflow_auth existed.
+        # docker-entrypoint-initdb.d only runs on first init. SQLite URIs skip it.
         python - <<'PY'
         import os
+        import re
         from pathlib import Path
+        from urllib.parse import unquote, urlparse
+
+        import psycopg
+        from psycopg import sql
 
         def required(name: str) -> str:
             value = os.environ.get(name, "").strip()
             if not value:
                 raise SystemExit(f"{name} is required. Set it in docker-compose/.env")
             return value
+
+        def postgres_auth_database_name(uri: str) -> str | None:
+            scheme = uri.split(":", 1)[0].split("+", 1)[0].lower()
+            if scheme not in {"postgresql", "postgres"}:
+                return None
+            without_query = uri.split("?", 1)[0]
+            name = unquote(without_query.rstrip("/").rsplit("/", 1)[-1])
+            if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name):
+                raise SystemExit(
+                    "MLFLOW_AUTH_DATABASE_URI database name must be a simple "
+                    "identifier. Production uses mlflow_auth."
+                )
+            return name
+
+        def ensure_auth_database(auth_uri: str) -> None:
+            auth_db = postgres_auth_database_name(auth_uri)
+            if auth_db is None:
+                print("Auth database URI is not PostgreSQL; skipping database creation.")
+                return
+
+            user = required("POSTGRES_USER")
+            password = os.environ.get("POSTGRES_PASSWORD", "")
+            if not password:
+                raise SystemExit(
+                    "POSTGRES_PASSWORD is required to create the PostgreSQL auth database."
+                )
+            tracking_db = required("POSTGRES_DB")
+            if auth_db == tracking_db:
+                raise SystemExit(
+                    f"Refusing to store auth tables in the tracking database {tracking_db!r}. "
+                    "Point MLFLOW_AUTH_DATABASE_URI at a separate database (mlflow_auth)."
+                )
+
+            parsed = urlparse(auth_uri)
+            host = parsed.hostname or "postgres"
+            try:
+                port = parsed.port or int(os.environ.get("PGPORT", "5432"))
+            except ValueError as exc:
+                raise SystemExit(
+                    f"PGPORT is not an integer: {os.environ.get('PGPORT')!r}"
+                ) from exc
+
+            with psycopg.connect(
+                host=host,
+                port=port,
+                user=user,
+                password=password,
+                dbname=tracking_db,
+                autocommit=True,
+                connect_timeout=10,
+            ) as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        "SELECT 1 FROM pg_database WHERE datname = %s",
+                        (auth_db,),
+                    )
+                    if cur.fetchone():
+                        print(f"PostgreSQL auth database {auth_db} already exists.")
+                        return
+                    try:
+                        cur.execute(
+                            sql.SQL("CREATE DATABASE {}").format(sql.Identifier(auth_db))
+                        )
+                    except psycopg.errors.DuplicateDatabase:
+                        print(f"PostgreSQL auth database {auth_db} already exists.")
+                        return
+            print(f"Created PostgreSQL auth database {auth_db}.")
 
         password = required("MLFLOW_AUTH_ADMIN_PASSWORD")
         if len(password) < 12:
@@ -137,6 +222,7 @@ services:
         required("MLFLOW_FLASK_SERVER_SECRET_KEY")
         username = os.environ.get("MLFLOW_AUTH_ADMIN_USERNAME", "admin").strip() or "admin"
         database_uri = required("MLFLOW_AUTH_DATABASE_URI")
+        ensure_auth_database(database_uri)
         default_permission = os.environ.get("MLFLOW_AUTH_DEFAULT_PERMISSION", "READ").strip() or "READ"
         grant = (
             os.environ.get("MLFLOW_AUTH_GRANT_DEFAULT_WORKSPACE_ACCESS", "false").strip() or "false"

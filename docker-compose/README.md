@@ -20,7 +20,7 @@ The tracking server is `ghcr.io/mlflow/mlflow`. This fork's server CLI supports 
   Artifact storage (`--serve-artifacts`).
 
 - **Auth database**  
-  Users and RBAC roles in SQLite on the `authdata` volume (`/mlflow/auth/basic_auth.db`), next to the Postgres data volume. The file is created on first start from `MLFLOW_AUTH_DATABASE_URI`.
+  Users and RBAC roles. A local `docker compose up` stores them in SQLite on the `authdata` volume (`/mlflow/auth/basic_auth.db`). Production stores them in a separate PostgreSQL database, `mlflow_auth`, on the same Postgres service as tracking. Tracking stays in `POSTGRES_DB`. Both modes rewrite `basic_auth.ini` under `/mlflow/auth` on each start.
 
 ---
 
@@ -84,7 +84,7 @@ Leave the Postgres and S3 variables unless you need to change ports or credentia
 - `MLFLOW_VERSION=latest`
 - `MLFLOW_HOST=0.0.0.0`
 - `MLFLOW_PORT=5000`
-- `MLFLOW_WORKERS=1` (raise this only if the auth database is PostgreSQL)
+- `MLFLOW_WORKERS=1` (the local auth database is SQLite; raise this when `MLFLOW_AUTH_DATABASE_URI` is PostgreSQL. Production already uses PostgreSQL, so workers may be greater than 1. The shipped default stays 1.)
 - `MLFLOW_BACKEND_STORE_URI=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}`
 
 **Basic auth and workspaces**
@@ -93,11 +93,11 @@ Leave the Postgres and S3 variables unless you need to change ports or credentia
 - `MLFLOW_AUTH_ADMIN_USERNAME=admin`
 - `MLFLOW_AUTH_ADMIN_PASSWORD` (min 12 characters)
 - `MLFLOW_AUTH_CONFIG_PATH=/mlflow/auth/basic_auth.ini` (rewritten on each start)
-- `MLFLOW_AUTH_DATABASE_URI=sqlite:////mlflow/auth/basic_auth.db` (the `authdata` volume)
+- `MLFLOW_AUTH_DATABASE_URI=sqlite:////mlflow/auth/basic_auth.db` (the `authdata` volume; non-production default)
 - `MLFLOW_AUTH_DEFAULT_PERMISSION=READ`
 - `MLFLOW_AUTH_GRANT_DEFAULT_WORKSPACE_ACCESS=false`
 
-To store auth in PostgreSQL instead of the volume, create a database and point `MLFLOW_AUTH_DATABASE_URI` at it, for example `postgresql://mlflow:mlflow@postgres:5432/mlflow_auth`. The SQLite file is the default because it survives `docker compose down` without an extra database.
+Local `docker compose up` keeps SQLite so it does not need a second database. Production (`.env.prod.example`) points `MLFLOW_AUTH_DATABASE_URI` at `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${PGPORT}/mlflow_auth`. When that URI is PostgreSQL, startup connects to the tracking database with the `POSTGRES_*` credentials and creates the auth database if it is missing. Do not point the auth URI at `POSTGRES_DB`. SQLite is no longer the production default.
 
 `MLFLOW_WORKSPACE` is a client setting. Do not put it in this `.env`; the server refuses to start if that variable is set in the container.
 
@@ -268,13 +268,13 @@ On a Mac (Apple Silicon) this command builds a native image for local `docker co
 docker compose down
 ```
 
-To drop Postgres, artifacts, and the auth database:
+To drop the local Postgres volume, artifacts, and the SQLite auth file:
 
 ```bash
 docker compose down -v
 ```
 
-The next start creates a new admin user from `MLFLOW_AUTH_ADMIN_PASSWORD`.
+The next start creates a new admin user from `MLFLOW_AUTH_ADMIN_PASSWORD`. This removes the local named volumes (`pgdata`, `storage-data`, `authdata`). Production data under `MLFLOW_DATA_DIR` is a different layout; see [在服务器上部署](#在服务器上部署).
 
 ---
 
@@ -328,9 +328,9 @@ gunzip -c hengjian-latest.tar.gz | docker load
 
 ```text
 /data/mlflow_data/
-├── postgres/   # PostgreSQL → /var/lib/postgresql/data
+├── postgres/   # PostgreSQL → /var/lib/postgresql/data（跟踪库与认证库 mlflow_auth）
 ├── storage/    # RustFS 对象 → /data
-└── auth/       # basic-auth SQLite 与 ini → /mlflow/auth
+└── auth/       # basic_auth.ini → /mlflow/auth
 ```
 
 ```bash
@@ -343,7 +343,7 @@ sudo chmod 700 /data/mlflow_data/auth
 
 - 官方 `postgres:15` 镜像的入口进程以 root 启动，初始化数据目录后降到 uid **999**（`postgres`）。先把 `postgres/` 交给 999，避免绑定目录不可写。
 - `rustfs/rustfs:1.0.0-alpha.83` 以 uid/gid **10001** 运行，不会在启动时改宿主目录的属主。`storage/` 必须事先属于 10001，否则对象存储起不来。
-- `Dockerfile.fork` 没有改 `USER`，服务进程是 root，并在启动时写入 `/mlflow/auth/basic_auth.ini`（容器内 `chmod 600`）和 `basic_auth.db`。`auth/` 保持 root 可写即可。
+- `Dockerfile.fork` 没有改 `USER`，服务进程是 root，并在启动时写入 `/mlflow/auth/basic_auth.ini`（容器内 `chmod 600`）。用户和权限写在 PostgreSQL 的 `mlflow_auth` 库里，不再写 `basic_auth.db`。`auth/` 保持 root 可写即可。目录里如果还有旧的 `basic_auth.db`，服务不会读取它。
 
 目录不存在时，Docker 会在启动时以 root 把绑定路径创建出来。那样 `storage/` 的属主不是 10001，RustFS 会因权限失败。先执行上面的 `mkdir` 和 `chown`，再 `up`。
 
@@ -366,12 +366,28 @@ cp .env.prod.example .env
 并确认：
 
 - `MLFLOW_DATA_DIR=/data/mlflow_data`（或你的实际根路径）
-- `MLFLOW_WORKERS=1`。认证库仍是 SQLite 时不要加大 worker，否则会出现 `database is locked`。只有把 `MLFLOW_AUTH_DATABASE_URI` 改到 PostgreSQL 之后才能提高 worker 数。
+- `MLFLOW_WORKERS` 默认是 1，可以改成大于 1。生产环境的认证库是 PostgreSQL 的 `mlflow_auth`，不再是 SQLite，因此不会因为多个 worker 出现 `database is locked`。SQLite 只还作为不带生产 overlay 的本机示例默认。
 - 不要设置 `MLFLOW_WORKSPACE`。它只属于客户端。服务端容器环境里一旦有这个变量，进程会拒绝启动。不要把它写进 `mlflow` 服务的 `environment`。
 
 不要使用 `.env.local`。那是 Mac 开发文件：Compose 里通常只跑 Postgres，服务端跑在宿主机上，路径也是 Mac 路径。Compose 默认只读取项目目录中的 `.env`，不会读取 `.env.local`。不要在服务器上 `cp .env.local .env`，也不要 `docker compose --env-file .env.local`。
 
-从 `.env.dev.example` 复制也可以，但要自己补上 `MLFLOW_DATA_DIR`，并换掉其中的开发口令。生产 overlay 不读取那个示例文件。
+从 `.env.dev.example` 复制也可以，但要自己补上 `MLFLOW_DATA_DIR`，并换掉其中的开发口令。生产 overlay 不读取那个示例文件。那个示例仍把认证放在 SQLite 上，不要把它的 `MLFLOW_AUTH_DATABASE_URI` 原样用于生产。
+
+### 认证库 `mlflow_auth`
+
+用户、角色和权限放在独立的 PostgreSQL 数据库 `mlflow_auth` 里。实验跟踪仍在 `POSTGRES_DB`（通常是 `mlflow`）。不要把认证指到跟踪库：认证表里有 `users`、`roles` 这样的名字，和跟踪库混在一起会撞名。
+
+`MLFLOW_AUTH_DATABASE_URI` 使用和 `POSTGRES_*` 相同的用户、密码、主机和端口，只是库名是 `mlflow_auth`：
+
+```text
+postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${PGPORT}/mlflow_auth
+```
+
+官方 Postgres 镜像只会在首次初始化数据目录时创建 `POSTGRES_DB`。`docker-entrypoint-initdb.d` 也只在那一次运行，所以不能靠它来补 `mlflow_auth`。`mlflow` 在每次启动、Postgres 健康检查通过、并且认证 URI 是 PostgreSQL 时，用 `POSTGRES_USER` / `POSTGRES_PASSWORD` 连到跟踪库，发现没有目标库就执行 `CREATE DATABASE`。库已经存在时直接继续，不会报错。认证 URI 仍是 SQLite 时（本机 `docker compose up` 的示例）会跳过这一步。
+
+`basic_auth.ini` 每次启动仍写到 `/mlflow/auth/basic_auth.ini`。生产 overlay 把 `${MLFLOW_DATA_DIR}/auth` 绑到这个目录，用来留下这份 ini。SQLite 文件不再是用户库。
+
+这是按全新生产部署来的，不会把旧的 `auth/basic_auth.db` 迁进 `mlflow_auth`。已经初始化过的 Postgres 数据目录也会在下次启动时补上 `mlflow_auth`，跟踪库里的实验数据不动。管理员账号仍只在用户还不存在时按 `MLFLOW_AUTH_ADMIN_PASSWORD` 创建。旧 SQLite 里的用户需要重新建立。
 
 ### 启动
 
@@ -391,14 +407,14 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml logs -f mlflow
 docker compose -f docker-compose.yml -f docker-compose.prod.yml down
 ```
 
-不要加 `-v`。上面这条命令停掉容器，`/data/mlflow_data` 里的 Postgres 数据、对象和认证库都还在。绑定挂载不依赖具名卷。
+不要加 `-v`。上面这条命令停掉容器，`/data/mlflow_data` 里的数据都还在。`postgres/` 里同时有跟踪库和认证库 `mlflow_auth`，`storage/` 是对象，`auth/` 里是 `basic_auth.ini`。绑定挂载不依赖具名卷。
 
 `docker compose down -v` 会删除**当前项目模型里的具名卷**。生产 overlay 已经拿掉 `pgdata`、`storage-data`、`authdata`，因此带上这两个 `-f` 时，`-v` 不会删除 `/data/mlflow_data`。它仍然危险：
 
 - 不加生产文件时，`docker compose down -v` 会删掉本机开发用的具名卷。
 - 如果合并结果里还留着具名卷（例如改坏了 overlay），`-v` 会删掉这些卷里的数据。
 
-不要对还装着数据的卷执行 `-v`。备份时直接打包 `/data/mlflow_data`。
+不要对还装着数据的卷执行 `-v`。备份时直接打包 `/data/mlflow_data`。用户和权限在 `postgres/` 的 `mlflow_auth` 里，不在 `auth/basic_auth.db`。
 
 ### 端口与 HTTPS
 
@@ -443,9 +459,11 @@ MLflow's `/health` is exempt from basic auth. A `401` on `/` or `/api/2.0/...` m
 
 ### Auth database
 
-The server rewrites `/mlflow/auth/basic_auth.ini` on every start from the variables in `.env`. Users and password hashes stay in `basic_auth.db` on the `authdata` volume. Changing `MLFLOW_AUTH_ADMIN_PASSWORD` after the admin user exists does not reset it. To rotate, call the update-password API as an admin, or `docker compose down -v` and start clean.
+The server rewrites `/mlflow/auth/basic_auth.ini` on every start from the variables in `.env`. Changing `MLFLOW_AUTH_ADMIN_PASSWORD` after the admin user exists does not reset it. To rotate, call the update-password API as an admin.
 
-`database is locked` on the auth SQLite file usually means too many workers. Keep `MLFLOW_WORKERS=1`, or move `MLFLOW_AUTH_DATABASE_URI` to PostgreSQL before raising the worker count.
+Local `docker compose up` keeps users in `basic_auth.db` on the `authdata` volume. `database is locked` on that SQLite file usually means too many workers. Keep `MLFLOW_WORKERS=1`, or point `MLFLOW_AUTH_DATABASE_URI` at PostgreSQL before raising the worker count. `docker compose down -v` drops that volume.
+
+Production stores users in PostgreSQL database `mlflow_auth`. SQLite is no longer the production default, and `MLFLOW_WORKERS` may be greater than 1. Startup creates `mlflow_auth` when it is missing, including when the Postgres data directory was initialized earlier. An existing `basic_auth.db` is not migrated and is not read.
 
 ### Artifact Upload Issues
 
