@@ -150,6 +150,10 @@ describe('TracesTableView', () => {
     expect(screen.queryByText(/No traces yet/)).not.toBeInTheDocument();
     // The toolbar still renders.
     expect(screen.getByRole('textbox', { name: /Search traces/ })).toBeInTheDocument();
+    // The quickstart is wrapped in its own region so the fixed-height page shell can scroll it.
+    // Emotion's `css` prop is not visible as a className under this jsdom runtime.
+    const scroller = screen.getByTestId('traces-table-custom-empty-state');
+    expect(scroller).toContainElement(screen.getByText('pick-a-warehouse'));
   });
 
   test('no-more-results keeps the pagination bar so the user can step back', async () => {
