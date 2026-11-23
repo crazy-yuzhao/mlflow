@@ -142,8 +142,9 @@ export interface TracesTableViewProps {
   getErrorDescription?: ErrorDescriptionGetter;
   /**
    * Short-circuit region content, rendered instead of the `viewState` switch when provided. Use for
-   * a product-specific pre-query state (e.g. MLflow's "select a SQL warehouse"). The toolbar and
-   * `bannerSlot` still render above it.
+   * a product-specific pre-query state (e.g. MLflow's "select a SQL warehouse" or the tracing
+   * quickstart). The toolbar and `bannerSlot` still render above it. Tall content scrolls inside
+   * the region instead of being clipped by the page shell.
    */
   customEmptyState?: React.ReactNode;
   /**
@@ -265,7 +266,18 @@ export const TracesTableView: React.FC<TracesTableViewProps> = (props: TracesTab
 
   const renderRegion = () => {
     if (customEmptyState) {
-      return customEmptyState;
+      // The traces page is a fixed-height flex column with overflow hidden so the table can
+      // scroll on its own. This region is that column's remaining space. A tall empty state
+      // (the tracing quickstart) has to scroll here — the shell will clip it otherwise, and
+      // opening the assistant panel makes the pane narrower and the content taller.
+      return (
+        <div
+          data-testid="traces-table-custom-empty-state"
+          css={{ flex: 1, minHeight: 0, minWidth: 0, overflow: 'auto', scrollbarGutter: 'stable' }}
+        >
+          {customEmptyState}
+        </div>
+      );
     }
     switch (viewState) {
       case 'empty':
