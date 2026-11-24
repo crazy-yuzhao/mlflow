@@ -370,6 +370,7 @@ cp .env.prod.example .env
 - `MLFLOW_DATA_DIR=/data/mlflow_data`（或你的实际根路径）
 - `MLFLOW_WORKERS` 默认是 1，可以改成大于 1。生产环境的认证库是 PostgreSQL 的 `mlflow_auth`，不再是 SQLite，因此不会因为多个 worker 出现 `database is locked`。SQLite 只还作为本机 `docker compose up`（`docker-compose.yml`）的示例默认。
 - 不要设置 `MLFLOW_WORKSPACE`。它只属于客户端。服务端容器环境里一旦有这个变量，进程会拒绝启动。不要把它写进 `mlflow` 服务的 `environment`。
+- 浏览器不是从 `localhost` 打开衡鉴时，必须设置 `MLFLOW_SERVER_ALLOWED_HOSTS` 和 `MLFLOW_SERVER_CORS_ALLOWED_ORIGINS`。填写规则见 [端口与 HTTPS](#端口与-https)。两项留空或删掉时，和生产文件里未设置相同，默认行为以及 `http://localhost:${MLFLOW_PORT}/health` 健康检查都不变。
 
 不要使用 `.env.local`。那是 Mac 开发文件：Compose 里通常只跑 Postgres，服务端跑在宿主机上，路径也是 Mac 路径。Compose 默认只读取项目目录中的 `.env`，不会读取 `.env.local`。不要在服务器上 `cp .env.local .env`，也不要 `docker compose --env-file .env.local`。
 
@@ -425,6 +426,30 @@ docker compose -f docker-compose.prod.yml --env-file .env down
 衡鉴 UI 和 API 只发布 `${MLFLOW_PORT}`（示例为 5000）。在它前面放 HTTPS 反向代理，由代理对外提供 TLS。代理和衡鉴在同一台机器上时，在 `.env` 里设置 `MLFLOW_BIND_IP=127.0.0.1`，UI 就只监听本机。不设置时，端口发布在 `0.0.0.0`。
 
 本机开发文档里用 `http://127.0.0.1:9000` 检查 RustFS 的命令，在这套生产端口下不适用。
+
+安全中间件默认只放行来自 `localhost`、`127.0.0.1`、`[::1]` 的状态修改请求（`/api/`、`/ajax-api/` 下的 POST、PUT、DELETE、PATCH）。用服务器 IP 或域名打开页面时，跟踪页的 `POST /ajax-api/3.0/mlflow/traces/search` 会返回 403，正文是 `Cross-origin request blocked`。概览页的 `POST /ajax-api/3.0/mlflow/traces/metrics` 同样被拦，前端拿不到数据就会一直转圈。
+
+在 `.env` 里设置 `MLFLOW_SERVER_ALLOWED_HOSTS` 和 `MLFLOW_SERVER_CORS_ALLOWED_ORIGINS`。它们比对的是浏览器地址栏实际看到的 Host 和 Origin：
+
+- 直接用 IP 访问，并且 `MLFLOW_PORT` 改成了 `25000`：地址栏是 `http://203.0.113.10:25000`。Host 和 Origin 都写这个对外地址，端口是 `25000`。
+
+  ```env
+  MLFLOW_SERVER_ALLOWED_HOSTS=localhost,localhost:*,127.0.0.1,127.0.0.1:*,203.0.113.10:25000
+  MLFLOW_SERVER_CORS_ALLOWED_ORIGINS=http://203.0.113.10:25000
+  ```
+
+- 前面有 HTTPS 域名反代：地址栏是 `https://mlflow.example.com`。Origin 写这个公网地址，Host 写域名。反代转发给容器的内部端口不写进这两项。
+
+  ```env
+  MLFLOW_SERVER_ALLOWED_HOSTS=localhost,localhost:*,127.0.0.1,127.0.0.1:*,mlflow.example.com
+  MLFLOW_SERVER_CORS_ALLOWED_ORIGINS=https://mlflow.example.com
+  ```
+
+非空值会替换默认名单。保留 `localhost,localhost:*,127.0.0.1,127.0.0.1:*`，本机对其它路径的探活（Host 为 `localhost` 或 `127.0.0.1`，任意端口）才会继续放行。容器健康检查请求的是 `http://localhost:${MLFLOW_PORT}/health`，`/health` 不做 Host 校验，所以这两项留空不会让健康检查失败。生产环境不要写 `*`。
+
+留空（`MLFLOW_SERVER_ALLOWED_HOSTS=`）和从 `.env` 里删掉这两行相同。`get_allowed_hosts_from_env()` 与 `get_allowed_origins_from_env()` 把空字符串当成未设置：Host 仍允许 localhost 和内网地址，跨源状态修改仍只放行 localhost。`/health` 本身也不做 Host 校验。等号后面不要加空格，空格会被当成一份名单。
+
+部署后如果跟踪页报 403，或概览页一直转圈，先看响应正文是不是 `Cross-origin request blocked`。是的话按地址栏补上上面两项，保留 localhost 条目，再执行 `docker compose -f docker-compose.prod.yml --env-file .env up -d`。
 
 ---
 
@@ -493,6 +518,7 @@ If this passes, MLflow can read and write artifacts to RustFS. From inside the c
 - Endpoint issues from MLflow → make sure `MLFLOW_S3_ENDPOINT_URL` uses the **service name** visible from MLflow (e.g., `http://storage:9000`).
 - Server exits immediately complaining about `MLFLOW_FLASK_SERVER_SECRET_KEY` or a short admin password → fix `.env` and `docker compose up -d` again.
 - `MLFLOW_WORKSPACE=... is client-only` → that variable was passed into the server container. Remove it from the compose environment.
+- Traces page returns 403 with `Cross-origin request blocked`, or the overview page keeps loading → the browser address is missing from `MLFLOW_SERVER_ALLOWED_HOSTS` and `MLFLOW_SERVER_CORS_ALLOWED_ORIGINS`. See [在服务器上部署](#在服务器上部署).
 
 ### Resetting the Environment
 

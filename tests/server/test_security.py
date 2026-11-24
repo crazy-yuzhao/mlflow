@@ -9,6 +9,10 @@ from werkzeug.test import Client
 from mlflow.server import security
 from mlflow.server.fastapi_security import init_fastapi_security
 from mlflow.server.security_utils import (
+    CORS_BLOCKED_MSG,
+    INVALID_HOST_MSG,
+    get_allowed_hosts_from_env,
+    get_allowed_origins_from_env,
     is_allowed_host_header,
     is_api_endpoint,
     is_health_endpoint,
@@ -598,3 +602,176 @@ def test_fastapi_cors_allows_configured_origin(monkeypatch: pytest.MonkeyPatch):
         headers={"Host": "localhost", "Origin": "http://evil.com"},
     )
     assert response.headers.get("access-control-allow-origin") is None
+
+
+_PROD_ALLOWED_HOSTS = (
+    "localhost,localhost:*,127.0.0.1,127.0.0.1:*,203.0.113.10:25000,mlflow.example.com"
+)
+_PROD_ALLOWED_ORIGINS = "http://203.0.113.10:25000,https://mlflow.example.com"
+
+
+def _set_security_env(
+    monkeypatch: pytest.MonkeyPatch, hosts: str | None, origins: str | None
+) -> None:
+    for name, value in (
+        ("MLFLOW_SERVER_ALLOWED_HOSTS", hosts),
+        ("MLFLOW_SERVER_CORS_ALLOWED_ORIGINS", origins),
+    ):
+        if value is None:
+            monkeypatch.delenv(name, raising=False)
+        else:
+            monkeypatch.setenv(name, value)
+
+
+def _response_body(response) -> bytes:
+    data = getattr(response, "data", None)
+    if isinstance(data, bytes):
+        return data
+    return response.content
+
+
+def _security_client(server: str):
+    if server == "flask":
+        app = Flask(__name__)
+
+        @app.route("/health")
+        def health():
+            return "OK"
+
+        @app.route("/ajax-api/3.0/mlflow/traces/search", methods=["POST"])
+        @app.route("/ajax-api/3.0/mlflow/traces/metrics", methods=["POST"])
+        def traces():
+            return "OK"
+
+        security.init_security_middleware(app)
+        return Client(app)
+
+    app = FastAPI()
+
+    @app.get("/health")
+    async def health():
+        return {"ok": True}
+
+    @app.post("/ajax-api/3.0/mlflow/traces/search")
+    @app.post("/ajax-api/3.0/mlflow/traces/metrics")
+    async def traces():
+        return {"ok": True}
+
+    init_fastapi_security(app)
+    return TestClient(app, raise_server_exceptions=False)
+
+
+def _security_request(client, path: str, host: str, origin: str | None):
+    headers = {"Host": host}
+    if origin is not None:
+        headers["Origin"] = origin
+    method = "get" if path == "/health" else "post"
+    return getattr(client, method)(path, headers=headers)
+
+
+@pytest.mark.parametrize("raw_value", [None, ""])
+def test_blank_security_env_uses_defaults(raw_value, monkeypatch: pytest.MonkeyPatch):
+    _set_security_env(monkeypatch, raw_value, raw_value)
+
+    assert get_allowed_hosts_from_env() is None
+    assert get_allowed_origins_from_env() is None
+    hosts = security.get_allowed_hosts()
+    assert "localhost" in hosts
+    assert "localhost:*" in hosts
+    assert "127.0.0.1" in hosts
+    assert "127.0.0.1:*" in hosts
+    assert security.get_allowed_origins() == []
+
+
+def test_nonempty_security_env_replaces_defaults(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setenv("MLFLOW_SERVER_ALLOWED_HOSTS", "mlflow.example.com")
+    monkeypatch.setenv("MLFLOW_SERVER_CORS_ALLOWED_ORIGINS", "https://mlflow.example.com")
+
+    assert get_allowed_hosts_from_env() == ["mlflow.example.com"]
+    assert security.get_allowed_hosts() == ["mlflow.example.com"]
+    assert get_allowed_origins_from_env() == ["https://mlflow.example.com"]
+    assert security.get_allowed_origins() == ["https://mlflow.example.com"]
+
+
+def test_whitespace_security_env_is_not_unset(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setenv("MLFLOW_SERVER_ALLOWED_HOSTS", " ")
+    monkeypatch.setenv("MLFLOW_SERVER_CORS_ALLOWED_ORIGINS", " ")
+
+    assert get_allowed_hosts_from_env() == [""]
+    assert get_allowed_origins_from_env() == [""]
+
+
+@pytest.mark.parametrize("server", ["flask", "fastapi"])
+@pytest.mark.parametrize("raw_value", [None, ""])
+def test_blank_security_env_allows_healthcheck_and_blocks_remote_origin(
+    server, raw_value, monkeypatch: pytest.MonkeyPatch
+):
+    _set_security_env(monkeypatch, raw_value, raw_value)
+    client = _security_client(server)
+
+    health = _security_request(client, "/health", "localhost:25000", None)
+    assert health.status_code == 200
+
+    local_post = _security_request(
+        client,
+        "/ajax-api/3.0/mlflow/traces/search",
+        "127.0.0.1:25000",
+        "http://127.0.0.1:25000",
+    )
+    assert local_post.status_code == 200
+
+    remote_post = _security_request(
+        client,
+        "/ajax-api/3.0/mlflow/traces/metrics",
+        "192.168.1.10:25000",
+        "http://192.168.1.10:25000",
+    )
+    assert remote_post.status_code == 403
+    assert CORS_BLOCKED_MSG.encode() in _response_body(remote_post)
+
+
+@pytest.mark.parametrize("server", ["flask", "fastapi"])
+@pytest.mark.parametrize(
+    ("path", "host", "origin", "expected_status", "expected_message"),
+    [
+        ("/health", "localhost:25000", None, 200, None),
+        (
+            "/ajax-api/3.0/mlflow/traces/search",
+            "203.0.113.10:25000",
+            "http://203.0.113.10:25000",
+            200,
+            None,
+        ),
+        (
+            "/ajax-api/3.0/mlflow/traces/metrics",
+            "mlflow.example.com",
+            "https://mlflow.example.com",
+            200,
+            None,
+        ),
+        (
+            "/ajax-api/3.0/mlflow/traces/search",
+            "203.0.113.10:25000",
+            "http://evil.example",
+            403,
+            CORS_BLOCKED_MSG,
+        ),
+        (
+            "/ajax-api/3.0/mlflow/traces/metrics",
+            "evil.example",
+            "https://mlflow.example.com",
+            403,
+            INVALID_HOST_MSG,
+        ),
+    ],
+)
+def test_configured_allowlist_permits_browser_origin_and_localhost_health(
+    server, path, host, origin, expected_status, expected_message, monkeypatch: pytest.MonkeyPatch
+):
+    _set_security_env(monkeypatch, _PROD_ALLOWED_HOSTS, _PROD_ALLOWED_ORIGINS)
+    client = _security_client(server)
+
+    response = _security_request(client, path, host, origin)
+    assert response.status_code == expected_status
+    if expected_message is not None:
+        assert expected_message.encode() in _response_body(response)
