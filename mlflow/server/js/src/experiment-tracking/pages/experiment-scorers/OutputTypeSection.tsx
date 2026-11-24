@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import type { Control } from 'react-hook-form';
 import { Controller, useWatch } from 'react-hook-form';
 import {
@@ -16,51 +16,169 @@ import {
 import { FormattedMessage, useIntl } from '@databricks/i18n';
 import { type ScorerFormMode, SCORER_FORM_MODE } from './constants';
 import type { LLMScorerFormData } from './LLMScorerFormRenderer';
+import type { JudgeOutputTypeKind, JudgePrimitiveOutputType } from './types';
 
 export interface OutputTypeSectionProps {
   mode: ScorerFormMode;
   control: Control<LLMScorerFormData>;
 }
 
-const OUTPUT_TYPE_KIND_OPTIONS = [
-  { value: 'default', label: 'Default', hint: 'Let the judge determine the output type automatically' },
-  { value: 'bool', label: 'Boolean', hint: 'Yes/no evaluations (pass/fail)' },
-  { value: 'int', label: 'Integer', hint: 'Integer ratings (e.g., 1-5 scale)' },
-  { value: 'float', label: 'Float', hint: 'Floating point scores (e.g., 0.0-1.0)' },
-  { value: 'str', label: 'String', hint: 'Text responses' },
-  { value: 'categorical', label: 'Categorical', hint: 'Fixed set of choices (e.g., good/bad/neutral)' },
-  { value: 'dict', label: 'Dictionary', hint: 'Key-value pairs (e.g., {"clarity": 4, "accuracy": 5})' },
-  { value: 'list', label: 'List', hint: 'List of values (e.g., ["issue1", "issue2"])' },
-] as const;
+// Sample payloads shown beside the type name. They are not labels: categorical choices,
+// dictionary keys, and list items are stored as the user typed them.
+const CATEGORICAL_OUTPUT_EXAMPLE = 'good/bad/neutral';
+const DICTIONARY_OUTPUT_EXAMPLE = '{"clarity": 4, "accuracy": 5}';
+const LIST_OUTPUT_EXAMPLE = '["issue1", "issue2"]';
 
-const PRIMITIVE_TYPE_OPTIONS = [
-  { value: 'bool', label: 'Boolean' },
-  { value: 'int', label: 'Integer' },
-  { value: 'float', label: 'Float' },
-  { value: 'str', label: 'String' },
-] as const;
+type OutputTypeKindOption = {
+  value: JudgeOutputTypeKind;
+  label: string;
+  hint: string;
+};
 
-const OUTPUT_TYPE_KIND_DISPLAY_MAP = {
-  default: 'Default',
-  bool: 'Boolean',
-  int: 'Integer',
-  float: 'Float',
-  str: 'String',
-  categorical: 'Categorical',
-  dict: 'Dictionary',
-  list: 'List',
-} satisfies Record<string, string>;
+type PrimitiveTypeOption = {
+  value: JudgePrimitiveOutputType;
+  label: string;
+};
 
-const PRIMITIVE_TYPE_DISPLAY_MAP = {
-  bool: 'Boolean',
-  int: 'Integer',
-  float: 'Float',
-  str: 'String',
-} satisfies Record<string, string>;
+/**
+ * Labels and hints only. `value` stays the output-type enum the form submits.
+ */
+function useOutputTypeOptions(): {
+  kindOptions: OutputTypeKindOption[];
+  primitiveOptions: PrimitiveTypeOption[];
+  kindDisplayMap: Record<string, string>;
+  primitiveDisplayMap: Record<string, string>;
+} {
+  const intl = useIntl();
+
+  return useMemo(() => {
+    const primitiveLabels: Record<JudgePrimitiveOutputType, string> = {
+      bool: intl.formatMessage({
+        defaultMessage: 'Boolean',
+        description: 'Label for the boolean judge output type',
+      }),
+      int: intl.formatMessage({
+        defaultMessage: 'Integer',
+        description: 'Label for the integer judge output type',
+      }),
+      float: intl.formatMessage({
+        defaultMessage: 'Float',
+        description: 'Label for the float judge output type',
+      }),
+      str: intl.formatMessage({
+        defaultMessage: 'String',
+        description: 'Label for the string judge output type',
+      }),
+    };
+
+    const kindOptions: OutputTypeKindOption[] = [
+      {
+        value: 'default',
+        label: intl.formatMessage({
+          defaultMessage: 'Default',
+          description: 'Label for the automatic judge output type',
+        }),
+        hint: intl.formatMessage({
+          defaultMessage: 'Let the judge determine the output type automatically',
+          description: 'Hint for the automatic judge output type',
+        }),
+      },
+      {
+        value: 'bool',
+        label: primitiveLabels.bool,
+        hint: intl.formatMessage({
+          defaultMessage: 'Yes/no evaluations (pass/fail)',
+          description: 'Hint for the boolean judge output type',
+        }),
+      },
+      {
+        value: 'int',
+        label: primitiveLabels.int,
+        hint: intl.formatMessage({
+          defaultMessage: 'Integer ratings (e.g., 1-5 scale)',
+          description: 'Hint for the integer judge output type',
+        }),
+      },
+      {
+        value: 'float',
+        label: primitiveLabels.float,
+        hint: intl.formatMessage({
+          defaultMessage: 'Floating point scores (e.g., 0.0-1.0)',
+          description: 'Hint for the float judge output type',
+        }),
+      },
+      {
+        value: 'str',
+        label: primitiveLabels.str,
+        hint: intl.formatMessage({
+          defaultMessage: 'Text responses',
+          description: 'Hint for the string judge output type',
+        }),
+      },
+      {
+        value: 'categorical',
+        label: intl.formatMessage({
+          defaultMessage: 'Categorical',
+          description: 'Label for the categorical judge output type',
+        }),
+        hint: intl.formatMessage(
+          {
+            defaultMessage: 'Fixed set of choices (e.g., {example})',
+            description: 'Hint for the categorical judge output type',
+          },
+          { example: CATEGORICAL_OUTPUT_EXAMPLE },
+        ),
+      },
+      {
+        value: 'dict',
+        label: intl.formatMessage({
+          defaultMessage: 'Dictionary',
+          description: 'Label for the dictionary judge output type',
+        }),
+        hint: intl.formatMessage(
+          {
+            defaultMessage: 'Key-value pairs (e.g., {example})',
+            description: 'Hint for the dictionary judge output type',
+          },
+          { example: DICTIONARY_OUTPUT_EXAMPLE },
+        ),
+      },
+      {
+        value: 'list',
+        label: intl.formatMessage({
+          defaultMessage: 'List',
+          description: 'Label for the list judge output type',
+        }),
+        hint: intl.formatMessage(
+          {
+            defaultMessage: 'List of values (e.g., {example})',
+            description: 'Hint for the list judge output type',
+          },
+          { example: LIST_OUTPUT_EXAMPLE },
+        ),
+      },
+    ];
+
+    const primitiveOptions: PrimitiveTypeOption[] = [
+      { value: 'bool', label: primitiveLabels.bool },
+      { value: 'int', label: primitiveLabels.int },
+      { value: 'float', label: primitiveLabels.float },
+      { value: 'str', label: primitiveLabels.str },
+    ];
+
+    return {
+      kindOptions,
+      primitiveOptions,
+      kindDisplayMap: Object.fromEntries(kindOptions.map((option) => [option.value, option.label])),
+      primitiveDisplayMap: Object.fromEntries(primitiveOptions.map((option) => [option.value, option.label])),
+    };
+  }, [intl]);
+}
 
 const OutputTypeSection: React.FC<OutputTypeSectionProps> = ({ mode, control }) => {
   const { theme } = useDesignSystemTheme();
   const intl = useIntl();
+  const { kindOptions, primitiveOptions, kindDisplayMap, primitiveDisplayMap } = useOutputTypeOptions();
   const outputTypeKind = useWatch({ control, name: 'outputTypeKind' }) ?? 'default';
 
   const stopPropagationClick = (e: React.MouseEvent) => {
@@ -102,14 +220,12 @@ const OutputTypeSection: React.FC<OutputTypeSectionProps> = ({ mode, control }) 
                       defaultMessage: 'Select output type',
                       description: 'Placeholder for output type selection',
                     })}
-                    renderDisplayedValue={(value) =>
-                      OUTPUT_TYPE_KIND_DISPLAY_MAP[value as keyof typeof OUTPUT_TYPE_KIND_DISPLAY_MAP] || value
-                    }
+                    renderDisplayedValue={(value) => kindDisplayMap[value] || value}
                   />
                   {!isReadOnly && (
                     <DialogComboboxContent maxHeight={350}>
                       <DialogComboboxOptionList>
-                        {OUTPUT_TYPE_KIND_OPTIONS.map((option) => (
+                        {kindOptions.map((option) => (
                           <DialogComboboxOptionListSelectItem
                             key={option.value}
                             value={option.value}
@@ -153,14 +269,12 @@ const OutputTypeSection: React.FC<OutputTypeSectionProps> = ({ mode, control }) 
                           defaultMessage: 'Select value type',
                           description: 'Placeholder for dict value type',
                         })}
-                        renderDisplayedValue={(value) =>
-                          PRIMITIVE_TYPE_DISPLAY_MAP[value as keyof typeof PRIMITIVE_TYPE_DISPLAY_MAP] || value
-                        }
+                        renderDisplayedValue={(value) => primitiveDisplayMap[value] || value}
                       />
                       {!isReadOnly && (
                         <DialogComboboxContent maxHeight={200}>
                           <DialogComboboxOptionList>
-                            {PRIMITIVE_TYPE_OPTIONS.map((option) => (
+                            {primitiveOptions.map((option) => (
                               <DialogComboboxOptionListSelectItem
                                 key={option.value}
                                 value={option.value}
@@ -203,14 +317,12 @@ const OutputTypeSection: React.FC<OutputTypeSectionProps> = ({ mode, control }) 
                           defaultMessage: 'Select element type',
                           description: 'Placeholder for list element type',
                         })}
-                        renderDisplayedValue={(value) =>
-                          PRIMITIVE_TYPE_DISPLAY_MAP[value as keyof typeof PRIMITIVE_TYPE_DISPLAY_MAP] || value
-                        }
+                        renderDisplayedValue={(value) => primitiveDisplayMap[value] || value}
                       />
                       {!isReadOnly && (
                         <DialogComboboxContent maxHeight={200}>
                           <DialogComboboxOptionList>
-                            {PRIMITIVE_TYPE_OPTIONS.map((option) => (
+                            {primitiveOptions.map((option) => (
                               <DialogComboboxOptionListSelectItem
                                 key={option.value}
                                 value={option.value}

@@ -769,4 +769,18 @@ module.exports = {
   'Extend the assistant with specialized workflows. See <link>skills</link> for a list of skills to install.': '用专门的工作流扩展助手。可安装的技能列表见<link>技能</link>。',
   'Is Hengjian open source?': '衡鉴是开源的吗？',
   'Hengjian is an open source platform for managing the end-to-end machine learning lifecycle.': '衡鉴是一个开源平台，用于管理机器学习的端到端生命周期。',
+
+  // LLM judge output-type picker. Display text only; submitted values stay bool/int/float/str/...
+  Integer: '整数',
+  Float: '浮点数',
+  Dictionary: '字典',
+  List: '列表',
+  'Let the judge determine the output type automatically': '由裁判自动确定输出类型',
+  'Yes/no evaluations (pass/fail)': '是/否评估（通过/失败）',
+  'Integer ratings (e.g., 1-5 scale)': '整数评分（例如 1-5 分）',
+  'Floating point scores (e.g., 0.0-1.0)': '浮点分数（例如 0.0-1.0）',
+  'Text responses': '文本回复',
+  'Fixed set of choices (e.g., {example})': '固定选项（例如 {example}）',
+  'Key-value pairs (e.g., {example})': '键值对（例如 {example}）',
+  'List of values (e.g., {example})': '值列表（例如 {example}）',
 };

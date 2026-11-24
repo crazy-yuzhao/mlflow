@@ -171,6 +171,10 @@
     "defaultMessage": "Are you sure you want to delete {count, plural, one {# trace} other {# traces}}? This action cannot be undone.",
     "description": "Body for the V4 traces bulk-delete confirmation modal"
   },
+  "+YaGyJ": {
+    "defaultMessage": "Yes/no evaluations (pass/fail)",
+    "description": "Hint for the boolean judge output type"
+  },
   "+a87Om": {
     "defaultMessage": "{count, plural, one {# question} other {# questions}} selected",
     "description": "Queue settings: questions dropdown selected-count summary"
@@ -178,6 +182,10 @@
   "+aGYrk": {
     "defaultMessage": "Use Edit role to assign users to this role.",
     "description": "Empty state hint for assigning users to a role"
+  },
+  "+cphzH": {
+    "defaultMessage": "Integer ratings (e.g., 1-5 scale)",
+    "description": "Hint for the integer judge output type"
   },
   "+cu+Ai": {
     "defaultMessage": "traces",
@@ -2446,6 +2454,10 @@
   "5a+EQt": {
     "defaultMessage": "Custom view",
     "description": "Selected trace explorer custom view mode label"
+  },
+  "5a1IU8": {
+    "defaultMessage": "Fixed set of choices (e.g., {example})",
+    "description": "Hint for the categorical judge output type"
   },
   "5aZ7nE": {
     "defaultMessage": "Artifact location copied",
@@ -5195,6 +5207,10 @@
     "defaultMessage": "Y axis",
     "description": "Label for Y axis in scatter chart configurator in compare runs chart config modal"
   },
+  "DaR10c": {
+    "defaultMessage": "Let the judge determine the output type automatically",
+    "description": "Hint for the automatic judge output type"
+  },
   "DanBsy": {
     "defaultMessage": "How is my agent quality trending?",
     "description": "Overview prompt placeholder"
@@ -5418,6 +5434,10 @@
   "EJ51re": {
     "defaultMessage": "Skills are installed on this server host's filesystem and can only be configured by an administrator.",
     "description": "Note when assistant skills cannot be edited by a non-admin on the server host"
+  },
+  "EJn3Di": {
+    "defaultMessage": "List",
+    "description": "Label for the list judge output type"
   },
   "EK5JxG": {
     "defaultMessage": "Parameters",
@@ -6831,6 +6851,10 @@
     "defaultMessage": "Description update failed",
     "description": "Partial save status message when experiment description update fails"
   },
+  "IWAcIK": {
+    "defaultMessage": "Dictionary",
+    "description": "Label for the dictionary judge output type"
+  },
   "IWNUE0": {
     "defaultMessage": "Failed to load roles",
     "description": "Alert title shown when the roles query fails on the account page"
@@ -7006,6 +7030,10 @@
   "J/srtP": {
     "defaultMessage": "{count} {count, plural, one {value} other {values}}",
     "description": "Tag showing the number of unique string values in session assessment"
+  },
+  "J01xYl": {
+    "defaultMessage": "Categorical",
+    "description": "Label for the categorical judge output type"
   },
   "J1DBbP": {
     "defaultMessage": "Created",
@@ -8374,6 +8402,10 @@
   "MzCfT7": {
     "defaultMessage": "Select name",
     "description": "Placeholder for choosing a trace filter name"
+  },
+  "MzLcfZ": {
+    "defaultMessage": "Integer",
+    "description": "Label for the integer judge output type"
   },
   "N/Svk+": {
     "defaultMessage": "Guidelines",
@@ -11227,6 +11259,10 @@
     "defaultMessage": "Compare parameter importance",
     "description": "Experiment page > compare runs > parallel coordinates chart > chart not configured warning > title"
   },
+  "VPmGDn": {
+    "defaultMessage": "Floating point scores (e.g., 0.0-1.0)",
+    "description": "Hint for the float judge output type"
+  },
   "VQL4C0": {
     "defaultMessage": "Aliases are mutable, named pointers to a specific skill version, referenced as {uri}. The alias latest is reserved and always resolves to the skill's latest version.",
     "description": "Description for the skill alias editor"
@@ -12246,6 +12282,10 @@
   "YKE3h7": {
     "defaultMessage": "Define custom instructions for LLM-based evaluation. {learnMore}",
     "description": "Hint text for Instructions section with documentation link"
+  },
+  "YKK9hc": {
+    "defaultMessage": "String",
+    "description": "Label for the string judge output type"
   },
   "YLMjFk": {
     "defaultMessage": "Reasoning",
@@ -14511,6 +14551,10 @@
     "defaultMessage": "(edited)",
     "description": "Link text in an edited assessment that allows the user to click to see the previous value"
   },
+  "f510be": {
+    "defaultMessage": "List of values (e.g., {example})",
+    "description": "Hint for the list judge output type"
+  },
   "f5cp11": {
     "defaultMessage": "Provide one or more function definitions the model can call. Choose how the model invokes them:",
     "description": "Intro line of the info popover next to the Tools section header"
@@ -15258,6 +15302,10 @@
   "h6q5Al": {
     "defaultMessage": "If this is a branch, pulls of this version get whatever it points to then. Use a tag or commit SHA to pin the content.",
     "description": "Hint when the skill git ref may be a moving branch"
+  },
+  "h7Jg8C": {
+    "defaultMessage": "Text responses",
+    "description": "Hint for the string judge output type"
   },
   "h9x9X7": {
     "defaultMessage": "Time range",
@@ -16891,6 +16939,10 @@
     "defaultMessage": "Insufficient",
     "description": "Evaluation results > retrieval sufficiency assessment > negative value label. Displayed if retrieved context is insufficient to generate the expected response."
   },
+  "ljKBLU": {
+    "defaultMessage": "Boolean",
+    "description": "Label for the boolean judge output type"
+  },
   "ljOsC9": {
     "defaultMessage": "Cost Over Time",
     "description": "Title for the cost over time by model chart"
@@ -17251,6 +17303,10 @@
     "defaultMessage": "This experiment has reached the maximum of {max} saved views. Delete a view before saving a new one.",
     "description": "Message shown in the save-traces-view modal when the experiment has reached the saved-view cap"
   },
+  "mkc84W": {
+    "defaultMessage": "Default",
+    "description": "Label for the automatic judge output type"
+  },
   "mlWHDm": {
     "defaultMessage": "No evaluation runs match your filters",
     "description": "Title of the evaluation runs empty state when the active filters hide every run"
@@ -17266,6 +17322,10 @@
   "mmKobK": {
     "defaultMessage": "Hourly",
     "description": "Experiment issues tab > Scheduled detection cadence option that runs every hour"
+  },
+  "mmVCGq": {
+    "defaultMessage": "Float",
+    "description": "Label for the float judge output type"
   },
   "mmiHAX": {
     "defaultMessage": "Parameters",
@@ -20490,6 +20550,10 @@
   "wU8Ziv": {
     "defaultMessage": "Which run is better?",
     "description": "Question shown while reviewing two traces side by side"
+  },
+  "wUxEeA": {
+    "defaultMessage": "Key-value pairs (e.g., {example})",
+    "description": "Hint for the dictionary judge output type"
   },
   "wW9Scn": {
     "defaultMessage": "N/A",
