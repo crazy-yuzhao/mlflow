@@ -374,6 +374,9 @@ class ConfigResponse(BaseModel):
     providers: dict[str, Any] = Field(default_factory=dict)
     projects: dict[str, Any] = Field(default_factory=dict)
     remote_access_allowed: bool = False
+    # Deployment switch only. This does not authorize chat or tool execution;
+    # that stays on remote_access_allowed (sandbox, provider, and the remote flag).
+    remote_assistant_enabled: bool = False
     can_edit_server_settings: bool = False
 
 
@@ -899,6 +902,7 @@ async def get_config(request: Request) -> ConfigResponse:
         providers=providers,
         projects=_visible_projects(config, can_edit_server_settings),
         remote_access_allowed=_provider_allows_remote_access(provider),
+        remote_assistant_enabled=MLFLOW_ENABLE_REMOTE_ASSISTANT.get(),
         can_edit_server_settings=can_edit_server_settings,
     )
 
@@ -1030,6 +1034,7 @@ async def update_config(request: ConfigUpdateRequest, http_request: Request) -> 
         providers=providers,
         projects=_visible_projects(config, restriction is None),
         remote_access_allowed=_provider_allows_remote_access(_get_selected_provider(config)),
+        remote_assistant_enabled=MLFLOW_ENABLE_REMOTE_ASSISTANT.get(),
         can_edit_server_settings=restriction is None,
     )
 

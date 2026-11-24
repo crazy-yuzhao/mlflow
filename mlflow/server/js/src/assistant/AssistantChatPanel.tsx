@@ -43,8 +43,11 @@ import { AssistantSettingsPage } from './setup';
 import { useLogTelemetryEvent } from '../telemetry/hooks/useLogTelemetryEvent';
 import { GenAIMarkdownRenderer } from '../shared/web-shared/genai-markdown-renderer';
 import { useCopyController } from '../shared/web-shared/snippet/hooks/useCopyController';
-import { useAssistantPrompts } from '../common/utils/RoutingUtils';
+import { Link, useAssistantPrompts } from '../common/utils/RoutingUtils';
 import { AssistantWelcomeCarousel } from './AssistantWelcomeCarousel';
+import { updateConfig } from './AssistantService';
+import { useCurrentUserIsAdmin } from '../account/hooks';
+import { useEndpointsQuery } from '../gateway/hooks/useEndpointsQuery';
 
 type CurrentView = 'chat' | 'settings';
 
@@ -859,9 +862,16 @@ const RemoteServerMessage = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
-const RemoteSetupRequiredMessage = ({ onClose }: { onClose: () => void }) => {
+const AssistantConfigError = ({
+  message,
+  onRetry,
+  onClose,
+}: {
+  message: string;
+  onRetry: () => void;
+  onClose: () => void;
+}) => {
   const { theme } = useDesignSystemTheme();
-
   return (
     <div
       css={{
@@ -872,33 +882,202 @@ const RemoteSetupRequiredMessage = ({ onClose }: { onClose: () => void }) => {
         flex: 1,
         minHeight: 0,
         padding: theme.spacing.lg,
-        paddingBottom: theme.spacing.lg * 3,
-        gap: theme.spacing.lg,
+        gap: theme.spacing.md,
       }}
     >
-      <WrenchSparkleIcon color="ai" css={{ fontSize: 64, opacity: 0.5 }} />
-
       <Typography.Title level={4} css={{ textAlign: 'center', marginBottom: 0 }}>
         <FormattedMessage
-          defaultMessage="Assistant setup required"
-          description="Title shown when a remote client cannot configure Assistant setup"
+          defaultMessage="Assistant settings could not be loaded"
+          description="Title shown when the assistant configuration request fails"
         />
       </Typography.Title>
-
-      <Typography.Text
-        color="secondary"
-        css={{
-          fontSize: theme.typography.fontSizeMd,
-          textAlign: 'center',
-          maxWidth: 400,
-        }}
-      >
+      <Typography.Text color="secondary" css={{ textAlign: 'center', maxWidth: 420 }}>
         <FormattedMessage
-          defaultMessage="Hengjian Assistant needs to be configured on the server host before remote clients can use it. Ask your server administrator to open this server locally and complete Assistant setup."
-          description="Message explaining that Assistant setup must be completed locally by a server admin"
+          defaultMessage="Chat is disabled until assistant settings load. {message}"
+          description="Body shown when loading assistant configuration fails, including the error text"
+          values={{ message }}
         />
       </Typography.Text>
+      <div css={{ display: 'flex', gap: theme.spacing.sm }}>
+        <Button componentId="mlflow.assistant.chat_panel.config_error_retry" onClick={onRetry}>
+          <FormattedMessage defaultMessage="Retry" description="Button that reloads assistant configuration" />
+        </Button>
+        <Button componentId="mlflow.assistant.chat_panel.config_error_close" onClick={onClose}>
+          <FormattedMessage
+            defaultMessage="Close"
+            description="Button to close the assistant panel on remote servers"
+          />
+        </Button>
+      </div>
+    </div>
+  );
+};
 
+const RemoteAssistantSetup = ({
+  setupComplete,
+  providerName,
+  providerModel,
+  onRefresh,
+  onClose,
+}: {
+  setupComplete: boolean;
+  providerName: string | null;
+  providerModel: string | null;
+  onRefresh: () => Promise<void>;
+  onClose: () => void;
+}) => {
+  const { theme } = useDesignSystemTheme();
+  const intl = useIntl();
+  const isAdmin = useCurrentUserIsAdmin();
+  const { data: endpoints, error: endpointsError, isLoading, refetch } = useEndpointsQuery();
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [savingName, setSavingName] = useState<string | null>(null);
+  const gatewayReady = setupComplete && providerName === GATEWAY_PROVIDER_ID && Boolean(providerModel);
+  const blockedProvider = setupComplete && providerName !== null && providerName !== GATEWAY_PROVIDER_ID;
+
+  const chooseEndpoint = async (name: string) => {
+    setSavingName(name);
+    setSaveError(null);
+    try {
+      await updateConfig({
+        providers: { [GATEWAY_PROVIDER_ID]: { selected: true, model: name } },
+      });
+      await onRefresh();
+    } catch (err) {
+      setSaveError(
+        err instanceof Error
+          ? err.message
+          : intl.formatMessage({
+              defaultMessage: 'Could not save the assistant model.',
+              description: 'Fallback error when saving an assistant gateway endpoint fails',
+            }),
+      );
+    } finally {
+      setSavingName(null);
+    }
+  };
+
+  return (
+    <div
+      css={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1,
+        minHeight: 0,
+        overflow: 'auto',
+        padding: theme.spacing.lg,
+        gap: theme.spacing.md,
+      }}
+    >
+      <WrenchSparkleIcon color="ai" css={{ fontSize: 48, opacity: 0.5 }} />
+      <Typography.Title level={4} css={{ textAlign: 'center', marginBottom: 0 }}>
+        {gatewayReady ? (
+          <FormattedMessage
+            defaultMessage="Remote chat is not ready"
+            description="Title when a gateway model is selected but remote assistant execution is still blocked"
+          />
+        ) : (
+          <FormattedMessage
+            defaultMessage="Choose a model before chatting"
+            description="Title shown when the remote assistant entry is open but no chat model is ready"
+          />
+        )}
+      </Typography.Title>
+      <Typography.Text color="secondary" css={{ textAlign: 'center', maxWidth: 440 }}>
+        {gatewayReady ? (
+          <FormattedMessage
+            defaultMessage="A Gateway endpoint is selected, but this server is not allowing remote execution yet. Chat stays off until an administrator enables the Docker sandbox. No message will be sent."
+            description="Explanation that a selected gateway model still cannot chat because the sandbox is off"
+          />
+        ) : blockedProvider ? (
+          <FormattedMessage
+            defaultMessage="The selected provider cannot run from this browser. Choose a Hengjian AI Gateway chat endpoint. No message will be sent until you do."
+            description="Explanation that a non-remote assistant provider cannot execute for a remote user"
+          />
+        ) : (
+          <FormattedMessage
+            defaultMessage="Hengjian Assistant is open, but chat is not available until you select a Gateway chat endpoint. No message will be sent before that."
+            description="Explanation that the remote assistant entry does not mean chat is ready"
+          />
+        )}
+      </Typography.Text>
+      {!gatewayReady && isLoading && <Spinner />}
+      {!gatewayReady && endpointsError && (
+        <>
+          <Alert
+            componentId="mlflow.assistant.chat_panel.endpoints_error"
+            type="error"
+            message={endpointsError.message}
+          />
+          <Button
+            componentId="mlflow.assistant.chat_panel.endpoints_retry"
+            onClick={() => {
+              void refetch();
+            }}
+          >
+            <FormattedMessage
+              defaultMessage="Retry"
+              description="Button that reloads the gateway endpoint list in the assistant setup guide"
+            />
+          </Button>
+        </>
+      )}
+      {!gatewayReady && !isLoading && !endpointsError && endpoints.length === 0 && (
+        <Typography.Text color="secondary" css={{ textAlign: 'center', maxWidth: 440 }}>
+          {isAdmin ? (
+            <FormattedMessage
+              defaultMessage="No chat endpoint exists yet. Create one in Gateway, then select it here. API keys are added in Gateway, not in this panel."
+              description="Empty gateway endpoint list shown to an administrator in the assistant setup guide"
+            />
+          ) : (
+            <FormattedMessage
+              defaultMessage="No chat endpoint is available to you. Ask an administrator to create one in Gateway. API keys cannot be added from this browser."
+              description="Empty gateway endpoint list shown to a non-admin in the assistant setup guide"
+            />
+          )}
+        </Typography.Text>
+      )}
+      {!gatewayReady && !isAdmin && endpoints.length > 0 && (
+        <Typography.Text color="secondary" css={{ textAlign: 'center', maxWidth: 440 }}>
+          <FormattedMessage
+            defaultMessage="API keys cannot be added from this browser. If you need a new chat endpoint, ask an administrator."
+            description="Note telling a non-admin remote user that gateway secrets stay with an administrator"
+          />
+        </Typography.Text>
+      )}
+      {!gatewayReady && endpoints.length > 0 && (
+        <div css={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.sm, width: '100%', maxWidth: 360 }}>
+          {endpoints.map((endpoint) => (
+            <Button
+              key={endpoint.name}
+              componentId="mlflow.assistant.chat_panel.choose_endpoint"
+              loading={savingName === endpoint.name}
+              onClick={() => {
+                void chooseEndpoint(endpoint.name);
+              }}
+            >
+              <FormattedMessage
+                defaultMessage="Use {name}"
+                description="Button that selects a gateway chat endpoint for the assistant"
+                values={{ name: endpoint.name }}
+              />
+            </Button>
+          ))}
+        </div>
+      )}
+      {isAdmin && (
+        <Link componentId="mlflow.assistant.chat_panel.open_gateway" to="/gateway">
+          <FormattedMessage
+            defaultMessage="Open Gateway"
+            description="Link from the assistant setup guide to the Gateway management page"
+          />
+        </Link>
+      )}
+      {saveError && (
+        <Alert componentId="mlflow.assistant.chat_panel.save_model_error" type="error" message={saveError} />
+      )}
       <Button componentId="mlflow.assistant.chat_panel.remote_setup_close" onClick={onClose}>
         <FormattedMessage defaultMessage="Close" description="Button to close the assistant panel on remote servers" />
       </Button>
@@ -937,8 +1116,17 @@ const SetupPrompt = () => {
 export const AssistantChatPanel = () => {
   const { theme } = useDesignSystemTheme();
   const intl = useIntl();
-  const { closePanel, reset, setupComplete, isLoadingConfig, canUseAssistant, isLocalServer, refreshConfig } =
-    useAssistant();
+  const {
+    closePanel,
+    reset,
+    setupComplete,
+    isLoadingConfig,
+    canUseAssistant,
+    canOpenAssistant,
+    configError,
+    activeProvider,
+    refreshConfig,
+  } = useAssistant();
   const context = useAssistantPageContext();
   const experimentId = context['experimentId'] as string | undefined;
 
@@ -968,17 +1156,28 @@ export const AssistantChatPanel = () => {
   const renderContent = () => {
     // Show message when this client isn't allowed to use the Assistant
     // (e.g. a remote client and the server's remote-access settings don't permit it)
-    if (!canUseAssistant) {
-      return <RemoteServerMessage onClose={handleClose} />;
-    }
-
-    // Show loading state while fetching config
     if (isLoadingConfig) {
       return <SetupLoadingState />;
     }
 
-    if (!isLocalServer && !setupComplete) {
-      return <RemoteSetupRequiredMessage onClose={handleClose} />;
+    if (configError) {
+      return <AssistantConfigError message={configError} onRetry={() => void refreshConfig()} onClose={handleClose} />;
+    }
+
+    if (!canOpenAssistant) {
+      return <RemoteServerMessage onClose={handleClose} />;
+    }
+
+    if (!canUseAssistant) {
+      return (
+        <RemoteAssistantSetup
+          setupComplete={setupComplete}
+          providerName={activeProvider?.name ?? null}
+          providerModel={activeProvider?.model ?? null}
+          onRefresh={() => refreshConfig({ silent: true })}
+          onClose={handleClose}
+        />
+      );
     }
 
     switch (currentView) {

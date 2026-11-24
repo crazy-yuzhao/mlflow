@@ -334,7 +334,10 @@ export const AssistantProvider = ({ children }: { children: ReactNode }) => {
   const [errorCode, setErrorCode] = useState<string | null>(null);
   const [isLoadingConfig, setIsLoadingConfig] = useState(true);
   const [remoteAccessAllowed, setRemoteAccessAllowed] = useState(false);
+  const [remoteAssistantEnabled, setRemoteAssistantEnabled] = useState(false);
+  const [configError, setConfigError] = useState<string | null>(null);
   const canUseAssistant = isLocalServer || remoteAccessAllowed;
+  const canOpenAssistant = canUseAssistant || remoteAssistantEnabled;
   // Reported by the server, which applies the same rule when it saves. False until the config
   // loads, so server-wide inputs are never shown to a caller who may not change them.
   const [canEditServerSettings, setCanEditServerSettings] = useState(false);
@@ -576,7 +579,9 @@ export const AssistantProvider = ({ children }: { children: ReactNode }) => {
       const resolved = resolveSetupFromProviders(providersResponse);
       setSetupComplete(resolved.setupComplete);
       setRemoteAccessAllowed(config.remote_access_allowed ?? false);
+      setRemoteAssistantEnabled(config.remote_assistant_enabled ?? false);
       setCanEditServerSettings(config.can_edit_server_settings ?? false);
+      setConfigError(null);
       setProviders(providersResponse.providers);
       setGatewayVendorOptions(providersResponse.gateway_vendor_options ?? {});
       // Don't clobber an uncommitted optimistic pick with the resolved provider;
@@ -584,11 +589,13 @@ export const AssistantProvider = ({ children }: { children: ReactNode }) => {
       if (!pendingProviderSelectionRef.current) {
         setActiveProvider(resolved.activeProvider);
       }
-    } catch {
-      // On error, assume setup is not complete
+    } catch (err) {
+      // On error, assume setup is not complete and do not treat chat as allowed.
       setSetupComplete(false);
       setRemoteAccessAllowed(false);
+      setRemoteAssistantEnabled(false);
       setCanEditServerSettings(false);
+      setConfigError(err instanceof Error ? err.message : 'Failed to load assistant configuration');
       setProviders([]);
       setGatewayVendorOptions({});
       if (!pendingProviderSelectionRef.current) {
@@ -1367,6 +1374,8 @@ export const AssistantProvider = ({ children }: { children: ReactNode }) => {
     pendingPermission,
     pendingClientToolCall,
     canUseAssistant,
+    canOpenAssistant,
+    configError,
     canEditServerSettings,
     tokenUsage,
     // Actions
@@ -1415,6 +1424,8 @@ const disabledAssistantContext: AssistantAgentContextType = {
   pendingPermission: null,
   pendingClientToolCall: null,
   canUseAssistant: false,
+  canOpenAssistant: false,
+  configError: null,
   canEditServerSettings: false,
   tokenUsage: { promptTokens: 0, completionTokens: 0, totalTokens: 0, cacheReadTokens: 0, costUsd: null },
   openPanel: () => {},

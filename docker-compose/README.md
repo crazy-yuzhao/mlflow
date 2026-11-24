@@ -459,11 +459,13 @@ docker compose -f docker-compose.prod.yml --env-file .env down
 
 ### 远程 AI Assistant
 
-用服务器 IP、域名或反向代理打开衡鉴时，浏览器不是 `localhost`。助手入口（浮动按钮、实验页侧栏）只在 `canUseAssistant` 为真时渲染，也就是主机名是 `localhost` / `127.0.0.1` / `::1`，或者 `GET /ajax-api/3.0/mlflow/assistant/config` 的 `remote_access_allowed` 为 `true`。后者要同时满足三件事：
+用服务器 IP、域名或反向代理打开衡鉴时，浏览器不是 `localhost`。助手入口（浮动按钮、实验页侧栏）在主机名是 `localhost` / `127.0.0.1` / `::1` 时出现。远程浏览器看已登录用户的 `GET /ajax-api/3.0/mlflow/assistant/config`：`remote_assistant_enabled` 为 true 时显示入口和配置引导。这只表示部署打开了 `MLFLOW_ENABLE_REMOTE_ASSISTANT`，不表示可以聊天。
+
+聊天和工具仍看 `remote_access_allowed`。它要同时满足：
 
 1. `MLFLOW_ENABLE_REMOTE_ASSISTANT=true`。
-2. 沙箱实际打开。`MLFLOW_ENABLE_ASSISTANT_SANDBOX` 留空时，这等于「远程开关为 true，并且容器里 `PATH` 上有 `docker`」。镜像里没有 docker CLI 时，沙箱保持关闭，远程入口继续隐藏。不要把 `MLFLOW_ENABLE_ASSISTANT_SANDBOX=true` 当成绕过沙箱的办法：没有可用的 Docker 时，工具调用会直接失败。
-3. **这个用户**已经把 provider 选成 `mlflow_gateway`。Claude Code 和 Codex 的 `allows_remote_access` 固定是 false，远程客户端不能用它们。还没保存选择时，远程 `GET /config` 的 provider 解析会跳过 Gateway（`include_gateway=False`），于是 `remote_access_allowed` 仍是 false，响应和未开启时一样：`{"providers": {}, "projects": {}, "remote_access_allowed": false, "can_edit_server_settings": false}`。
+2. 沙箱实际打开。`MLFLOW_ENABLE_ASSISTANT_SANDBOX` 留空时，这等于「远程开关为 true，并且容器里 `PATH` 上有 `docker`」。镜像里没有 docker CLI 时，沙箱保持关闭。不要把 `MLFLOW_ENABLE_ASSISTANT_SANDBOX=true` 当成绕过沙箱的办法：没有可用的 Docker 时，工具调用会直接失败。沙箱关闭时入口仍可出现，面板会说明聊天不会发送。
+3. **这个用户**已经把 provider 选成 `mlflow_gateway`，并选了一个真实的 Gateway chat endpoint。Claude Code 和 Codex 的 `allows_remote_access` 固定是 false，远程客户端不能用它们执行。还没保存选择时，`remote_access_allowed` 仍是 false。服务不会从已有 endpoint 里挑一个，也不会使用某个写死的模型名。
 
 `can_edit_server_settings` 对非本机请求一直是 false。项目目录、Full access，以及通过助手接口写入 Gateway API key，都只能从 MLflow 进程眼里的本机来做。反向代理带上的 `X-Forwarded-For` 不会被当成本机。
 
@@ -479,11 +481,11 @@ dind 对这套代码不可靠。沙箱把工作目录、`$HOME`、stdin 目录�
 
 因此要让 bind mount 真的指到文件，而不是在宿主机上新建一个空目录：
 
-| 容器内路径 | 宿主机路径 | 用途 |
-| --- | --- | --- |
-| `/root/.mlflow/assistant` | `${MLFLOW_DATA_DIR}/assistant/config` | 配置。只给服务进程读写，不交给 daemon 做 bind mount |
-| `${MLFLOW_DATA_DIR}/assistant/sandbox` | 同一路径 | 远程助手打开时 `TMPDIR` 设在 `.../sandbox/tmp`。stdin、会话 `sandbox-home`、镜像构建上下文都在这里 |
-| `${MLFLOW_DATA_DIR}/assistant/projects` | 同一路径 | 助手项目目录。设置里填写的路径必须落在这里（或另一条同样「容器路径 = 宿主机路径」的挂载上） |
+| 容器内路径                              | 宿主机路径                            | 用途                                                                                               |
+| --------------------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `/root/.mlflow/assistant`               | `${MLFLOW_DATA_DIR}/assistant/config` | 配置。只给服务进程读写，不交给 daemon 做 bind mount                                                |
+| `${MLFLOW_DATA_DIR}/assistant/sandbox`  | 同一路径                              | 远程助手打开时 `TMPDIR` 设在 `.../sandbox/tmp`。stdin、会话 `sandbox-home`、镜像构建上下文都在这里 |
+| `${MLFLOW_DATA_DIR}/assistant/projects` | 同一路径                              | 助手项目目录。设置里填写的路径必须落在这里（或另一条同样「容器路径 = 宿主机路径」的挂载上）        |
 
 不要把项目路径设成 `/tmp`、`/root` 或容器里其他没有按同一绝对路径挂出来的目录。daemon 会在宿主机上找这个字符串，挂进去的是空目录或宿主机上同名的别的东西，工具会安静地读写错误的文件。
 
@@ -562,36 +564,18 @@ docker exec mlflow-server docker info
 
 `docker info` 应打出宿主机 daemon 的信息。若报 `permission denied` 或连不上 `/var/run/docker.sock`，检查 socket 路径（rootless Docker 不在 `/var/run/docker.sock`）以及 `.env` 里的 `MLFLOW_ASSISTANT_DOCKER_SOCKET`。日志里会出现沙箱「不限制网络」的 warning，这是上游在沙箱打开时打的，不是失败。
 
-#### 配置 Gateway 并选中 `mlflow_gateway`
+#### 打开助手并选择 Gateway endpoint
 
-Gateway 的 endpoint 走普通 UI，不经过助手的远程开关。管理员用公网地址或隧道都可以：
+`up -d` 之后，已登录的远程用户就能看到助手入口，不必先有 Gateway endpoint，也不必逐用户 PUT。还没选模型时，面板只显示配置引导，输入框不会出现，也不会发出聊天请求。
 
-1. 打开 `/#/gateway/api-keys`，新建 LLM connection（provider + API key）。key 存在跟踪库的 Gateway secret 里，不在 `assistant/config`。
-2. 打开 `/#/gateway/endpoints/create`（或侧栏 Gateway），建一个 chat endpoint，记下它的**名字**（下面用 `my-chat-endpoint`）。
+Gateway 的 endpoint 走普通 UI：
 
-选中助手 provider 是另一件事，而且是**按用户**存在 `assistant/config/users/<sha256>/config.json` 里的。管理员的选择不会套到其他用户身上。远程浏览器在该用户还没保存 `mlflow_gateway` 之前看不到助手面板，所以第一次选择用 SSH 隧道，让浏览器主机名变成 localhost：
+1. 管理员打开 `/#/gateway/api-keys`，新建 LLM connection（provider + API key）。key 存在跟踪库的 Gateway secret 里，不在 `assistant/config`。远程助手接口不能写入 API key。
+2. 管理员打开 `/#/gateway/endpoints/create`（或侧栏 Gateway），建一个 chat endpoint。助手不会自己挑一个已有 endpoint，也不会使用某个历史模型名。
 
-```bash
-# MLFLOW_BIND_IP=127.0.0.1 时，隧道目标就是本机已发布的端口。
-# 端口在 0.0.0.0 上时同样转到 127.0.0.1:${MLFLOW_PORT}。
-ssh -L 5000:127.0.0.1:5000 <user>@<server>
-```
+然后每个用户在助手面板里选择这个 endpoint。选择保存在 `assistant/config/users/<sha256>/config.json`。沙箱已经打开、并且该用户对这个 endpoint 有 Gateway USE 权限时，`remote_access_allowed` 变为 true，聊天才可用。没有 USE 的用户选不了别人的端点，面板会请他们联系管理员。管理员也不会因为打开助手而多出权限。
 
-在自己的机器上打开 `http://127.0.0.1:5000`，用**管理员**登录。这时 `isLocalServer` 为 true，助手面板会出现（即使 `remote_access_allowed` 还是 false）。打开助手设置，选择 **Hengjian AI Gateway**（provider id `mlflow_gateway`），模型填 `my-chat-endpoint`。
-
-不想点 UI 时，在服务器上对 localhost 调 API（把 endpoint 名换成上一步的名字）：
-
-```bash
-curl -s -u "admin:${MLFLOW_AUTH_ADMIN_PASSWORD}" \
-  -H 'Content-Type: application/json' \
-  -X PUT \
-  -d '{"providers":{"mlflow_gateway":{"selected":true,"model":"my-chat-endpoint"}}}' \
-  http://127.0.0.1:5000/ajax-api/3.0/mlflow/assistant/config
-```
-
-这个 PUT 在远程助手已经打开、并且调用者已登录时，也可以从公网发（策略是 `AUTHENTICATED`，不要求先看到面板）。从公网发时**不能**在 body 里带 `api_key` 或 `gateway_vendor`：那会被拒绝，提示 Gateway connection 只能在服务器本机配置。endpoint 要先在 Gateway 页面建好。每个要用助手的用户都要对自己的账号做一次选择；用该用户的口令把上面的 curl 打一遍即可。
-
-选好之后在服务器上再查一次。只打 `127.0.0.1` 时，服务把调用者当本机，`can_edit_server_settings` 对管理员仍是 true。加上 `X-Forwarded-For` 才会走远程判断（助手把任一转发头当成非本机；Host 仍要落在允许名单里，所以保留 localhost 条目时不用改 Host）：
+在服务器上确认入口和聊天是两件事。只打 `127.0.0.1` 时，服务把调用者当本机。加上 `X-Forwarded-For` 才会走远程判断（助手把任一转发头当成非本机；Host 仍要落在允许名单里）：
 
 ```bash
 curl -s -u "admin:${MLFLOW_AUTH_ADMIN_PASSWORD}" \
@@ -599,7 +583,19 @@ curl -s -u "admin:${MLFLOW_AUTH_ADMIN_PASSWORD}" \
   "http://127.0.0.1:${MLFLOW_PORT}/ajax-api/3.0/mlflow/assistant/config"
 ```
 
-期望 `remote_access_allowed` 为 `true`，`providers.mlflow_gateway.selected` 为 `true`，`can_edit_server_settings` 为 `false`。刷新公网页面，助手入口会出现。聊天走进程内的 Gateway，不依赖沙箱镜像。模型若调用 Bash 或文件工具，才会在宿主机上拉起 `mlflow-sandbox` 容器；第一次可能要等镜像构建。没有把 socket 挂上时，入口在 docker CLI 存在且 provider 已保存的情况下仍会出现，但工具调用会失败。`docker exec mlflow-server docker info` 就是用来确认 socket 真的连上了宿主机 daemon。
+还没选择 endpoint 时，期望 `remote_assistant_enabled` 为 `true`，`remote_access_allowed` 为 `false`，`providers` 为 `{}`。选好 `mlflow_gateway` 并且沙箱可用之后，`remote_access_allowed` 才为 `true`。`MLFLOW_ENABLE_REMOTE_ASSISTANT=false` 时 `remote_assistant_enabled` 为 false，远程入口隐藏。沙箱关闭时入口仍可出现，聊天保持关闭。
+
+可选：已经能登录时，也可以 PUT 自己的选择，把 `my-chat-endpoint` 换成 Gateway 里的真实名字。这不是打开入口的必要步骤。从公网发时不能在 body 里带 `api_key` 或 `gateway_vendor`。
+
+```bash
+curl -s -u "<user>:${PASSWORD}" \
+  -H 'Content-Type: application/json' \
+  -X PUT \
+  -d '{"providers":{"mlflow_gateway":{"selected":true,"model":"my-chat-endpoint"}}}' \
+  "http://127.0.0.1:${MLFLOW_PORT}/ajax-api/3.0/mlflow/assistant/config"
+```
+
+聊天走进程内的 Gateway，不依赖沙箱镜像。模型若调用 Bash 或文件工具，才会在宿主机上拉起 `mlflow-sandbox` 容器。没有把 socket 挂上时，入口在远程开关打开时仍会出现，但工具调用会失败。`docker exec mlflow-server docker info` 用来确认 socket 连上了宿主机 daemon。
 
 项目目录只在隧道里的管理员会话配置。路径填宿主机和容器共用的那条，例如 `/data/mlflow_data/assistant/projects/my-app`，并事先把代码放进这个目录。不要开 Full access；远程场景要的就是沙箱，而不是在宿主机上放开命令。
 
@@ -673,7 +669,7 @@ If this passes, MLflow can read and write artifacts to RustFS. From inside the c
 - Server exits immediately complaining about `MLFLOW_FLASK_SERVER_SECRET_KEY` or a short admin password → fix `.env` and `docker compose up -d` again.
 - `MLFLOW_WORKSPACE=... is client-only` → that variable was passed into the server container. Remove it from the compose environment.
 - Traces page returns 403 with `Cross-origin request blocked`, or the overview page keeps loading → the browser address is missing from `MLFLOW_SERVER_ALLOWED_HOSTS` and `MLFLOW_SERVER_CORS_ALLOWED_ORIGINS`. See [在服务器上部署](#在服务器上部署).
-- The Assistant entry is missing on a non-localhost browser and `remote_access_allowed` is false → `MLFLOW_ENABLE_REMOTE_ASSISTANT` is not true, `hengjian:latest` has no `docker` on `PATH` (sandbox stays off), or that user has not saved `mlflow_gateway`. The host socket is required for sandbox tools, not for the entry itself. See [远程 AI Assistant](#远程-ai-assistant).
+- The Assistant entry is missing on a non-localhost browser → `remote_assistant_enabled` is false, so `MLFLOW_ENABLE_REMOTE_ASSISTANT` is not true, or the config request failed. The entry can show while `remote_access_allowed` is false: chat stays off until the sandbox is on and that user selects `mlflow_gateway` with a real endpoint. The host socket is required for sandbox tools, not for the entry itself. See [远程 AI Assistant](#远程-ai-assistant).
 
 ### Resetting the Environment
 

@@ -16,12 +16,12 @@ import { COLLAPSED_CLASS_NAME, FULL_WIDTH_CLASS_NAME } from './constants';
 
 export const ExperimentPageSideNavAssistantButton = () => {
   const { theme } = useDesignSystemTheme();
-  const { openPanel, closePanel, isPanelOpen, canUseAssistant } = useAssistant();
+  const { openPanel, closePanel, isPanelOpen, canUseAssistant, canOpenAssistant } = useAssistant();
   const logTelemetryEvent = useLogTelemetryEvent();
   const viewId = useMemo(() => uuidv4(), []);
   const [isHovered, setIsHovered] = useState(false);
 
-  if (!canUseAssistant) {
+  if (!(canOpenAssistant || canUseAssistant)) {
     return null;
   }
 
