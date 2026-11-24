@@ -310,7 +310,7 @@ docker build --platform linux/amd64 -f docker-compose/Dockerfile.fork -t hengjia
 docker build -f docker-compose/Dockerfile.fork -t hengjian:latest .
 ```
 
-UI 构建需要 Node 24 和数 GB 内存。
+UI 构建需要 Node 24 和数 GB 内存。最终阶段还会下载静态 docker 客户端（给 AI Assistant 沙箱做 `PATH` 探测）。16GB ARM Mac 上如果不用上面的完整 Dockerfile、而是把本机已经打好的 `mlflow/server/js/build` 拷进瘦镜像，必须把 `Dockerfile.fork` 里 `DOCKER_CLI_VERSION` 那一段 `RUN` 留在最终阶段。细节见 [远程 AI Assistant](#远程-ai-assistant)。
 
 镜像在别的机器上构建时，用 `docker save` / `docker load` 传到服务器。标签是 `hengjian:latest`：
 
@@ -330,22 +330,28 @@ gunzip -c hengjian-latest.tar.gz | docker load
 
 ```text
 /data/mlflow_data/
-├── postgres/   # PostgreSQL → /var/lib/postgresql/data（跟踪库与认证库 mlflow_auth）
-├── storage/    # RustFS 对象 → /data
-└── auth/       # basic_auth.ini → /mlflow/auth
+├── postgres/    # PostgreSQL → /var/lib/postgresql/data（跟踪库与认证库 mlflow_auth）
+├── storage/     # RustFS 对象 → /data
+├── auth/        # basic_auth.ini → /mlflow/auth
+└── assistant/
+    ├── config/    # → /root/.mlflow/assistant（provider 与 project 配置）
+    ├── sandbox/   # 容器内同一绝对路径（沙箱 TMPDIR、会话目录）
+    └── projects/  # 容器内同一绝对路径（可选的 Assistant 项目目录）
 ```
 
 ```bash
-sudo mkdir -p /data/mlflow_data/{postgres,storage,auth}
+sudo mkdir -p /data/mlflow_data/{postgres,storage,auth} \
+  /data/mlflow_data/assistant/{config,sandbox/tmp,projects}
 sudo chown 999:999 /data/mlflow_data/postgres
 sudo chown -R 10001:10001 /data/mlflow_data/storage
-sudo chown root:root /data/mlflow_data/auth
-sudo chmod 700 /data/mlflow_data/auth
+sudo chown root:root /data/mlflow_data/auth /data/mlflow_data/assistant
+sudo chmod 700 /data/mlflow_data/auth /data/mlflow_data/assistant/config
 ```
 
 - 官方 `postgres:15` 镜像的入口进程以 root 启动，初始化数据目录后降到 uid **999**（`postgres`）。先把 `postgres/` 交给 999，避免绑定目录不可写。
 - `rustfs/rustfs:1.0.0-alpha.83` 以 uid/gid **10001** 运行，不会在启动时改宿主目录的属主。`storage/` 必须事先属于 10001，否则对象存储起不来。
 - `Dockerfile.fork` 没有改 `USER`，服务进程是 root，并在启动时写入 `/mlflow/auth/basic_auth.ini`（容器内 `chmod 600`）。用户和权限写在 PostgreSQL 的 `mlflow_auth` 库里，不再写 `basic_auth.db`。`auth/` 保持 root 可写即可。目录里如果还有旧的 `basic_auth.db`，服务不会读取它。
+- `assistant/` 也是 root。`config/` 挂到容器里的 `/root/.mlflow/assistant`，这是 `AssistantConfig` 的固定位置（`$HOME/.mlflow/assistant`，进程是 root）。provider 选择和 project 映射写在这里，容器重建不会丢掉。`sandbox/` 和 `projects/` 在容器内外是同一条绝对路径，给 Docker 沙箱做 bind mount。远程助手保持关闭时，这三个目录可以是空的。
 
 目录不存在时，Docker 会在启动时以 root 把绑定路径创建出来。那样 `storage/` 的属主不是 10001，RustFS 会因权限失败。先执行上面的 `mkdir` 和 `chown`，再 `up`。
 
@@ -410,7 +416,7 @@ docker compose -f docker-compose.prod.yml --env-file .env logs -f mlflow
 docker compose -f docker-compose.prod.yml --env-file .env down
 ```
 
-`down` 必须使用和 `up` 相同的 `-f`。不要加 `-v`。上面这条命令停掉容器，`/data/mlflow_data` 里的数据都还在。`postgres/` 里同时有跟踪库和认证库 `mlflow_auth`，`storage/` 是对象，`auth/` 里是 `basic_auth.ini`。这些是绑定挂载，不依赖具名卷。
+`down` 必须使用和 `up` 相同的 `-f`。不要加 `-v`。上面这条命令停掉容器，`/data/mlflow_data` 里的数据都还在。`postgres/` 里同时有跟踪库和认证库 `mlflow_auth`，`storage/` 是对象，`auth/` 里是 `basic_auth.ini`，`assistant/config/` 里是 AI Assistant 的 provider 和 project 配置。这些是绑定挂载，不依赖具名卷。更新镜像后重新 `up` 不会清掉已经配好的 Gateway provider。
 
 `docker compose down -v` 会删除**当前项目模型里的具名卷**。生产文件没有声明 `pgdata`、`storage-data`、`authdata`，因此带上 `-f docker-compose.prod.yml` 时，`-v` 不会删除 `/data/mlflow_data`。它仍然危险：
 
@@ -450,6 +456,154 @@ docker compose -f docker-compose.prod.yml --env-file .env down
 留空（`MLFLOW_SERVER_ALLOWED_HOSTS=`）和从 `.env` 里删掉这两行相同。`get_allowed_hosts_from_env()` 与 `get_allowed_origins_from_env()` 把空字符串当成未设置：Host 仍允许 localhost 和内网地址，跨源状态修改仍只放行 localhost。`/health` 本身也不做 Host 校验。等号后面不要加空格，空格会被当成一份名单。
 
 部署后如果跟踪页报 403，或概览页一直转圈，先看响应正文是不是 `Cross-origin request blocked`。是的话按地址栏补上上面两项，保留 localhost 条目，再执行 `docker compose -f docker-compose.prod.yml --env-file .env up -d`。
+
+### 远程 AI Assistant
+
+用服务器 IP、域名或反向代理打开衡鉴时，浏览器不是 `localhost`。助手入口（浮动按钮、实验页侧栏）只在 `canUseAssistant` 为真时渲染，也就是主机名是 `localhost` / `127.0.0.1` / `::1`，或者 `GET /ajax-api/3.0/mlflow/assistant/config` 的 `remote_access_allowed` 为 `true`。后者要同时满足三件事：
+
+1. `MLFLOW_ENABLE_REMOTE_ASSISTANT=true`。
+2. 沙箱实际打开。`MLFLOW_ENABLE_ASSISTANT_SANDBOX` 留空时，这等于「远程开关为 true，并且容器里 `PATH` 上有 `docker`」。镜像里没有 docker CLI 时，沙箱保持关闭，远程入口继续隐藏。不要把 `MLFLOW_ENABLE_ASSISTANT_SANDBOX=true` 当成绕过沙箱的办法：没有可用的 Docker 时，工具调用会直接失败。
+3. **这个用户**已经把 provider 选成 `mlflow_gateway`。Claude Code 和 Codex 的 `allows_remote_access` 固定是 false，远程客户端不能用它们。还没保存选择时，远程 `GET /config` 的 provider 解析会跳过 Gateway（`include_gateway=False`），于是 `remote_access_allowed` 仍是 false，响应和未开启时一样：`{"providers": {}, "projects": {}, "remote_access_allowed": false, "can_edit_server_settings": false}`。
+
+`can_edit_server_settings` 对非本机请求一直是 false。项目目录、Full access，以及通过助手接口写入 Gateway API key，都只能从 MLflow 进程眼里的本机来做。反向代理带上的 `X-Forwarded-For` 不会被当成本机。
+
+默认 `.env` 不挂真正的 Docker socket，远程助手关闭。旧的 `.env` 不写下面这些变量时，行为与现在相同。
+
+#### 沙箱怎么接进这套 Compose
+
+`mlflow/server/sandbox` 用 Python `docker` SDK（`docker.from_env()`）在**它连上的那个 daemon** 里建容器。探测开关只用 `shutil.which("docker")`，所以镜像里要有 docker 客户端，daemon 不必装在镜像里。
+
+生产选择是：**把宿主机的 `/var/run/docker.sock` 挂进 `mlflow-server`（Docker-out-of-Docker）**。不另起 `docker:dind`。
+
+dind 对这套代码不可靠。沙箱把工作目录、`$HOME`、stdin 目录按**调用方进程里的绝对路径** bind mount。dind 的 daemon 只看得到 dind 容器自己的文件系统，除非每条路径都在两个容器里以同一个绝对路径再挂一遍。`extra_hosts` 里的 `host.docker.internal:host-gateway` 也是由创建容器的 daemon 解析的；嵌在 dind 里时，这个地址是内层网桥网关，不是宿主机上已经发布的衡鉴端口，跟踪调用会打到错误的地方。dind 还需要 `--privileged`。宿主机 socket 和沙箱 README 里的假设一致：daemon 就是宿主机的 Docker，`host-gateway` 指向宿主机网桥，bind mount 的路径就是宿主机路径。
+
+因此要让 bind mount 真的指到文件，而不是在宿主机上新建一个空目录：
+
+| 容器内路径 | 宿主机路径 | 用途 |
+| --- | --- | --- |
+| `/root/.mlflow/assistant` | `${MLFLOW_DATA_DIR}/assistant/config` | 配置。只给服务进程读写，不交给 daemon 做 bind mount |
+| `${MLFLOW_DATA_DIR}/assistant/sandbox` | 同一路径 | 远程助手打开时 `TMPDIR` 设在 `.../sandbox/tmp`。stdin、会话 `sandbox-home`、镜像构建上下文都在这里 |
+| `${MLFLOW_DATA_DIR}/assistant/projects` | 同一路径 | 助手项目目录。设置里填写的路径必须落在这里（或另一条同样「容器路径 = 宿主机路径」的挂载上） |
+
+不要把项目路径设成 `/tmp`、`/root` 或容器里其他没有按同一绝对路径挂出来的目录。daemon 会在宿主机上找这个字符串，挂进去的是空目录或宿主机上同名的别的东西，工具会安静地读写错误的文件。
+
+远程助手关闭时不设置 `TMPDIR`，也不设置 `MLFLOW_HOME`，临时文件仍在容器默认的 `/tmp`。打开时入口脚本把 `TMPDIR` 指到上面的 sandbox 目录，并把 `MLFLOW_HOME` 设为 `/opt/mlflow`（操作者已经设置的 `MLFLOW_HOME` 会保留）。这份镜像里的 MLflow 是开发版（`mlflow/version.py` 的版本号带 `.dev`）。不设 `MLFLOW_HOME` 时，沙箱镜像的自动构建会去装上游的 development 分支，而不是这套 fork。`MLFLOW_HOME` 同时会被 pyfunc 的环境构建看到；只在远程助手打开时导出。
+
+沙箱容器跑在宿主机 daemon 新建的桥接网络 `mlflow-sandbox` 上，**不**加入 Compose 网络 `mlflow-network`。它们解析不了 `postgres`、`storage`、`mlflow-server`。也不要把 `mlflow-network` 改名。沙箱环境里不会带上 Postgres 或 RustFS 的口令。
+
+跟踪地址是浏览器地址栏的 URL（`get_server_base_url`）。只有 loopback（`localhost`、`127.0.0.1`、`0.0.0.0`、`::1`）会改写成 `host.docker.internal`，并靠容器上的 `host-gateway` 回到宿主机。在 Linux 上这是 Docker 网桥地址，不是宿主机的 `127.0.0.1`。
+
+- 用户通过域名打开（`https://mlflow.example.com`）：沙箱直接访问这个公网 URL。容器要能解析并连上它（一般可以）。Host 用这个域名，所以它必须在 `MLFLOW_SERVER_ALLOWED_HOSTS` 里。
+- 用户通过 SSH 隧道打开（浏览器是 `http://127.0.0.1:5000`）：URI 被改写成 `http://host.docker.internal:5000`。这要求宿主机在 Docker 网桥上监听 `MLFLOW_PORT`。`MLFLOW_BIND_IP=127.0.0.1` 时，网桥访问不到该端口，隧道会话里的 Bash / 文件工具连不上跟踪服务。Gateway 聊天本身不走沙箱：模型调用是服务进程访问自己的 `get_server_self_url`，所以聊天仍然可以工作，只有沙箱里的 `mlflow` 命令会失败。日常从域名进来的会话不受这条限制。
+- 用户直接用服务器公网 IP：沙箱从自己的网络回连这个 IP（hairpin）。Linux 上经常失败。有域名时优先用域名。
+- `MLFLOW_SERVER_ALLOWED_HOSTS` 非空时会替换默认名单。只要有人可能从 localhost / 隧道打开，就把 `host.docker.internal,host.docker.internal:*` 加进去，否则改写后的 Host 会得到 `403 Invalid Host header`。名单为空时默认允许 localhost 和内网 IP，**不**包含 `host.docker.internal`。
+
+挂上 docker.sock 等于把宿主机 daemon 交给 `mlflow-server`（进程是 root，相当于宿主机 root）。沙箱容器自己会 drop capability、`no-new-privileges`、限制内存 / CPU / PID，但挡不住已经能操作 socket 的服务进程。所以默认不挂 socket。这不是网络隔离：沙箱 README 写明容器仍能访问网络，`MLFLOW_SANDBOX_EGRESS_PROXY` 只影响遵守代理变量的 HTTP 客户端。
+
+镜像构建发生在宿主机 daemon 上。第一次 Bash 或文件工具会构建 `mlflow-sandbox:latest`（上下文经 API 上传，不依赖 bind mount）。宿主机要能拉 `python:<版本>-slim`，并在构建里 `pip install` 这份源码的依赖。构建可能要几分钟，而且 MLflow 变了也不会自动重建；在宿主机上 `docker image rm mlflow-sandbox:latest` 才会重建。宿主机上不了 Docker Hub 或 PyPI 时，自己做一份带相同 Python 和这份 MLflow 的镜像，把 `MLFLOW_SANDBOX_DOCKER_IMAGE` 指过去。远程用户用不到 Claude Code / Codex，不必构建 `mlflow-assistant-sandbox`。
+
+服务进程是 root，沙箱容器的 `user` 也是 `0:0`。写进 `projects/` 的文件属主是 root。这是上游在「服务以 root 运行」时的既有行为，这套 Compose 不改 `USER`。
+
+#### 重建 `hengjian:latest`
+
+旧镜像没有 docker CLI 时，只改 `.env` 不会让 `remote_access_allowed` 变成 true。必须先重建并加载镜像。
+
+仓库根目录、完整构建（UI 在镜像里编译，需要 Node 24 和数 GB 内存）：
+
+```bash
+docker build --platform linux/amd64 -f docker-compose/Dockerfile.fork -t hengjian:latest .
+```
+
+16GB ARM Mac 上不要在 qemu 里跑 yarn。沿用现在的瘦 Dockerfile：最终阶段仍是 `python:3.11-slim-bookworm`，用本机已经打好的 `mlflow/server/js/build` 代替 `COPY --from=ui`：
+
+```dockerfile
+COPY mlflow/server/js/build ./mlflow/server/js/build
+```
+
+并且保留 `docker-compose/Dockerfile.fork` 里 `DOCKER_CLI_VERSION` / `TARGETARCH` 那一段 `RUN`。它只解出静态包里的 `docker` 客户端（27.5.1，校验 sha256），不安装 dockerd。`--platform linux/amd64` 时 `TARGETARCH=amd64`，装的是 x86_64 客户端。构建机器要能访问 `https://download.docker.com`。
+
+确认镜像里有客户端再加载到服务器：
+
+```bash
+docker run --rm --platform linux/amd64 hengjian:latest docker --version
+docker save hengjian:latest | gzip > hengjian-latest.tar.gz
+# 服务器上
+gunzip -c hengjian-latest.tar.gz | docker load
+```
+
+#### 在服务器上打开
+
+`.env` 里（不要提交这个文件）：
+
+```env
+MLFLOW_ENABLE_REMOTE_ASSISTANT=true
+MLFLOW_ENABLE_ASSISTANT_SANDBOX=
+MLFLOW_ASSISTANT_DOCKER_SOCKET=/var/run/docker.sock
+```
+
+`MLFLOW_SERVER_ALLOWED_HOSTS` 在原有名单上补上 `host.docker.internal,host.docker.internal:*`，localhost 条目继续留着。例如域名反代：
+
+```env
+MLFLOW_SERVER_ALLOWED_HOSTS=localhost,localhost:*,127.0.0.1,127.0.0.1:*,host.docker.internal,host.docker.internal:*,mlflow.example.com
+MLFLOW_SERVER_CORS_ALLOWED_ORIGINS=https://mlflow.example.com
+```
+
+直接用 IP 时同样加上 `host.docker.internal` 和 `host.docker.internal:*`，并把地址栏里的 `IP:端口` 留在名单里。
+
+然后：
+
+```bash
+sudo mkdir -p /data/mlflow_data/assistant/{config,sandbox/tmp,projects}
+sudo chown -R root:root /data/mlflow_data/assistant
+sudo chmod 700 /data/mlflow_data/assistant/config
+docker compose -f docker-compose.prod.yml --env-file .env up -d
+docker exec mlflow-server docker info
+```
+
+`docker info` 应打出宿主机 daemon 的信息。若报 `permission denied` 或连不上 `/var/run/docker.sock`，检查 socket 路径（rootless Docker 不在 `/var/run/docker.sock`）以及 `.env` 里的 `MLFLOW_ASSISTANT_DOCKER_SOCKET`。日志里会出现沙箱「不限制网络」的 warning，这是上游在沙箱打开时打的，不是失败。
+
+#### 配置 Gateway 并选中 `mlflow_gateway`
+
+Gateway 的 endpoint 走普通 UI，不经过助手的远程开关。管理员用公网地址或隧道都可以：
+
+1. 打开 `/#/gateway/api-keys`，新建 LLM connection（provider + API key）。key 存在跟踪库的 Gateway secret 里，不在 `assistant/config`。
+2. 打开 `/#/gateway/endpoints/create`（或侧栏 Gateway），建一个 chat endpoint，记下它的**名字**（下面用 `my-chat-endpoint`）。
+
+选中助手 provider 是另一件事，而且是**按用户**存在 `assistant/config/users/<sha256>/config.json` 里的。管理员的选择不会套到其他用户身上。远程浏览器在该用户还没保存 `mlflow_gateway` 之前看不到助手面板，所以第一次选择用 SSH 隧道，让浏览器主机名变成 localhost：
+
+```bash
+# MLFLOW_BIND_IP=127.0.0.1 时，隧道目标就是本机已发布的端口。
+# 端口在 0.0.0.0 上时同样转到 127.0.0.1:${MLFLOW_PORT}。
+ssh -L 5000:127.0.0.1:5000 <user>@<server>
+```
+
+在自己的机器上打开 `http://127.0.0.1:5000`，用**管理员**登录。这时 `isLocalServer` 为 true，助手面板会出现（即使 `remote_access_allowed` 还是 false）。打开助手设置，选择 **Hengjian AI Gateway**（provider id `mlflow_gateway`），模型填 `my-chat-endpoint`。
+
+不想点 UI 时，在服务器上对 localhost 调 API（把 endpoint 名换成上一步的名字）：
+
+```bash
+curl -s -u "admin:${MLFLOW_AUTH_ADMIN_PASSWORD}" \
+  -H 'Content-Type: application/json' \
+  -X PUT \
+  -d '{"providers":{"mlflow_gateway":{"selected":true,"model":"my-chat-endpoint"}}}' \
+  http://127.0.0.1:5000/ajax-api/3.0/mlflow/assistant/config
+```
+
+这个 PUT 在远程助手已经打开、并且调用者已登录时，也可以从公网发（策略是 `AUTHENTICATED`，不要求先看到面板）。从公网发时**不能**在 body 里带 `api_key` 或 `gateway_vendor`：那会被拒绝，提示 Gateway connection 只能在服务器本机配置。endpoint 要先在 Gateway 页面建好。每个要用助手的用户都要对自己的账号做一次选择；用该用户的口令把上面的 curl 打一遍即可。
+
+选好之后在服务器上再查一次。只打 `127.0.0.1` 时，服务把调用者当本机，`can_edit_server_settings` 对管理员仍是 true。加上 `X-Forwarded-For` 才会走远程判断（助手把任一转发头当成非本机；Host 仍要落在允许名单里，所以保留 localhost 条目时不用改 Host）：
+
+```bash
+curl -s -u "admin:${MLFLOW_AUTH_ADMIN_PASSWORD}" \
+  -H "X-Forwarded-For: 203.0.113.10" \
+  "http://127.0.0.1:${MLFLOW_PORT}/ajax-api/3.0/mlflow/assistant/config"
+```
+
+期望 `remote_access_allowed` 为 `true`，`providers.mlflow_gateway.selected` 为 `true`，`can_edit_server_settings` 为 `false`。刷新公网页面，助手入口会出现。聊天走进程内的 Gateway，不依赖沙箱镜像。模型若调用 Bash 或文件工具，才会在宿主机上拉起 `mlflow-sandbox` 容器；第一次可能要等镜像构建。没有把 socket 挂上时，入口在 docker CLI 存在且 provider 已保存的情况下仍会出现，但工具调用会失败。`docker exec mlflow-server docker info` 就是用来确认 socket 真的连上了宿主机 daemon。
+
+项目目录只在隧道里的管理员会话配置。路径填宿主机和容器共用的那条，例如 `/data/mlflow_data/assistant/projects/my-app`，并事先把代码放进这个目录。不要开 Full access；远程场景要的就是沙箱，而不是在宿主机上放开命令。
+
+关掉远程助手：把 `MLFLOW_ENABLE_REMOTE_ASSISTANT` 改回 `false`，把 `MLFLOW_ASSISTANT_DOCKER_SOCKET` 改回 `/dev/null`，再 `up -d`。`assistant/config` 还在，下次打开不用重配 provider。
 
 ---
 
@@ -519,6 +673,7 @@ If this passes, MLflow can read and write artifacts to RustFS. From inside the c
 - Server exits immediately complaining about `MLFLOW_FLASK_SERVER_SECRET_KEY` or a short admin password → fix `.env` and `docker compose up -d` again.
 - `MLFLOW_WORKSPACE=... is client-only` → that variable was passed into the server container. Remove it from the compose environment.
 - Traces page returns 403 with `Cross-origin request blocked`, or the overview page keeps loading → the browser address is missing from `MLFLOW_SERVER_ALLOWED_HOSTS` and `MLFLOW_SERVER_CORS_ALLOWED_ORIGINS`. See [在服务器上部署](#在服务器上部署).
+- The Assistant entry is missing on a non-localhost browser and `remote_access_allowed` is false → `MLFLOW_ENABLE_REMOTE_ASSISTANT` is not true, `hengjian:latest` has no `docker` on `PATH` (sandbox stays off), or that user has not saved `mlflow_gateway`. The host socket is required for sandbox tools, not for the entry itself. See [远程 AI Assistant](#远程-ai-assistant).
 
 ### Resetting the Environment
 

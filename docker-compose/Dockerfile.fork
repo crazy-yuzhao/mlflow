@@ -10,6 +10,17 @@
 # The UI build needs Node 24 and several gigabytes of RAM. After the image
 # exists, copy docker-compose/docker-compose.override.example.yml to
 # docker-compose/docker-compose.override.yml and start the stack as usual.
+#
+# The final stage also installs a static docker *client* (not dockerd). The
+# assistant sandbox turns on only when `docker` is on PATH. A 16GB ARM Mac
+# production build that cannot run the `ui` stage under qemu should keep this
+# final stage and replace the two UI lines (`FROM node` through
+# `COPY --from=ui`) with a copy of a prebuilt local UI:
+#
+#   COPY mlflow/server/js/build ./mlflow/server/js/build
+#
+# Keep the `DOCKER_CLI_VERSION` / `TARGETARCH` RUN below. The client is what
+# `hengjian:latest` must contain; the daemon stays on the host.
 
 FROM node:24-bookworm-slim AS ui
 WORKDIR /src
@@ -25,3 +36,47 @@ COPY pyproject.toml README.md LICENSE.txt ./
 COPY mlflow ./mlflow
 COPY --from=ui /src/mlflow/server/js/build ./mlflow/server/js/build
 RUN pip install --no-cache-dir '.[auth]' 'psycopg[binary]' psycopg2-binary boto3
+
+# Client only. `assistant_sandbox_enabled()` probes `shutil.which("docker")`;
+# container create/build uses the Python docker SDK against the host socket.
+# Checksums are the official static tarballs for this version (x86_64 and
+# aarch64). `--platform linux/amd64` on an ARM Mac selects the x86_64 client.
+ARG DOCKER_CLI_VERSION=27.5.1
+ARG TARGETARCH
+RUN python - <<'PY'
+import hashlib
+import os
+import stat
+import tarfile
+import urllib.request
+from pathlib import Path
+
+version = os.environ["DOCKER_CLI_VERSION"]
+arch = os.environ.get("TARGETARCH") or os.uname().machine
+docker_arch = {
+    "amd64": "x86_64",
+    "x86_64": "x86_64",
+    "arm64": "aarch64",
+    "aarch64": "aarch64",
+}.get(arch)
+if docker_arch is None:
+    raise SystemExit(f"unsupported architecture for the docker CLI: {arch}")
+checksums = {
+    "x86_64": "4f798b3ee1e0140eab5bf30b0edc4e84f4cdb53255a429dc3bbae9524845d640",
+    "aarch64": "e6b53725a73763ab3f988c73f8772eaed429754c1a579db5ff11f21990fd1817",
+}
+url = f"https://download.docker.com/linux/static/stable/{docker_arch}/docker-{version}.tgz"
+destination = Path("/tmp/docker-cli.tgz")
+urllib.request.urlretrieve(url, destination)
+digest = hashlib.sha256(destination.read_bytes()).hexdigest()
+if digest != checksums[docker_arch]:
+    raise SystemExit(f"docker CLI checksum mismatch for {docker_arch}: {digest}")
+with tarfile.open(destination) as archive:
+    member = archive.extractfile("docker/docker")
+    if member is None:
+        raise SystemExit("docker/docker missing from the static archive")
+    target = Path("/usr/local/bin/docker")
+    target.write_bytes(member.read())
+    target.chmod(target.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+destination.unlink()
+PY
