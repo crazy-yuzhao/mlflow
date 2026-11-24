@@ -2,6 +2,7 @@ import os
 import shutil
 import subprocess
 from pathlib import Path
+from typing import Any
 
 import pytest
 import yaml
@@ -28,7 +29,7 @@ def _parse_env(text: str) -> dict[str, str]:
     return values
 
 
-def _render_prod_compose(tmp_path: Path, updates: dict[str, str | None]) -> dict:
+def _render_prod_compose(tmp_path: Path, updates: dict[str, str | None]) -> dict[str, Any]:
     docker = shutil.which("docker")
     if docker is None:
         pytest.skip("docker compose is required to render docker-compose.prod.yml")
