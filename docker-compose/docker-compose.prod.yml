@@ -22,6 +22,10 @@
 #   ${MLFLOW_DATA_DIR:-/data/mlflow_data}/auth      root, mode 700
 #     basic_auth.ini is rewritten here on each start. Users live in PostgreSQL
 #     database mlflow_auth, not in a SQLite file on this mount.
+#   ${MLFLOW_DATA_DIR:-/data/mlflow_data}/assistant root
+#     config/    → /root/.mlflow/assistant (providers and projects; survives recreate)
+#     sandbox/   same absolute path in the container (sandbox TMPDIR / session homes)
+#     projects/  same absolute path in the container (optional Assistant project dirs)
 #
 # Only ${MLFLOW_BIND_IP:-0.0.0.0}:${MLFLOW_PORT} is published. Postgres and
 # RustFS stay on the compose network. The server image is hengjian:latest.
@@ -112,6 +116,31 @@ services:
       # Dockerfile.fork does not set USER, so the server writes this as root.
       # Keep the host directory root-owned and mode 700.
       - "${MLFLOW_DATA_DIR:-/data/mlflow_data}/auth:/mlflow/auth"
+      # AssistantConfig lives at $HOME/.mlflow/assistant. This image runs as
+      # root, so that is /root/.mlflow/assistant. Persist it here. The sandbox
+      # does not bind-mount this container path; the host daemon would look for
+      # /root on the host and miss these files.
+      - "${MLFLOW_DATA_DIR:-/data/mlflow_data}/assistant/config:/root/.mlflow/assistant"
+      # Path-aligned mounts. mlflow/server/sandbox passes these absolute paths
+      # to the Docker daemon that creates the sandbox (the host daemon, via the
+      # socket below). The daemon bind-mounts host paths, so the path inside
+      # this container must be the same string as on the host. sandbox/ holds
+      # TMPDIR (stdin buffers, session homes, image-build context). projects/
+      # is the only directory that should be configured as an Assistant
+      # project path.
+      - "${MLFLOW_DATA_DIR:-/data/mlflow_data}/assistant/sandbox:${MLFLOW_DATA_DIR:-/data/mlflow_data}/assistant/sandbox"
+      - "${MLFLOW_DATA_DIR:-/data/mlflow_data}/assistant/projects:${MLFLOW_DATA_DIR:-/data/mlflow_data}/assistant/projects"
+      # Default source is /dev/null, a regular file, so an .env that omits
+      # MLFLOW_ASSISTANT_DOCKER_SOCKET does not expose the host daemon. Set
+      # /var/run/docker.sock only when MLFLOW_ENABLE_REMOTE_ASSISTANT=true.
+      # That is Docker-out-of-Docker against the host daemon: sandbox bind
+      # mounts and extra_hosts host.docker.internal:host-gateway are resolved
+      # there. A docker:dind sidecar is not used; its daemon has a different
+      # filesystem and a nested host-gateway, so those mounts and the tracking
+      # URI rewrite miss mlflow-server. Mounting the socket grants this
+      # container full control of the host daemon. Keep the flag off unless
+      # that tradeoff is accepted.
+      - "${MLFLOW_ASSISTANT_DOCKER_SOCKET:-/dev/null}:/var/run/docker.sock"
     environment:
       # Backend store URI built from vars
       MLFLOW_BACKEND_STORE_URI: ${MLFLOW_BACKEND_STORE_URI}
@@ -147,6 +176,17 @@ services:
       MLFLOW_AUTH_DEFAULT_PERMISSION: ${MLFLOW_AUTH_DEFAULT_PERMISSION}
       MLFLOW_AUTH_GRANT_DEFAULT_WORKSPACE_ACCESS: ${MLFLOW_AUTH_GRANT_DEFAULT_WORKSPACE_ACCESS}
       MLFLOW_ENABLE_WORKSPACES: "true"
+      # Remote assistant. :-false covers an old .env that omits the variable.
+      # The sandbox override and image/proxy settings are optional. A blank
+      # value is unset before exec (see the command) because an empty
+      # MLFLOW_ENABLE_ASSISTANT_SANDBOX is invalid: the variable is tri-state
+      # and must be unset, true, or false. Unset derives the sandbox from
+      # remote mode plus a docker CLI on PATH.
+      MLFLOW_ENABLE_REMOTE_ASSISTANT: ${MLFLOW_ENABLE_REMOTE_ASSISTANT:-false}
+      MLFLOW_ENABLE_ASSISTANT_SANDBOX: ${MLFLOW_ENABLE_ASSISTANT_SANDBOX:-}
+      MLFLOW_SANDBOX_DOCKER_IMAGE: ${MLFLOW_SANDBOX_DOCKER_IMAGE:-}
+      MLFLOW_ASSISTANT_SANDBOX_CLI_IMAGE: ${MLFLOW_ASSISTANT_SANDBOX_CLI_IMAGE:-}
+      MLFLOW_SANDBOX_EGRESS_PROXY: ${MLFLOW_SANDBOX_EGRESS_PROXY:-}
       # Same credentials as the postgres service. Used only to CREATE DATABASE
       # for a PostgreSQL auth URI (production: mlflow_auth). SQLite auth ignores
       # them. Tracking still uses MLFLOW_BACKEND_STORE_URI.
@@ -280,6 +320,36 @@ services:
         path.chmod(0o600)
         print(f"Wrote auth config {path} (database {database_uri})")
         PY
+        # assistant-sandbox-prelude: begin
+        # Blank optional settings are "set" to the empty string. Unset them so
+        # MLFLOW_ENABLE_ASSISTANT_SANDBOX stays tri-state (unset derives the
+        # sandbox from remote mode + a docker CLI) and image/proxy overrides
+        # keep their code defaults.
+        _assistant_root="${MLFLOW_DATA_DIR:-/data/mlflow_data}/assistant"
+        mkdir -p "$${_assistant_root}/sandbox/tmp" "$${_assistant_root}/projects"
+        for _assistant_var in \
+          MLFLOW_ENABLE_ASSISTANT_SANDBOX \
+          MLFLOW_SANDBOX_DOCKER_IMAGE \
+          MLFLOW_ASSISTANT_SANDBOX_CLI_IMAGE \
+          MLFLOW_SANDBOX_EGRESS_PROXY
+        do
+          if [ -z "$${!_assistant_var:-}" ]; then
+            unset "$$_assistant_var"
+          fi
+        done
+        # TMPDIR must be this path-aligned directory when the sandbox can run.
+        # The host daemon bind-mounts it. Leave TMPDIR alone when the remote
+        # assistant is off so temp files stay on the container's default /tmp.
+        # MLFLOW_HOME makes the auto-built sandbox image install this fork from
+        # /opt/mlflow. The tree version is a dev release; without MLFLOW_HOME
+        # the fallback image installs upstream's development branch.
+        if [ "$${MLFLOW_ENABLE_REMOTE_ASSISTANT:-false}" = "true" ]; then
+          export TMPDIR="$${_assistant_root}/sandbox/tmp"
+          if [ -z "$${MLFLOW_HOME:-}" ]; then
+            export MLFLOW_HOME=/opt/mlflow
+          fi
+        fi
+        # assistant-sandbox-prelude: end
         exec mlflow server \
           --backend-store-uri "${MLFLOW_BACKEND_STORE_URI}" \
           --artifacts-destination "${MLFLOW_ARTIFACTS_DESTINATION}" \
