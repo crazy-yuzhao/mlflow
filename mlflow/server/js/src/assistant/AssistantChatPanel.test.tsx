@@ -47,6 +47,9 @@ let mockGatewayVendorOptions: Record<string, string[]> = {};
 let mockGatewayEndpoints: Endpoint[] = [];
 let mockIsLocalServer = true;
 let mockCanUseAssistant = true;
+let mockCanOpenAssistant = true;
+let mockConfigError: string | null = null;
+let mockIsAdmin = false;
 let mockNeedsApiKey = false;
 let mockError: string | null = null;
 let mockErrorCode: string | null = null;
@@ -68,8 +71,14 @@ const mockUpdateConfig = jest.mocked(AssistantService.updateConfig);
 jest.mock('../gateway/hooks/useEndpointsQuery', () => ({
   useEndpointsQuery: () => ({
     data: mockGatewayEndpoints,
+    error: undefined,
     isLoading: false,
+    refetch: jest.fn(),
   }),
+}));
+
+jest.mock('../account/hooks', () => ({
+  useCurrentUserIsAdmin: () => mockIsAdmin,
 }));
 
 jest.mock('./AssistantContext', () => ({
@@ -93,6 +102,8 @@ jest.mock('./AssistantContext', () => ({
     pendingComposerFocus: mockPendingComposerFocus,
     pendingAutomaticMessage: mockPendingAutomaticMessage,
     canUseAssistant: mockCanUseAssistant,
+    canOpenAssistant: mockCanOpenAssistant,
+    configError: mockConfigError,
     canEditServerSettings: true,
     tokenUsage: mockTokenUsage,
     openPanel: jest.fn(),
@@ -130,6 +141,7 @@ jest.mock('./AssistantPageContext', () => ({
 
 jest.mock('../common/utils/RoutingUtils', () => ({
   useAssistantPrompts: () => ['Prompt 1', 'Prompt 2'],
+  Link: ({ children, to }: { children?: unknown; to: string }) => <a href={to}>{children}</a>,
 }));
 
 const renderChatPanel = () => {
@@ -169,6 +181,9 @@ describe('AssistantChatPanel', () => {
     mockGatewayEndpoints = [];
     mockIsLocalServer = true;
     mockCanUseAssistant = true;
+    mockCanOpenAssistant = true;
+    mockConfigError = null;
+    mockIsAdmin = false;
     mockNeedsApiKey = false;
     mockError = null;
     mockErrorCode = null;
@@ -186,13 +201,132 @@ describe('AssistantChatPanel', () => {
     expect(screen.queryByPlaceholderText('Ask a question...')).not.toBeInTheDocument();
   });
 
-  test('when setup is incomplete on a remote client, the panel asks for local setup', () => {
+  test('when setup is incomplete on a remote client that can already chat, the panel matches localhost', () => {
     mockSetupComplete = false;
     mockIsLocalServer = false;
     renderChatPanel();
 
-    expect(screen.getByText('Assistant setup required')).toBeInTheDocument();
-    expect(screen.queryByText('Welcome to Hengjian Assistant')).not.toBeInTheDocument();
+    expect(screen.getByText('Welcome to Hengjian Assistant')).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText('Ask a question...')).not.toBeInTheDocument();
+  });
+
+  test('remote assistant entry with no model shows setup guidance and does not send', async () => {
+    const user = userEvent.setup();
+    mockIsLocalServer = false;
+    mockCanUseAssistant = false;
+    mockCanOpenAssistant = true;
+    mockSetupComplete = false;
+    mockGatewayEndpoints = [{ name: 'team-chat' } as Endpoint];
+    renderChatPanel();
+
+    expect(screen.getByText('Choose a model before chatting')).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText('Ask a question...')).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Use team-chat' }));
+
+    expect(mockUpdateConfig).toHaveBeenCalledWith({
+      providers: { mlflow_gateway: { selected: true, model: 'team-chat' } },
+    });
+    expect(mockSendMessage).not.toHaveBeenCalled();
+    expect(mockRefreshConfig).toHaveBeenCalledWith({ silent: true });
+  });
+
+  test('a failed model save stays on the setup guide and shows the error', async () => {
+    const user = userEvent.setup();
+    mockUpdateConfig.mockRejectedValueOnce(new Error('sandbox required'));
+    mockIsLocalServer = false;
+    mockCanUseAssistant = false;
+    mockCanOpenAssistant = true;
+    mockSetupComplete = false;
+    mockGatewayEndpoints = [{ name: 'team-chat' } as Endpoint];
+    renderChatPanel();
+
+    await user.click(screen.getByRole('button', { name: 'Use team-chat' }));
+
+    expect(await screen.findByText(/sandbox required/)).toBeInTheDocument();
+    expect(screen.getByText('Choose a model before chatting')).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText('Ask a question...')).not.toBeInTheDocument();
+    expect(mockSendMessage).not.toHaveBeenCalled();
+  });
+
+  test('a non-admin with no gateway endpoint is told to contact an administrator', () => {
+    mockIsLocalServer = false;
+    mockCanUseAssistant = false;
+    mockCanOpenAssistant = true;
+    mockSetupComplete = false;
+    mockIsAdmin = false;
+    renderChatPanel();
+
+    expect(screen.getByText(/Ask an administrator to create one in Gateway/)).toBeInTheDocument();
+    expect(screen.queryByText('Open Gateway')).not.toBeInTheDocument();
+    expect(screen.queryByPlaceholderText('Ask a question...')).not.toBeInTheDocument();
+  });
+
+  test('an administrator with no gateway endpoint can open Gateway', () => {
+    mockIsLocalServer = false;
+    mockCanUseAssistant = false;
+    mockCanOpenAssistant = true;
+    mockSetupComplete = false;
+    mockIsAdmin = true;
+    renderChatPanel();
+
+    expect(screen.getByText(/Create one in Gateway/)).toBeInTheDocument();
+    expect(screen.getByText('Open Gateway')).toBeInTheDocument();
+  });
+
+  test('a selected gateway model still cannot chat while remote execution is blocked', () => {
+    mockIsLocalServer = false;
+    mockCanUseAssistant = false;
+    mockCanOpenAssistant = true;
+    mockSetupComplete = true;
+    mockActiveProvider = {
+      name: 'mlflow_gateway',
+      model: 'team-chat',
+      auto_selected: false,
+      requires_api_key: false,
+      has_api_key: false,
+      client_tool_delivery: 'tool',
+    };
+    renderChatPanel();
+
+    expect(screen.getByText('Remote chat is not ready')).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText('Ask a question...')).not.toBeInTheDocument();
+  });
+
+  test('a provider that cannot run remotely does not open the composer', () => {
+    mockIsLocalServer = false;
+    mockCanUseAssistant = false;
+    mockCanOpenAssistant = true;
+    mockSetupComplete = true;
+    mockActiveProvider = {
+      name: 'claude_code',
+      model: null,
+      auto_selected: true,
+      requires_api_key: false,
+      has_api_key: false,
+      client_tool_delivery: 'unsupported',
+    };
+    renderChatPanel();
+
+    expect(screen.getByText(/cannot run from this browser/)).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText('Ask a question...')).not.toBeInTheDocument();
+  });
+
+  test('a failed assistant config load explains that chat stays off', () => {
+    mockConfigError = 'Gateway unavailable';
+    renderChatPanel();
+
+    expect(screen.getByText('Assistant settings could not be loaded')).toBeInTheDocument();
+    expect(screen.getByText(/Gateway unavailable/)).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText('Ask a question...')).not.toBeInTheDocument();
+  });
+
+  test('remote assistant switched off keeps the entry closed', () => {
+    mockIsLocalServer = false;
+    mockCanUseAssistant = false;
+    mockCanOpenAssistant = false;
+    renderChatPanel();
+
+    expect(screen.getByText('Assistant Not Available')).toBeInTheDocument();
     expect(screen.queryByPlaceholderText('Ask a question...')).not.toBeInTheDocument();
   });
 

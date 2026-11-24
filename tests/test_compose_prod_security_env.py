@@ -20,7 +20,6 @@ _ASSISTANT_ENV_KEYS = (
     "MLFLOW_SANDBOX_DOCKER_IMAGE",
     "MLFLOW_ASSISTANT_SANDBOX_CLI_IMAGE",
     "MLFLOW_SANDBOX_EGRESS_PROXY",
-    "MLFLOW_ASSISTANT_DEFAULT_GATEWAY_ENDPOINT",
     "TMPDIR",
     "MLFLOW_HOME",
 )
@@ -219,7 +218,6 @@ def _run_prelude(command: str, env: dict[str, str]) -> dict[str, str | None]:
 def test_prod_env_example_leaves_remote_assistant_off():
     values = _parse_env(_ENV_EXAMPLE.read_text())
     assert values["MLFLOW_ENABLE_REMOTE_ASSISTANT"] == "false"
-    assert values["MLFLOW_ASSISTANT_DEFAULT_GATEWAY_ENDPOINT"] == ""
     assert values["MLFLOW_ENABLE_ASSISTANT_SANDBOX"] == ""
     assert values["MLFLOW_ASSISTANT_DOCKER_SOCKET"] == "/dev/null"
     assert values["MLFLOW_SANDBOX_DOCKER_IMAGE"] == ""
@@ -233,7 +231,6 @@ def test_prod_compose_assistant_defaults_and_persistence(tmp_path: Path):
     service = config["services"]["mlflow"]
     environment = service["environment"]
     assert _env_str(environment, "MLFLOW_ENABLE_REMOTE_ASSISTANT") == "false"
-    assert _env_str(environment, "MLFLOW_ASSISTANT_DEFAULT_GATEWAY_ENDPOINT") == ""
     assert _env_str(environment, "MLFLOW_ENABLE_ASSISTANT_SANDBOX") in (None, "")
     assert "MLFLOW_WORKSPACE" not in environment
     assert "MLFLOW_HOME" not in environment
@@ -265,12 +262,10 @@ def test_prod_compose_omitted_assistant_vars_stay_disabled(tmp_path: Path):
             "MLFLOW_SANDBOX_DOCKER_IMAGE": None,
             "MLFLOW_ASSISTANT_SANDBOX_CLI_IMAGE": None,
             "MLFLOW_SANDBOX_EGRESS_PROXY": None,
-            "MLFLOW_ASSISTANT_DEFAULT_GATEWAY_ENDPOINT": None,
         },
     )
     environment = config["services"]["mlflow"]["environment"]
     assert _env_str(environment, "MLFLOW_ENABLE_REMOTE_ASSISTANT") == "false"
-    assert _env_str(environment, "MLFLOW_ASSISTANT_DEFAULT_GATEWAY_ENDPOINT") == ""
     assert _env_str(environment, "MLFLOW_ENABLE_ASSISTANT_SANDBOX") in (None, "")
     mounts = _volume_mounts(config["services"]["mlflow"])
     assert ("/dev/null", "/var/run/docker.sock") in mounts
@@ -285,7 +280,6 @@ def test_prod_compose_remote_assistant_wires_socket_and_paths(tmp_path: Path):
             "MLFLOW_DATA_DIR": str(data),
             "MLFLOW_ENABLE_REMOTE_ASSISTANT": "true",
             "MLFLOW_ENABLE_ASSISTANT_SANDBOX": "false",
-            "MLFLOW_ASSISTANT_DEFAULT_GATEWAY_ENDPOINT": "example-chat",
             "MLFLOW_ASSISTANT_DOCKER_SOCKET": "/var/run/docker.sock",
             "MLFLOW_SANDBOX_DOCKER_IMAGE": "example/mlflow-sandbox:1",
             "MLFLOW_ASSISTANT_SANDBOX_CLI_IMAGE": "example/mlflow-assistant-sandbox:1",
@@ -294,7 +288,6 @@ def test_prod_compose_remote_assistant_wires_socket_and_paths(tmp_path: Path):
     )
     environment = config["services"]["mlflow"]["environment"]
     assert _env_str(environment, "MLFLOW_ENABLE_REMOTE_ASSISTANT") == "true"
-    assert _env_str(environment, "MLFLOW_ASSISTANT_DEFAULT_GATEWAY_ENDPOINT") == "example-chat"
     assert _env_str(environment, "MLFLOW_ENABLE_ASSISTANT_SANDBOX") == "false"
     assert _env_str(environment, "MLFLOW_SANDBOX_DOCKER_IMAGE") == "example/mlflow-sandbox:1"
     assert (
@@ -326,17 +319,12 @@ def test_prod_compose_remote_assistant_wires_socket_and_paths(tmp_path: Path):
     ("extra_env", "expected"),
     [
         (
-            {
-                "MLFLOW_ENABLE_REMOTE_ASSISTANT": "false",
-                "MLFLOW_ENABLE_ASSISTANT_SANDBOX": "",
-                "MLFLOW_ASSISTANT_DEFAULT_GATEWAY_ENDPOINT": "",
-            },
+            {"MLFLOW_ENABLE_REMOTE_ASSISTANT": "false", "MLFLOW_ENABLE_ASSISTANT_SANDBOX": ""},
             {
                 "MLFLOW_ENABLE_ASSISTANT_SANDBOX": None,
                 "MLFLOW_SANDBOX_DOCKER_IMAGE": None,
                 "MLFLOW_ASSISTANT_SANDBOX_CLI_IMAGE": None,
                 "MLFLOW_SANDBOX_EGRESS_PROXY": None,
-                "MLFLOW_ASSISTANT_DEFAULT_GATEWAY_ENDPOINT": None,
                 "TMPDIR": None,
                 "MLFLOW_HOME": None,
             },
@@ -352,23 +340,17 @@ def test_prod_compose_remote_assistant_wires_socket_and_paths(tmp_path: Path):
                 "MLFLOW_SANDBOX_DOCKER_IMAGE": "example/mlflow-sandbox:1",
                 "MLFLOW_ASSISTANT_SANDBOX_CLI_IMAGE": None,
                 "MLFLOW_SANDBOX_EGRESS_PROXY": None,
-                "MLFLOW_ASSISTANT_DEFAULT_GATEWAY_ENDPOINT": None,
                 "TMPDIR": "sandbox-tmp",
                 "MLFLOW_HOME": "/opt/mlflow",
             },
         ),
         (
-            {
-                "MLFLOW_ENABLE_REMOTE_ASSISTANT": "true",
-                "MLFLOW_HOME": "/custom/mlflow",
-                "MLFLOW_ASSISTANT_DEFAULT_GATEWAY_ENDPOINT": "example-chat",
-            },
+            {"MLFLOW_ENABLE_REMOTE_ASSISTANT": "true", "MLFLOW_HOME": "/custom/mlflow"},
             {
                 "MLFLOW_ENABLE_ASSISTANT_SANDBOX": None,
                 "MLFLOW_SANDBOX_DOCKER_IMAGE": None,
                 "MLFLOW_ASSISTANT_SANDBOX_CLI_IMAGE": None,
                 "MLFLOW_SANDBOX_EGRESS_PROXY": None,
-                "MLFLOW_ASSISTANT_DEFAULT_GATEWAY_ENDPOINT": "example-chat",
                 "TMPDIR": "sandbox-tmp",
                 "MLFLOW_HOME": "/custom/mlflow",
             },
@@ -408,6 +390,5 @@ def test_prod_readme_documents_remote_assistant_runbook():
     assert "/var/run/docker.sock" in text
     assert "host.docker.internal" in text
     assert "mlflow_gateway" in text
-    assert "MLFLOW_ASSISTANT_DEFAULT_GATEWAY_ENDPOINT" in text
     assert "assistant/config" in text
     assert "docker:dind" in text

@@ -18,15 +18,9 @@ from mlflow.assistant.config import (
     AssistantConfig,
     PermissionsConfig,
     ProjectConfig,
-    get_config_user,
     set_config_user,
 )
 from mlflow.assistant.config import ProviderConfig as AssistantProviderConfig
-from mlflow.assistant.default_gateway import (
-    configured_default_gateway_endpoint,
-    reset_default_gateway_model,
-    set_default_gateway_model,
-)
 from mlflow.assistant.gateway_connection import (
     _GATEWAY_VENDOR_MODELS,
     GatewayUnsupportedError,
@@ -52,7 +46,6 @@ from mlflow.assistant.skill_installer import install_skills, list_installed_skil
 from mlflow.assistant.types import EventType
 from mlflow.environment_variables import MLFLOW_ENABLE_REMOTE_ASSISTANT
 from mlflow.server.asgi_utils import get_server_base_url, get_server_self_url
-from mlflow.server.assistant.default_gateway import usable_default_gateway_endpoint
 from mlflow.server.assistant.gateway_permissions import ensure_assistant_gateway_use_permission
 from mlflow.server.assistant.identity import (
     BASIC_AUTH_CHALLENGE_HEADERS,
@@ -90,36 +83,15 @@ def _get_selected_provider(config: AssistantConfig | None = None):
     return None
 
 
-def _unconfigured_default_gateway_endpoint(config: AssistantConfig) -> str | None:
-    """Deployment default for a user who has not saved any provider configuration.
-
-    A saved provider map is a preference and is not replaced, including a map in which no
-    provider is ``selected``. That unselected map is the durable form of "not this provider"
-    the config writer can store. Nothing here writes the user's file.
-    """
-    if config.providers:
-        return None
-    return usable_default_gateway_endpoint(get_config_user())
-
-
 def _resolve_provider(
     config: AssistantConfig | None = None, remote: bool = False
 ) -> AssistantProvider | None:
     """Return the explicit provider, or a runtime default for chat routes."""
-    if config is None:
-        config = AssistantConfig.load()
     selected = _get_selected_provider(config)
     if selected is not None:
         if remote and not selected.allows_remote_access:
             return None
         return selected
-    if _unconfigured_default_gateway_endpoint(config):
-        if gateway := _get_provider(MlflowGatewayProvider.GATEWAY_PROVIDER_NAME):
-            return gateway
-    # A configured default that this caller cannot use must not fall through to whichever
-    # other Gateway endpoint happens to exist.
-    if not config.providers and configured_default_gateway_endpoint():
-        return resolve_default_provider(remote=remote, include_gateway=False)
     return resolve_default_provider(remote=remote)
 
 
@@ -402,6 +374,9 @@ class ConfigResponse(BaseModel):
     providers: dict[str, Any] = Field(default_factory=dict)
     projects: dict[str, Any] = Field(default_factory=dict)
     remote_access_allowed: bool = False
+    # Deployment switch only. This does not authorize chat or tool execution;
+    # that stays on remote_access_allowed (sandbox, provider, and the remote flag).
+    remote_assistant_enabled: bool = False
     can_edit_server_settings: bool = False
 
 
@@ -538,22 +513,6 @@ def _resolve_assistant_provider(
         provider_config = config.providers.get(provider.name)
         if provider_config and provider_config.selected:
             return _resolved_provider_info(provider, provider_config, auto_selected=False)
-
-    if endpoint := _unconfigured_default_gateway_endpoint(config):
-        gateway = next(
-            (
-                provider
-                for provider in providers
-                if provider.name == MlflowGatewayProvider.GATEWAY_PROVIDER_NAME
-            ),
-            None,
-        )
-        if gateway is not None:
-            return _resolved_provider_info(
-                gateway,
-                AssistantProviderConfig(model=endpoint, selected=True),
-                auto_selected=True,
-            )
 
     for provider in providers:
         if provider.name == MlflowGatewayProvider.GATEWAY_PROVIDER_NAME:
@@ -695,19 +654,51 @@ async def stream_response(request: Request, session_id: str) -> StreamingRespons
     async def event_generator() -> AsyncGenerator[str, None]:
         nonlocal session
         provider = await asyncio.to_thread(_resolve_provider, remote=is_remote)
-        default_model = None
-        if provider is not None and provider.name == MlflowGatewayProvider.GATEWAY_PROVIDER_NAME:
-            default_model = await asyncio.to_thread(
-                _unconfigured_default_gateway_endpoint, AssistantConfig.load()
+        if provider is None:
+            from mlflow.assistant.types import Event
+
+            message = await asyncio.to_thread(_no_provider_message, is_remote)
+            yield Event.from_error(message).to_sse_event()
+            return
+        if provider.name == MlflowGatewayProvider.GATEWAY_PROVIDER_NAME:
+            # The provider calls the in-server gateway with the server's internal gateway token,
+            # so that call goes to the server's own address. The tracking URI above derives from
+            # the client's Host header, which a caller could point at a host they control. The
+            # call still presents this request's Host header, which the server's Host allowlist
+            # has already admitted, and its workspace header, so the gateway resolves the same
+            # workspace as this request. Its credential headers authenticate the call when the
+            # server's auth app does not accept the internal gateway token.
+            set_server_url(
+                get_server_self_url(request),
+                host_header=request.headers.get("host"),
+                workspace_header=request.headers.get(WORKSPACE_HEADER_NAME),
+                credential_headers={
+                    name: value
+                    for name in CALLER_CREDENTIAL_HEADERS
+                    if (value := request.headers.get(name))
+                },
             )
-        default_model_token = set_default_gateway_model(default_model)
-        try:
-            async for chunk in _stream_provider_events(
-                provider, session, session_id, prompt, context, tracking_uri, username, request
-            ):
-                yield chunk
-        finally:
-            reset_default_gateway_model(default_model_token)
+            # The in-server gateway enforces a per-endpoint USE permission. The Assistant's
+            # managed endpoints are created outside the HTTP route that would grant it, so
+            # authorize this caller for them before the turn calls the gateway.
+            await asyncio.to_thread(ensure_assistant_gateway_use_permission, username)
+        async for event in provider.astream(
+            prompt=prompt,
+            tracking_uri=tracking_uri,
+            session_id=session.provider_session_id,
+            mlflow_session_id=session_id,
+            cwd=session.working_dir,
+            context=context,
+        ):
+            # Store provider session ID if returned (for conversation continuity).
+            # On a paused or failed turn this lets a later request resume the same
+            # provider conversation instead of losing its history.
+            provider_session_id = event.data.get("session_id")
+            if event.type in {EventType.DONE, EventType.ERROR} and provider_session_id:
+                session.provider_session_id = provider_session_id
+                SessionManager.save(session_id, session)
+
+            yield event.to_sse_event()
 
     return StreamingResponse(
         event_generator(),
@@ -718,63 +709,6 @@ async def stream_response(request: Request, session_id: str) -> StreamingRespons
             "X-Accel-Buffering": "no",
         },
     )
-
-
-async def _stream_provider_events(
-    provider: AssistantProvider | None,
-    session: Session,
-    session_id: str,
-    prompt: str,
-    context: dict[str, Any],
-    tracking_uri: str,
-    username: str | None,
-    request: Request,
-) -> AsyncGenerator[str, None]:
-    if provider is None:
-        from mlflow.assistant.types import Event
-
-        message = await asyncio.to_thread(_no_provider_message, is_remote_caller())
-        yield Event.from_error(message).to_sse_event()
-        return
-    if provider.name == MlflowGatewayProvider.GATEWAY_PROVIDER_NAME:
-        # The provider calls the in-server gateway with the server's internal gateway token,
-        # so that call goes to the server's own address. The tracking URI above derives from
-        # the client's Host header, which a caller could point at a host they control. The
-        # call still presents this request's Host header, which the server's Host allowlist
-        # has already admitted, and its workspace header, so the gateway resolves the same
-        # workspace as this request. Its credential headers authenticate the call when the
-        # server's auth app does not accept the internal gateway token.
-        set_server_url(
-            get_server_self_url(request),
-            host_header=request.headers.get("host"),
-            workspace_header=request.headers.get(WORKSPACE_HEADER_NAME),
-            credential_headers={
-                name: value
-                for name in CALLER_CREDENTIAL_HEADERS
-                if (value := request.headers.get(name))
-            },
-        )
-        # The in-server gateway enforces a per-endpoint USE permission. The Assistant's
-        # managed endpoints are created outside the HTTP route that would grant it, so
-        # authorize this caller for them before the turn calls the gateway.
-        await asyncio.to_thread(ensure_assistant_gateway_use_permission, username)
-    async for event in provider.astream(
-        prompt=prompt,
-        tracking_uri=tracking_uri,
-        session_id=session.provider_session_id,
-        mlflow_session_id=session_id,
-        cwd=session.working_dir,
-        context=context,
-    ):
-        # Store provider session ID if returned (for conversation continuity).
-        # On a paused or failed turn this lets a later request resume the same
-        # provider conversation instead of losing its history.
-        provider_session_id = event.data.get("session_id")
-        if event.type in {EventType.DONE, EventType.ERROR} and provider_session_id:
-            session.provider_session_id = provider_session_id
-            SessionManager.save(session_id, session)
-
-        yield event.to_sse_event()
 
 
 @assistant_router.patch("/sessions/{session_id}")
@@ -951,20 +885,10 @@ async def get_config(request: Request) -> ConfigResponse:
     providers = {name: p.model_dump() for name, p in config.providers.items()}
     is_remote = is_remote_caller()
     selected_provider = _get_selected_provider(config)
-    default_endpoint = (
-        None if selected_provider is not None else _unconfigured_default_gateway_endpoint(config)
+    provider = selected_provider or resolve_default_provider(
+        remote=is_remote, include_gateway=False
     )
-    if default_endpoint and (gateway := _get_provider(MlflowGatewayProvider.GATEWAY_PROVIDER_NAME)):
-        provider = gateway
-        provider_data = AssistantProviderConfig(model=default_endpoint, selected=True).model_dump()
-        providers[gateway.name] = provider_data
-    else:
-        # Leave Gateway out of the unconfigured fallback. Selecting it here would advertise an
-        # arbitrary existing endpoint. A named deployment default is handled above.
-        provider = selected_provider or resolve_default_provider(
-            remote=is_remote, include_gateway=False
-        )
-    if selected_provider is None and default_endpoint is None and provider is not None:
+    if selected_provider is None and provider is not None:
         provider_config = config.providers.get(provider.name) or AssistantProviderConfig()
         provider_data = provider_config.model_dump()
         provider_data["selected"] = True
@@ -978,6 +902,7 @@ async def get_config(request: Request) -> ConfigResponse:
         providers=providers,
         projects=_visible_projects(config, can_edit_server_settings),
         remote_access_allowed=_provider_allows_remote_access(provider),
+        remote_assistant_enabled=MLFLOW_ENABLE_REMOTE_ASSISTANT.get(),
         can_edit_server_settings=can_edit_server_settings,
     )
 
@@ -1109,6 +1034,7 @@ async def update_config(request: ConfigUpdateRequest, http_request: Request) -> 
         providers=providers,
         projects=_visible_projects(config, restriction is None),
         remote_access_allowed=_provider_allows_remote_access(_get_selected_provider(config)),
+        remote_assistant_enabled=MLFLOW_ENABLE_REMOTE_ASSISTANT.get(),
         can_edit_server_settings=restriction is None,
     )
 

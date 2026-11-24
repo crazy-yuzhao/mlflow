@@ -355,6 +355,10 @@
     "defaultMessage": "Pass / Fail",
     "description": "Review question input type: pass/fail"
   },
+  "/99sJ+": {
+    "defaultMessage": "Could not save the assistant model.",
+    "description": "Fallback error when saving an assistant gateway endpoint fails"
+  },
   "/Aup8Q": {
     "defaultMessage": "Request time",
     "description": "Column label for request time"
@@ -1247,10 +1251,6 @@
     "defaultMessage": "Change message role",
     "description": "Aria label for the dropdown that swaps a chat message role on the playground page"
   },
-  "1uOyoY": {
-    "defaultMessage": "Assistant setup required",
-    "description": "Title shown when a remote client cannot configure Assistant setup"
-  },
   "1uSCDX": {
     "defaultMessage": "{count, plural, one {# improved comparison group} other {# improved comparison groups}} compared with baseline",
     "description": "Count of matched session summaries or standalone traces that improved against baseline"
@@ -1907,6 +1907,10 @@
     "defaultMessage": "Delete",
     "description": "Text for delete button on model version view page header"
   },
+  "4/w+Km": {
+    "defaultMessage": "No chat endpoint exists yet. Create one in Gateway, then select it here. API keys are added in Gateway, not in this panel.",
+    "description": "Empty gateway endpoint list shown to an administrator in the assistant setup guide"
+  },
   "40TLJk": {
     "defaultMessage": "Structured output:",
     "description": "Label for structured output schema in the prompt details page"
@@ -2310,10 +2314,6 @@
   "58xhem": {
     "defaultMessage": "Click to pin the run",
     "description": "A tooltip for the pin icon button in the runs chart tooltip next to the not pinned run"
-  },
-  "5A+ifR": {
-    "defaultMessage": "Hengjian Assistant needs to be configured on the server host before remote clients can use it. Ask your server administrator to open this server locally and complete Assistant setup.",
-    "description": "Message explaining that Assistant setup must be completed locally by a server admin"
   },
   "5AiU0Q": {
     "defaultMessage": "Create your first prompt",
@@ -3026,6 +3026,10 @@
   "7GU2wd": {
     "defaultMessage": "Add traces from the Traces tab to start reviewing them with your team.",
     "description": "Review queue: empty queue description"
+  },
+  "7HW+JI": {
+    "defaultMessage": "Open Gateway",
+    "description": "Link from the assistant setup guide to the Gateway management page"
   },
   "7HabBX": {
     "defaultMessage": "MCP servers",
@@ -4206,6 +4210,10 @@
   "AbMmZg": {
     "defaultMessage": "LLM connection",
     "description": "Admin permission picker label for the LLM connection resource type"
+  },
+  "AdLiPe": {
+    "defaultMessage": "Choose a model before chatting",
+    "description": "Title shown when the remote assistant entry is open but no chat model is ready"
   },
   "AeRhuI": {
     "defaultMessage": "Conversational guidelines",
@@ -6223,6 +6231,10 @@
     "defaultMessage": "Has access endpoint",
     "description": "Filter toggle for MCP servers with access endpoints"
   },
+  "GlY65S": {
+    "defaultMessage": "Use {name}",
+    "description": "Button that selects a gateway chat endpoint for the assistant"
+  },
   "Gm77Ws": {
     "defaultMessage": "Loading artifact failed",
     "description": "Run page > artifact view > error state > default error message"
@@ -7118,6 +7130,10 @@
   "JJFZ1V": {
     "defaultMessage": "Fetching trace data...",
     "description": "MLflow trace notebook output > loading state"
+  },
+  "JJnOo3": {
+    "defaultMessage": "Retry",
+    "description": "Button that reloads the gateway endpoint list in the assistant setup guide"
   },
   "JKjqGC": {
     "defaultMessage": "Record ID",
@@ -8939,6 +8955,10 @@
     "defaultMessage": "This folder is {size}. The server accepts up to {max} of files.",
     "description": "Error when a skill folder is larger than the server accepts"
   },
+  "OOZS0c": {
+    "defaultMessage": "Chat is disabled until assistant settings load. {message}",
+    "description": "Body shown when loading assistant configuration fails, including the error text"
+  },
   "OQOckC": {
     "defaultMessage": "Review queues let your team evaluate trace quality with structured questions. Add traces to a queue from the Traces tab, or create a new queue to get started.",
     "description": "Review queue: empty state description when no queues exist"
@@ -9606,6 +9626,10 @@
   "QPgbsv": {
     "defaultMessage": "Stats include only loaded traces with recorded usage.",
     "description": "Evaluation run sidebar totals may be partial because traces or usage are missing"
+  },
+  "QQMUIJ": {
+    "defaultMessage": "The selected provider cannot run from this browser. Choose a Hengjian AI Gateway chat endpoint. No message will be sent until you do.",
+    "description": "Explanation that a non-remote assistant provider cannot execute for a remote user"
   },
   "QR5jwv": {
     "defaultMessage": "Add an option",
@@ -10415,6 +10439,10 @@
     "defaultMessage": "Candidate: missing",
     "description": "Label for an absent candidate value in a trace comparison diff"
   },
+  "SyJoUh": {
+    "defaultMessage": "Assistant settings could not be loaded",
+    "description": "Title shown when the assistant configuration request fails"
+  },
   "SymYki": {
     "defaultMessage": "About icons",
     "description": "Aria label for icons help popover in create MCP server modal"
@@ -10698,6 +10726,10 @@
   "Tr9+7m": {
     "defaultMessage": "Cost",
     "description": "Column selector label for the cost column"
+  },
+  "TrGyxZ": {
+    "defaultMessage": "Remote chat is not ready",
+    "description": "Title when a gateway model is selected but remote assistant execution is still blocked"
   },
   "TrXhNZ": {
     "defaultMessage": "Always show spans with exceptions, regardless of filter conditions",
@@ -11382,6 +11414,10 @@
   "VfGJFc": {
     "defaultMessage": "Deleted traces cannot be restored. Are you sure you want to proceed?",
     "description": "Experiment page > traces view controls > Delete traces modal > Confirmation message"
+  },
+  "VhDx33": {
+    "defaultMessage": "A Gateway endpoint is selected, but this server is not allowing remote execution yet. Chat stays off until an administrator enables the Docker sandbox. No message will be sent.",
+    "description": "Explanation that a selected gateway model still cannot chat because the sandbox is off"
   },
   "ViqP7B": {
     "defaultMessage": "Traces",
@@ -17303,6 +17339,10 @@
     "defaultMessage": "This experiment has reached the maximum of {max} saved views. Delete a view before saving a new one.",
     "description": "Message shown in the save-traces-view modal when the experiment has reached the saved-view cap"
   },
+  "mkZqHN": {
+    "defaultMessage": "Hengjian Assistant is open, but chat is not available until you select a Gateway chat endpoint. No message will be sent before that.",
+    "description": "Explanation that the remote assistant entry does not mean chat is ready"
+  },
   "mkc84W": {
     "defaultMessage": "Default",
     "description": "Label for the automatic judge output type"
@@ -18015,6 +18055,10 @@
     "defaultMessage": "Scheduled: {cadence}",
     "description": "Experiment issues tab > Button showing the active scheduled-detection cadence"
   },
+  "oigOxx": {
+    "defaultMessage": "Retry",
+    "description": "Button that reloads assistant configuration"
+  },
   "ojLGIx": {
     "defaultMessage": "Enter a feedback name",
     "description": "Placeholder for the feedback name typeahead"
@@ -18491,6 +18535,10 @@
     "defaultMessage": "Raw answer",
     "description": "Summary for an unrecognized decision answer"
   },
+  "qAYxWW": {
+    "defaultMessage": "No chat endpoint is available to you. Ask an administrator to create one in Gateway. API keys cannot be added from this browser.",
+    "description": "Empty gateway endpoint list shown to a non-admin in the assistant setup guide"
+  },
   "qAdWdK": {
     "defaultMessage": "Error",
     "description": "Title of editor error fallback component"
@@ -18926,6 +18974,10 @@
   "rMR4gC": {
     "defaultMessage": "Create new version",
     "description": "Title for the create MCP server version modal when adding a version to an existing server"
+  },
+  "rNQ7kk": {
+    "defaultMessage": "API keys cannot be added from this browser. If you need a new chat endpoint, ask an administrator.",
+    "description": "Note telling a non-admin remote user that gateway secrets stay with an administrator"
   },
   "rNj11o": {
     "defaultMessage": "Switch to the {tracesTab} tab to inspect trace inputs, outputs, and tokens.",

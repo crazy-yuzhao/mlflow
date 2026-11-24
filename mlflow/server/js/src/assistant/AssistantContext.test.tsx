@@ -732,6 +732,30 @@ describe('AssistantProvider setup state from provider discovery', () => {
     });
 
     expect(result.current.canEditServerSettings).toBe(false);
+    expect(result.current.configError).toBe('boom');
+    expect(result.current.canUseAssistant).toBe(result.current.isLocalServer);
+    expect(result.current.canOpenAssistant).toBe(result.current.isLocalServer);
+  });
+
+  test('remote switch opens the entry without allowing chat when no model is configured', async () => {
+    Object.defineProperty(window, 'location', {
+      value: { ...originalLocation, hostname: 'remote.example.com' },
+      writable: true,
+    });
+    mockGetConfig.mockResolvedValue({
+      providers: {},
+      projects: {},
+      remote_access_allowed: false,
+      remote_assistant_enabled: true,
+    });
+    mockGetProviders.mockResolvedValue({ providers: [], resolved: null, gateway_vendor_options: {} });
+
+    const result = await renderAndWaitForConfig();
+
+    expect(result.current.isLocalServer).toBe(false);
+    expect(result.current.canOpenAssistant).toBe(true);
+    expect(result.current.canUseAssistant).toBe(false);
+    expect(result.current.setupComplete).toBe(false);
   });
 
   test('allows provider selection on a permitted remote client', async () => {

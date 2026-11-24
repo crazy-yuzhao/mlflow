@@ -6,7 +6,13 @@ import { DesignSystemProvider } from '@databricks/design-system';
 import { AssistantFloatingButton } from './AssistantFloatingButton';
 
 const mockOpenPanel = jest.fn();
-let mockAssistant: { isLocalServer: boolean; canUseAssistant: boolean; isPanelOpen: boolean; openPanel: jest.Mock };
+let mockAssistant: {
+  isLocalServer: boolean;
+  canUseAssistant: boolean;
+  canOpenAssistant?: boolean;
+  isPanelOpen: boolean;
+  openPanel: jest.Mock;
+};
 let mockObstructionWidth: number;
 let mockObstructionHeight: number;
 
@@ -69,6 +75,19 @@ describe('AssistantFloatingButton', () => {
     renderFab();
     expect(mockOpenPanel).not.toHaveBeenCalled();
     expect(screen.queryByRole('button', { name: 'Hengjian Assistant' })).not.toBeInTheDocument();
+  });
+
+  test('renders the entry when remote setup is open even though chat is not allowed', () => {
+    mockAssistant = {
+      isLocalServer: false,
+      canUseAssistant: false,
+      canOpenAssistant: true,
+      isPanelOpen: false,
+      openPanel: mockOpenPanel,
+    };
+    renderFab();
+
+    expect(screen.getByRole('button', { name: 'Hengjian Assistant' })).toBeInTheDocument();
   });
 
   test('does not render when canUseAssistant is false even if isLocalServer is true', () => {

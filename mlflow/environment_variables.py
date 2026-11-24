@@ -132,19 +132,6 @@ MLFLOW_ENABLE_REMOTE_ASSISTANT = _BooleanEnvironmentVariable(
 )
 
 #: **Experimental** — subject to change or removal in a future release.
-#: Gateway endpoint **name** (the chat ``model`` field, not the generated endpoint id) used for
-#: users who have not saved an Assistant provider configuration. When unset or blank, nothing is
-#: chosen automatically: the Assistant does not pick some other Gateway endpoint. A saved provider
-#: map, including one where no provider is selected, is left unchanged and is not rewritten.
-#: The named endpoint is checked with the Gateway's existing USE permission (admins follow the
-#: same bypass as other Gateway routes). A missing endpoint, a permission denial, or a lookup
-#: error skips the default and does not prevent the server from starting.
-#: (default: ``None``)
-MLFLOW_ASSISTANT_DEFAULT_GATEWAY_ENDPOINT = _EnvironmentVariable(
-    "MLFLOW_ASSISTANT_DEFAULT_GATEWAY_ENDPOINT", str, None
-)
-
-#: **Experimental** — subject to change or removal in a future release.
 #: Override for whether the assistant runs its work (the ``Bash`` tool and the coding-agent CLI
 #: providers) inside a Docker sandbox. Tri-state:
 #:
