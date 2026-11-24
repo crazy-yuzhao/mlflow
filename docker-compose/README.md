@@ -481,11 +481,11 @@ dind 对这套代码不可靠。沙箱把工作目录、`$HOME`、stdin 目录�
 
 因此要让 bind mount 真的指到文件，而不是在宿主机上新建一个空目录：
 
-| 容器内路径 | 宿主机路径 | 用途 |
-| --- | --- | --- |
-| `/root/.mlflow/assistant` | `${MLFLOW_DATA_DIR}/assistant/config` | 配置。只给服务进程读写，不交给 daemon 做 bind mount |
-| `${MLFLOW_DATA_DIR}/assistant/sandbox` | 同一路径 | 远程助手打开时 `TMPDIR` 设在 `.../sandbox/tmp`。stdin、会话 `sandbox-home`、镜像构建上下文都在这里 |
-| `${MLFLOW_DATA_DIR}/assistant/projects` | 同一路径 | 助手项目目录。设置里填写的路径必须落在这里（或另一条同样「容器路径 = 宿主机路径」的挂载上） |
+| 容器内路径                              | 宿主机路径                            | 用途                                                                                               |
+| --------------------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `/root/.mlflow/assistant`               | `${MLFLOW_DATA_DIR}/assistant/config` | 配置。只给服务进程读写，不交给 daemon 做 bind mount                                                |
+| `${MLFLOW_DATA_DIR}/assistant/sandbox`  | 同一路径                              | 远程助手打开时 `TMPDIR` 设在 `.../sandbox/tmp`。stdin、会话 `sandbox-home`、镜像构建上下文都在这里 |
+| `${MLFLOW_DATA_DIR}/assistant/projects` | 同一路径                              | 助手项目目录。设置里填写的路径必须落在这里（或另一条同样「容器路径 = 宿主机路径」的挂载上）        |
 
 不要把项目路径设成 `/tmp`、`/root` 或容器里其他没有按同一绝对路径挂出来的目录。daemon 会在宿主机上找这个字符串，挂进去的是空目录或宿主机上同名的别的东西，工具会安静地读写错误的文件。
 
