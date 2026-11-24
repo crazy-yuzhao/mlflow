@@ -183,6 +183,11 @@ services:
       # and must be unset, true, or false. Unset derives the sandbox from
       # remote mode plus a docker CLI on PATH.
       MLFLOW_ENABLE_REMOTE_ASSISTANT: ${MLFLOW_ENABLE_REMOTE_ASSISTANT:-false}
+      # Gateway endpoint name (chat model), not an id. Blank is unset before
+      # exec. Unset does not select a Gateway endpoint for users who have not
+      # saved a provider. A non-empty name is the default for those users when
+      # they already have USE on that endpoint. It does not grant permission.
+      MLFLOW_ASSISTANT_DEFAULT_GATEWAY_ENDPOINT: ${MLFLOW_ASSISTANT_DEFAULT_GATEWAY_ENDPOINT:-}
       MLFLOW_ENABLE_ASSISTANT_SANDBOX: ${MLFLOW_ENABLE_ASSISTANT_SANDBOX:-}
       MLFLOW_SANDBOX_DOCKER_IMAGE: ${MLFLOW_SANDBOX_DOCKER_IMAGE:-}
       MLFLOW_ASSISTANT_SANDBOX_CLI_IMAGE: ${MLFLOW_ASSISTANT_SANDBOX_CLI_IMAGE:-}
@@ -331,7 +336,8 @@ services:
           MLFLOW_ENABLE_ASSISTANT_SANDBOX \
           MLFLOW_SANDBOX_DOCKER_IMAGE \
           MLFLOW_ASSISTANT_SANDBOX_CLI_IMAGE \
-          MLFLOW_SANDBOX_EGRESS_PROXY
+          MLFLOW_SANDBOX_EGRESS_PROXY \
+          MLFLOW_ASSISTANT_DEFAULT_GATEWAY_ENDPOINT
         do
           if [ -z "$${!_assistant_var:-}" ]; then
             unset "$$_assistant_var"

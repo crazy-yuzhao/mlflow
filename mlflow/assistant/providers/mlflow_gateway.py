@@ -9,7 +9,9 @@ from typing import Any, ClassVar
 import aiohttp
 from packaging.version import Version
 
+from mlflow.assistant.config import ProviderConfig as AssistantProviderConfig
 from mlflow.assistant.config import get_config_user
+from mlflow.assistant.default_gateway import get_default_gateway_model
 from mlflow.assistant.providers.base import ProviderNotConfiguredError
 from mlflow.assistant.providers.openai_compatible import OpenAICompatibleProvider
 from mlflow.environment_variables import _MLFLOW_INTERNAL_GATEWAY_AUTH_TOKEN
@@ -100,6 +102,15 @@ class MlflowGatewayProvider(OpenAICompatibleProvider):
             chat_url_builder=self._build_chat_url,
             allows_remote_access=True,
         )
+
+    def _load_config(self) -> AssistantProviderConfig:
+        config = super()._load_config()
+        # A turn bound to the deployment default has no saved model. Use that endpoint instead
+        # of listing Gateway endpoints and taking the first one. An explicit saved model wins.
+        default_model = get_default_gateway_model()
+        if default_model and (not config.model or config.model == "default"):
+            return config.model_copy(update={"model": default_model})
+        return config
 
     def _auth_headers(self, api_key: str | None) -> dict[str, str]:
         headers = super()._auth_headers(api_key)
